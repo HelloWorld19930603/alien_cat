@@ -184,7 +184,7 @@ public class DateAndTime {
 
     @Test
     public void formateDate(){
-        String dayAfterTommorrow = "20200230";
+        String dayAfterTommorrow = "20200123";
         LocalDate formatted = LocalDate.parse(dayAfterTommorrow, DateTimeFormatter.BASIC_ISO_DATE);
         System.out.printf("Date generated from String %s is %s %n", dayAfterTommorrow, formatted);
     }
