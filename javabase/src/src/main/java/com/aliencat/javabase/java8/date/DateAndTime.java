@@ -9,6 +9,7 @@ import java.util.Date;
 
 public class DateAndTime {
 
+    //1.获取今天的日期
     @Test
     public void getCurrentDate(){
         LocalDate today = LocalDate.now();
@@ -19,6 +20,7 @@ public class DateAndTime {
         System.out.println("Old version date : "+date);
     }
 
+    //获取年月日信息
     @Test
     public void getDetailDate(){
         LocalDate today = LocalDate.now();
@@ -29,12 +31,14 @@ public class DateAndTime {
         System.out.printf("Year : %d  \nMonth : %d  \nday : %d ", year, month, day);
     }
 
+    //处理特定日期
     @Test
     public void handleSpecilDate(){
         LocalDate dateOfBirth = LocalDate.of(2020, 01, 23);
         System.out.println("The specil date is : " + dateOfBirth);
     }
 
+    //日期比较
     @Test
     public void compareDate(){
         LocalDate today = LocalDate.now();
@@ -47,6 +51,7 @@ public class DateAndTime {
         }
     }
 
+    //处理周期性日期
     @Test
     public void cycleDate(){
         LocalDate today = LocalDate.now();
@@ -63,12 +68,14 @@ public class DateAndTime {
         }
     }
 
+    //获取当前时间，精确到毫秒
     @Test
     public void getCurrentTime(){
         LocalTime time = LocalTime.now();
         System.out.println("local time now : " + time);
     }
 
+    //时间按小时推迟或者提前
     @Test
     public void plusHours(){
         LocalTime time = LocalTime.now();
@@ -80,6 +87,7 @@ public class DateAndTime {
         System.out.println("Time before 2 hours : " +  newTime);
     }
 
+    //时间按周推迟或者提前
     @Test
     public void nextWeek(){
         LocalDate today = LocalDate.now();
@@ -88,6 +96,7 @@ public class DateAndTime {
         System.out.println("Date after 1 week : " + nextWeek);
     }
 
+    //时间按年推迟或者提前
     @Test
     public void minusDate(){
         LocalDate today = LocalDate.now();
@@ -98,6 +107,7 @@ public class DateAndTime {
         System.out.println("Date after 1 year : " + nextYear);
     }
 
+    //获取时钟
     @Test
     public void clock(){
         // 根据系统时间返回当前时间并设置为UTC。
@@ -109,6 +119,7 @@ public class DateAndTime {
         System.out.println("Clock : " + clock);
     }
 
+    //判断日期是早于还是晚于另一个日期
     @Test
     public void isBeforeOrIsAfter(){
         LocalDate today = LocalDate.now();
@@ -125,6 +136,7 @@ public class DateAndTime {
         }
     }
 
+    //时区处理
     @Test
     public void getZoneTime(){
         //设置时区
@@ -136,6 +148,7 @@ public class DateAndTime {
         System.out.println("现在的日期和时间在特定的时区 : " + dateAndTimeInNewYork);
     }
 
+    //使用YearMonth处理特定日期
     @Test
     public void checkCardExpiry(){
         YearMonth currentYearMonth = YearMonth.now();
@@ -145,6 +158,7 @@ public class DateAndTime {
         System.out.printf("Your credit card expires on %s %n", creditCardExpiry);
     }
 
+    //判断闰年
     @Test
     public void isLeapYear(){
         LocalDate today = LocalDate.now();
@@ -155,6 +169,7 @@ public class DateAndTime {
         }
     }
 
+    //计算两个日期间的间隔天数
     @Test
     public void calcDateDays(){
         LocalDate today = LocalDate.now();
@@ -167,6 +182,7 @@ public class DateAndTime {
                 + periodToNextJavaRelease.getMonths() );
     }
 
+    //时差处理
     @Test
     public void ZoneOffset(){
         LocalDateTime datetime = LocalDateTime.of(2020, Month.FEBRUARY, 14, 19, 30);
@@ -175,13 +191,14 @@ public class DateAndTime {
         System.out.println("Date and Time with timezone offset in Java : " + date);
     }
 
-
+    //获取时间戳
     @Test
     public void getTimestamp(){
         Instant timestamp = Instant.now();
         System.out.println("What's the value of this instant : " + timestamp);
     }
 
+    //使用预定义格式解析或格式化日期字符串
     @Test
     public void formateDate(){
         String dayAfterTommorrow = "20200123";
