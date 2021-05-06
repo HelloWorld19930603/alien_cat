@@ -7,13 +7,17 @@ import java.util.Map;
 
 public class Host {
 
+
     private static List<String> hostList;
     private static Map<String,Integer> hostMap;
+    private static Map<String,Integer> hostMap2;
+    public static int totalWeight;
 
     static {
         //初始化主机ip地址
         initHostList();
         initHostMap();
+        initHostMap2();
     }
 
     public static void initHostList(){
@@ -29,6 +33,21 @@ public class Host {
         hostMap.put("A",5);
         hostMap.put("B",2);
         hostMap.put("C",3);
+
+        Map<String ,Integer> hosts = Host.getHostMap();
+        for(int v : hosts.values()){
+            totalWeight += v;
+        }
+    }
+
+    public static void initHostMap2(){
+        hostMap2 = new HashMap<>();
+        int weight = 0;
+        for(Map.Entry<String,Integer> entry : hostMap.entrySet()){
+            weight += entry.getValue();
+            hostMap2.put(entry.getKey(),weight);
+        }
+
     }
 
     public static List<String> getHostList(){
@@ -37,5 +56,9 @@ public class Host {
 
     public static Map<String,Integer> getHostMap(){
         return hostMap;
+    }
+
+    public static Map<String,Integer> getHostMap2(){
+        return hostMap2;
     }
 }
