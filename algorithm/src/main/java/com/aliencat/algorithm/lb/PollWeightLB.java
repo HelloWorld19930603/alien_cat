@@ -1,5 +1,7 @@
 package com.aliencat.algorithm.lb;
 
+import com.aliencat.algorithm.lb.bean.Host;
+
 import java.util.Map;
 
 /**

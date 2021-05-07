@@ -1,4 +1,4 @@
-package com.aliencat.algorithm.lb;
+package com.aliencat.algorithm.lb.bean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +11,7 @@ public class Host {
     private static List<String> hostList;
     private static Map<String,Integer> hostMap;
     private static Map<String,Integer> hostMap2;
+    private static List<Server> serverList;
     public static int totalWeight;
 
     static {
@@ -18,6 +19,7 @@ public class Host {
         initHostList();
         initHostMap();
         initHostMap2();
+        initServerList();
     }
 
     public static void initHostList(){
@@ -50,6 +52,13 @@ public class Host {
 
     }
 
+    public static void initServerList(){
+        serverList = new ArrayList<>();
+        serverList.add(new Server("A"));
+        serverList.add(new Server("B"));
+        serverList.add(new Server("C"));
+    }
+
     public static List<String> getHostList(){
         return hostList;
     }
@@ -60,5 +69,9 @@ public class Host {
 
     public static Map<String,Integer> getHostMap2(){
         return hostMap2;
+    }
+
+    public static List<Server> getServerList(){
+        return serverList;
     }
 }
