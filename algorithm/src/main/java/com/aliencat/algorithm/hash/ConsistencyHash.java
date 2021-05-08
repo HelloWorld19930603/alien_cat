@@ -28,10 +28,15 @@ public class ConsistencyHash {
      * 增加物理ip  到环
      */
     public void addServer(String physicalIp) throws Exception {
+        addServer(physicalIp,this.virtualsNum);
+    }
+
+    public void addServer(String physicalIp,int virtualsNum) throws Exception {
         this.physicalIps.add(physicalIp);
         //加入物理ip对应的虚拟集合
         ArrayList<Integer> virtuals = new ArrayList<>();
         this.physicalIp2Virtuals.put(physicalIp, virtuals);
+        //物理节点hash值
         int physicalIpHash = getHash(physicalIp);
         //判断hash碰撞情况
         if (!sortedMap.containsKey(physicalIpHash)) {
@@ -43,9 +48,10 @@ public class ConsistencyHash {
 
         //创建虚拟节点放入环上
         int count = 0, i = 0;
-        while (count < this.virtualsNum) {
+        while (count < virtualsNum) {
             i++;
-            int hash = getHash(physicalIp+"&&v-"+i);
+            //虚拟节点hash值
+            int hash = getHash(physicalIp+"-"+i);
             //判断hash碰撞问题，出现碰撞后忽略该虚拟节点
             if (!sortedMap.containsKey(hash)) {
                 virtuals.add(hash);
@@ -53,7 +59,6 @@ public class ConsistencyHash {
                 count ++;
             }
         }
-
     }
 
     /**
@@ -108,17 +113,30 @@ public class ConsistencyHash {
 
 
     public static void main(String[] args) throws Exception {
+        //每台服务器初始化100个虚拟节点
         ConsistencyHash consistencyHash = new ConsistencyHash(100);
         consistencyHash.addServer("A");
         consistencyHash.addServer("B");
         consistencyHash.addServer("C");
 
-        System.out.println();
+
         for (int i=0; i <10 ; i++){
             System.out.println("request"+i+"服务器物理ip:"+consistencyHash.getServer("request"+i));
         }
 
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("\n模拟添加一台服务器：");
+        consistencyHash.addServer("D",200);
+        for (int i=0; i <10 ; i++){
+            System.out.println("request"+i+"服务器物理ip:"+consistencyHash.getServer("request"+i));
+        }
 
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("\n模拟删除一台服务器：");
+        consistencyHash.removeServer("B");
+        for (int i=0; i <10 ; i++){
+            System.out.println("request"+i+"服务器物理ip:"+consistencyHash.getServer("request"+i));
+        }
     }
 
 
