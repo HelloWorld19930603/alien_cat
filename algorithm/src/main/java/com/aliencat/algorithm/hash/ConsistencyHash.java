@@ -2,6 +2,9 @@ package com.aliencat.algorithm.hash;
 
 import java.util.*;
 
+/**
+ * 一致性哈希算法
+ */
 public class ConsistencyHash {
 
     //物理节点集合  用String 类型表示
@@ -24,23 +27,31 @@ public class ConsistencyHash {
     /**
      * 增加物理ip  到环
      */
-    public void addServer(String physicalIp) {
+    public void addServer(String physicalIp) throws Exception {
         this.physicalIps.add(physicalIp);
         //加入物理ip对应的虚拟集合
         ArrayList<Integer> virtuals = new ArrayList<>();
         this.physicalIp2Virtuals.put(physicalIp, virtuals);
+        int physicalIpHash = getHash(physicalIp);
+        //判断hash碰撞情况
+        if (!sortedMap.containsKey(physicalIpHash)) {
+            this.sortedMap.put(physicalIpHash, physicalIp);
+        }else{
+            //hash碰撞后抛出异常，建议重写getHash方法
+            throw new Exception("发生hash碰撞，请检查hash算法");
+        }
 
+        //创建虚拟节点放入环上
         int count = 0, i = 0;
         while (count < this.virtualsNum) {
             i++;
             int hash = getHash(physicalIp+"&&v-"+i);
-            //解决hash碰撞问题
+            //判断hash碰撞问题，出现碰撞后忽略该虚拟节点
             if (!sortedMap.containsKey(hash)) {
                 virtuals.add(hash);
                 this.sortedMap.put(hash, physicalIp);
                 count ++;
             }
-           // System.out.println(count);
         }
 
     }
@@ -96,7 +107,7 @@ public class ConsistencyHash {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         ConsistencyHash consistencyHash = new ConsistencyHash(100);
         consistencyHash.addServer("A");
         consistencyHash.addServer("B");
