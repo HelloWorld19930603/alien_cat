@@ -9,9 +9,12 @@ public class Host {
 
 
     private static List<String> hostList;
+    //key:主机地址  value:权重
     private static Map<String,Integer> hostMap;
     private static Map<String,Integer> hostMap2;
+    //记录了连接数的Server集合
     private static List<Server> serverList;
+    //记录总权重
     public static int totalWeight;
 
     static {
@@ -45,6 +48,7 @@ public class Host {
     public static void initHostMap2(){
         hostMap2 = new HashMap<>();
         int weight = 0;
+        //A对应0~4,B对应5~6,C对应7~9
         for(Map.Entry<String,Integer> entry : hostMap.entrySet()){
             weight += entry.getValue();
             hostMap2.put(entry.getKey(),weight);
@@ -54,6 +58,7 @@ public class Host {
 
     public static void initServerList(){
         serverList = new ArrayList<>();
+        //初始化Server连接数都是0
         serverList.add(new Server("A"));
         serverList.add(new Server("B"));
         serverList.add(new Server("C"));
