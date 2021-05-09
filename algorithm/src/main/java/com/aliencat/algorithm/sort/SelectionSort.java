@@ -12,28 +12,28 @@ import com.aliencat.algorithm.sort.interfaces.Sort;
 public class SelectionSort implements Sort {
 
 
+    public static void main(String[] args) throws Exception {
+        int[] arr = SortUtil.initArr(10, 100);
+        Sort sort = new SelectionSort();
+        SortUtil.printArr(arr, "排序前：");
+        sort.sort(arr);
+        SortUtil.printArr(arr, "排序后：");
+    }
+
     public int[] sort(int[] arr) {
-        for(int i = 0;i<arr.length-1;i++){
+        for (int i = 0; i < arr.length - 1; i++) {
+            //记录最小值的下标
             int tmp = i;
-            for(int j = i+1;j <arr.length;j++){
-                if(arr[tmp] > arr[j]){
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[tmp] > arr[j]) {
                     tmp = j;
                 }
             }
-            if(tmp != i){
+            if (tmp != i) {
                 //交换数组中的两个数
-                SortUtil.swapArr(arr,i,tmp);
+                SortUtil.swapArr(arr, i, tmp);
             }
         }
         return arr;
-    }
-
-    public static void main(String[] args) throws Exception {
-        int[] arr = SortUtil.initArr(10,100);
-        Sort sort = new SelectionSort();
-        SortUtil.printArr(arr,"排序前：");
-        sort.sort(arr);
-        SortUtil.printArr(arr,"排序后：");
-
     }
 }
