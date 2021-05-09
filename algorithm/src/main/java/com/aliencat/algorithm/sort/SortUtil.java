@@ -10,6 +10,13 @@ public class SortUtil {
         arr[i] ^= arr[j];
     }
 
+    /**
+     *
+     * @param size 数组大小
+     * @param range 生成随机数范围
+     * @return
+     * @throws Exception
+     */
     public static int[] initArr(int size,int range) throws Exception {
         if(size < 0 || range < 0){
             throw new Exception("输入非法参数");
