@@ -20,12 +20,12 @@ public class PollWeightLB {
         String host = null;
         synchronized (pos){
             for(Map.Entry<String,Integer> entry : hosts.entrySet()){
+                // 权重总和为10，pos每累加到10就从0重新开始
                 if(pos >= Host.totalWeight){
                     pos = 0;
                 }
                 //A对应0~4,B对应5~6,C对应7~9
                 // 假设pos为8，那么8是在7~9的区间的，所以host此时返回C
-                // 权重总和为10，pos每累加到10就从0重新开始
                 if(pos < entry.getValue()){
                     host = entry.getKey();
                     pos++;
@@ -36,11 +36,11 @@ public class PollWeightLB {
         return host;
     }
 
-
     public static void main(String[] args) {
         PollWeightLB pollWeightLB = new PollWeightLB();
-        for(int i =0;i<10;i++){
+        for(int i = 0 ; i < 10; i++){
             System.out.println(pollWeightLB.getHostByPollWeight());
         }
     }
+
 }
