@@ -39,12 +39,11 @@ public class HeapSort implements Sort {
         for (int i = (arr.length - 2)/ 2; i >= 0; i--) {
             heapify(arr, i, arr.length);
         }
-
     }
 
     public void heapify(int[] arr, int i, int len) {
-        int left = 2 * i + 1;
-        int right = 2 * i + 2;
+        int left = 2 * i + 1;   //第i个节点下的左节点
+        int right = 2 * i + 2;  //第i个节点下的右节点
         int largest = i;
         if (left < len && arr[left] > arr[largest]) {
             largest = left;
@@ -53,6 +52,7 @@ public class HeapSort implements Sort {
             largest = right;
         }
         if (i != largest) {
+            //将i节点与比其大的最大的那个子节点交换
             SortUtil.swapArr(arr, i, largest);
             heapify(arr, largest, len);
         }
