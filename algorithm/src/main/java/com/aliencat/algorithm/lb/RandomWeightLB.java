@@ -1,6 +1,6 @@
 package com.aliencat.algorithm.lb;
 
-import com.aliencat.algorithm.lb.bean.Host;
+import com.aliencat.algorithm.lb.common.Host;
 
 import java.util.Map;
 import java.util.Random;

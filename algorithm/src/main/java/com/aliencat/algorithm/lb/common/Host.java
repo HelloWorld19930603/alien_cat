@@ -1,4 +1,4 @@
-package com.aliencat.algorithm.lb.bean;
+package com.aliencat.algorithm.lb.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;

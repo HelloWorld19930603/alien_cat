@@ -1,7 +1,7 @@
 package com.aliencat.algorithm.lb;
 
-import com.aliencat.algorithm.lb.bean.Host;
-import com.aliencat.algorithm.lb.bean.Server;
+import com.aliencat.algorithm.lb.common.Host;
+import com.aliencat.algorithm.lb.common.Server;
 
 import java.util.List;
 import java.util.Random;
