@@ -46,6 +46,10 @@ public class SortUtil {
         SortUtil.printArr(arr, "排序前：");
         arr = sort.sort(arr);
         SortUtil.printArr(arr, "排序后：");
+        //校验排序结果，不正确则抛出错误
+        if(!checkAsc(arr)){
+            throw new Exception("排序错误！");
+        }
     }
 
     //检查数组是否升序排列

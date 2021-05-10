@@ -14,7 +14,8 @@ public class MergeSort implements Sort {
 
 
     public static void main(String[] args) throws Exception {
-        SortUtil.printArr(10, 100, new MergeSort());
+        while (true)
+            SortUtil.printArr(10, 100, new MergeSort());
     }
 
     @Override

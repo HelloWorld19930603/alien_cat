@@ -13,7 +13,8 @@ public class InsertionSort implements Sort {
 
 
     public static void main(String[] args) throws Exception {
-        SortUtil.printArr(10, 100, new InsertionSort());
+        while (true)
+            SortUtil.printArr(10, 100, new InsertionSort());
     }
 
     public int[] sort(int[] arr) {

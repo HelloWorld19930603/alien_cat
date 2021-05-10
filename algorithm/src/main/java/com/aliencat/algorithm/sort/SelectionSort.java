@@ -14,7 +14,8 @@ public class SelectionSort implements Sort {
 
 
     public static void main(String[] args) throws Exception {
-        SortUtil.printArr(10, 100, new SelectionSort());
+        while (true)
+            SortUtil.printArr(10, 100, new SelectionSort());
     }
 
     public int[] sort(int[] arr) {

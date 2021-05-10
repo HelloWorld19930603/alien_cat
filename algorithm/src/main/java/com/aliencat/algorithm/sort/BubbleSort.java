@@ -6,7 +6,8 @@ import com.aliencat.algorithm.sort.interfaces.Sort;
 public class BubbleSort implements Sort {
 
     public static void main(String[] args) throws Exception {
-        SortUtil.printArr(10, 100, new BubbleSort());
+        while (true)
+            SortUtil.printArr(10, 100, new BubbleSort());
     }
 
     @Override
