@@ -1,5 +1,6 @@
 package com.aliencat.algorithm.sort;
 
+import com.aliencat.algorithm.sort.common.SortUtil;
 import com.aliencat.algorithm.sort.interfaces.Sort;
 
 /**
@@ -13,11 +14,7 @@ public class SelectionSort implements Sort {
 
 
     public static void main(String[] args) throws Exception {
-        int[] arr = SortUtil.initArr(10, 100);
-        Sort sort = new SelectionSort();
-        SortUtil.printArr(arr, "排序前：");
-        sort.sort(arr);
-        SortUtil.printArr(arr, "排序后：");
+        SortUtil.printArr(10, 100, new SelectionSort());
     }
 
     public int[] sort(int[] arr) {
