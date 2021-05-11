@@ -26,7 +26,12 @@ public class SortUtil {
         int[] arr = new int[size];
         Random random = new Random();
         for (int i = 0; i < size; i++) {
-            arr[i] = random.nextInt(range);
+            if(random.nextInt(2) == 1) {
+                arr[i] = random.nextInt(range);
+            }else{
+                //二分之一的概率生成随机负数
+                arr[i] = -random.nextInt(range);
+            }
         }
         return arr;
     }
@@ -68,5 +73,7 @@ public class SortUtil {
         System.out.println(arr[0] + "  " + arr[1]);
         swapArr(arr, 0, 1);
         System.out.println(arr[0] + "  " + arr[1]);
+
+        System.out.println(new Random().nextInt(2));
     }
 }

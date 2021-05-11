@@ -12,6 +12,9 @@ public class BucketSort implements Sort {
 
     @Override
     public int[] sort(int[] arr) {
+        if (arr == null || arr.length <= 1) {
+            return arr;
+        }
         return new int[0];
     }
 }
