@@ -25,11 +25,16 @@ public class HeapSort implements Sort {
      * 4.重复步骤 2，直到堆的尺寸为 1。
      */
     public int[] sort(int[] arr) {
-        //创建一个大顶堆
+        if (arr == null || arr.length <= 1) {
+            return arr;
+        }
+        //创建一个大顶堆，此时arr[0]为最大值
         buildMaxHeap(arr);
 
         for (int i = arr.length - 1; i > 0; i--) {
+            //把最大值移到末尾
             SortUtil.swapArr(arr, 0, i);
+            //对[0,i-1]区间重新建堆
             heapify(arr, 0, i);
         }
         return arr;

@@ -18,7 +18,9 @@ public class QuickSort implements Sort {
      * 3．再对左右区间重复第二步，直到各区间只有一个数。
      */
     public int[] sort(int[] arr) {
-
+        if (arr == null || arr.length <= 1) {
+            return arr;
+        }
         return sort(arr,0,arr.length - 1);
     }
 

@@ -1,5 +1,6 @@
 package com.aliencat.algorithm.sort;
 
+import com.aliencat.algorithm.sort.common.SortUtil;
 import com.aliencat.algorithm.sort.interfaces.Sort;
 
 /**
@@ -10,13 +11,40 @@ import com.aliencat.algorithm.sort.interfaces.Sort;
  */
 public class CountSort implements Sort {
 
-    /**
-     *  1.找出待排序的数组中最大和最小的元素
-     *  2.统计数组中每个值为i的元素出现的次数，存入数组C的第i项
-     *  3.对所有的计数累加（从C中的第一个元素开始，每一项和前一项相加）
-     *  4.反向填充目标数组：将每个元素i放在新数组的第C(i)项，每放一个元素就将C(i)减去1
-     */
+    public static void main(String[] args) throws Exception {
+        while (true)
+            SortUtil.printArr(10, 100, new CountSort());
+    }
+
+
     public int[] sort(int[] arr) {
-        return new int[0];
+        if (arr == null || arr.length <= 1) {
+            return arr;
+        }
+        //1.找出待排序的数组中最大和最小的元素
+        int minValue = arr[0];
+        int maxValue = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (minValue > arr[i]) {
+                minValue = arr[i];
+            }
+            if (maxValue < arr[i]) {
+                maxValue = arr[i];
+            }
+        }
+        int len = maxValue - minValue + 1;
+        //2. 创建一个新数组count，长度为待排序数组的取值范围的宽度+1
+        int[] count = new int[len];
+        //3.统计源数组中每个值为a的元素出现的次数，存入数组count的第(a-minValue)项
+        for (int a : arr) {
+            count[a - minValue] += 1; //其中minValue对应count数组中的下标即为0
+        }
+        //4.反向填充源数组：将C中不为0的下标为pos元素计算后放在源数组的第i项，每放一个元素就将count[pos]减去1,同时i加1
+        for (int pos = 0, i = 0; pos < len; pos++) {
+            while (count[pos]-- != 0) {
+                arr[i++] = pos + minValue;
+            }
+        }
+        return arr;
     }
 }

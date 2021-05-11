@@ -19,6 +19,9 @@ public class SelectionSort implements Sort {
     }
 
     public int[] sort(int[] arr) {
+        if (arr == null || arr.length <= 1) {
+            return arr;
+        }
         for (int i = 0; i < arr.length - 1; i++) {
             //记录最小值的下标
             int tmp = i;

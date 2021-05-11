@@ -20,7 +20,9 @@ public class MergeSort implements Sort {
 
     @Override
     public int[] sort(int[] arr) {
-
+        if (arr == null || arr.length <= 1) {
+            return arr;
+        }
         return sort(arr, 0, arr.length - 1);
     }
 
