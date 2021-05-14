@@ -1,4 +1,4 @@
-package com.aliencat.testing.demo.parampattern;
+package com.aliencat.testing.mockdemo.parampattern;
 
 import com.aliencat.testing.utils.StringUtils;
 import org.junit.Assert;

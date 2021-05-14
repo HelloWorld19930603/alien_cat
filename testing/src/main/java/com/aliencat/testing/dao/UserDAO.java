@@ -14,5 +14,6 @@ public class UserDAO {
     }
 
     public void modify(UserDO modify) {
+        modify.setName("李四");
     }
 }

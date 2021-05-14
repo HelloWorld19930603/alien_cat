@@ -1,4 +1,4 @@
-package com.aliencat.testing.demo.staticmethod;
+package com.aliencat.testing.mockdemo.staticmethod;
 
 
 import com.aliencat.testing.utils.StringUtils;

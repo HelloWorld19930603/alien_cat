@@ -1,4 +1,4 @@
-package com.aliencat.testing.demo.privatefield;
+package com.aliencat.testing.mockdemo.privatefield;
 
 import com.aliencat.testing.service.UserService;
 import org.junit.Assert;

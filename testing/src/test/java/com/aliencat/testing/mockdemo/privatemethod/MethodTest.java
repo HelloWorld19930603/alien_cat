@@ -1,4 +1,4 @@
-package com.aliencat.testing.demo.privatemethod;
+package com.aliencat.testing.mockdemo.privatemethod;
 
 import com.aliencat.testing.service.UserService;
 import org.junit.Assert;

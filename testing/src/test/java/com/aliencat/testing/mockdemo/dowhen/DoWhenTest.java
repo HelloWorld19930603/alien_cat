@@ -1,4 +1,4 @@
-package com.aliencat.testing.demo.dowhen;
+package com.aliencat.testing.mockdemo.dowhen;
 
 import org.junit.Assert;
 import org.junit.Test;

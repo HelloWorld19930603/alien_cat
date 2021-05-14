@@ -1,4 +1,4 @@
-package com.aliencat.testing.demo.finalclass;
+package com.aliencat.testing.mockdemo.finalclass;
 
 import com.aliencat.testing.pojo.Circle;
 import org.junit.Assert;

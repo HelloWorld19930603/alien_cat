@@ -5,6 +5,7 @@ import com.aliencat.testing.common.IdGenerator;
 import com.aliencat.testing.dao.UserDAO;
 import com.aliencat.testing.pojo.UserDO;
 import com.aliencat.testing.pojo.vo.UserVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -79,5 +80,11 @@ public class UserService {
 
     private boolean isSuperUser(Long userId) {
         return Objects.equals(userId, superUserId);
+    }
+
+    public void modifyUser(UserVO userVO) {
+        UserDO userDO = new UserDO();
+        BeanUtils.copyProperties(userVO, userDO);
+        userDAO.modify(userDO);
     }
 }

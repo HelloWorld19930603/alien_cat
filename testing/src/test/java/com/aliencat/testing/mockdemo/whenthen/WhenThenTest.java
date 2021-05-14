@@ -1,4 +1,4 @@
-package com.aliencat.testing.demo.whenthen;
+package com.aliencat.testing.mockdemo.whenthen;
 
 import org.junit.Assert;
 import org.junit.Test;

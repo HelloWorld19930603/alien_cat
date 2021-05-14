@@ -1,12 +1,19 @@
-package com.aliencat.testing.demo.verify;
+package com.aliencat.testing.mockdemo.verify;
 
+import com.aliencat.testing.dao.UserDAO;
+import com.aliencat.testing.pojo.Circle;
+import com.aliencat.testing.pojo.UserDO;
 import com.aliencat.testing.utils.StringUtils;
+import org.apache.catalina.User;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
 
@@ -19,6 +26,8 @@ import java.util.List;
  * Mockito.verify(mockObject[,times(int)]).someMethod(somgArgs);
  * 用途：用于模拟对象方法，直接返回期望的值、异常、应答，或调用真实的方法，无需执行原始方法。
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({StringUtils.class})
 public class VerifyTest {
 
 
@@ -81,7 +90,9 @@ public class VerifyTest {
         List<Integer> mockedList = PowerMockito.mock(List.class);
         Mockito.verifyNoMoreInteractions(mockedList); // 执行正常
         mockedList.isEmpty();
-        Mockito.verifyNoMoreInteractions(mockedList); // 抛出异常
+        Mockito.verify(mockedList).isEmpty();   //若不进行此行验证，则下面的verifyNoMoreInteractions抛出异常
+        Mockito.verifyNoMoreInteractions(mockedList);
+
     }
 
     /**
