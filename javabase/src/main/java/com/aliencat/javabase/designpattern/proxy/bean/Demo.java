@@ -1,6 +1,6 @@
-package com.aliencat.javabase.proxy.bean;
+package com.aliencat.javabase.designpattern.proxy.bean;
 
-import com.aliencat.javabase.proxy.interfaces.IDemo;
+import com.aliencat.javabase.designpattern.proxy.interfaces.IDemo;
 
 public class Demo implements IDemo {
 

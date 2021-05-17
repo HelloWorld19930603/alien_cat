@@ -1,8 +1,8 @@
-package com.aliencat.javabase.proxy;
+package com.aliencat.javabase.designpattern.proxy;
 
-import com.aliencat.javabase.proxy.bean.Demo;
-import com.aliencat.javabase.proxy.handler.ProxyInvocationHandler;
-import com.aliencat.javabase.proxy.interfaces.IDemo;
+import com.aliencat.javabase.designpattern.proxy.interfaces.IDemo;
+import com.aliencat.javabase.designpattern.proxy.bean.Demo;
+import com.aliencat.javabase.designpattern.proxy.handler.ProxyInvocationHandler;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;

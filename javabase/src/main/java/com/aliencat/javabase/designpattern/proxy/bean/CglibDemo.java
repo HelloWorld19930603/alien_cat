@@ -1,4 +1,4 @@
-package com.aliencat.javabase.proxy.bean;
+package com.aliencat.javabase.designpattern.proxy.bean;
 
 public class CglibDemo{
 

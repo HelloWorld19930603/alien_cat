@@ -1,7 +1,7 @@
-package com.aliencat.javabase.proxy;
+package com.aliencat.javabase.designpattern.proxy;
 
-import com.aliencat.javabase.proxy.bean.CglibDemo;
-import com.aliencat.javabase.proxy.intercept.CglibInterceptor;
+import com.aliencat.javabase.designpattern.proxy.bean.CglibDemo;
+import com.aliencat.javabase.designpattern.proxy.intercept.CglibInterceptor;
 import net.sf.cglib.proxy.Enhancer;
 
 public class CglibProxy {

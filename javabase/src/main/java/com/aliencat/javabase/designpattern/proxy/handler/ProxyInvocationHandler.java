@@ -1,4 +1,4 @@
-package com.aliencat.javabase.proxy.handler;
+package com.aliencat.javabase.designpattern.proxy.handler;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

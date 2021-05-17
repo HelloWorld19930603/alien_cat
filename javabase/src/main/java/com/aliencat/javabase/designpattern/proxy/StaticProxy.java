@@ -1,7 +1,7 @@
-package com.aliencat.javabase.proxy;
+package com.aliencat.javabase.designpattern.proxy;
 
-import com.aliencat.javabase.proxy.bean.Demo;
-import com.aliencat.javabase.proxy.interfaces.IDemo;
+import com.aliencat.javabase.designpattern.proxy.interfaces.IDemo;
+import com.aliencat.javabase.designpattern.proxy.bean.Demo;
 
 public class StaticProxy implements IDemo {
 

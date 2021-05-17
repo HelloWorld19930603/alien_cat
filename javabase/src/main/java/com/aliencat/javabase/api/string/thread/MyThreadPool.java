@@ -1,4 +1,4 @@
-package com.aliencat.javabase.api.thread;
+package com.aliencat.javabase.api.string.thread;
 
 import java.util.concurrent.*;
 

@@ -1,4 +1,4 @@
-package com.aliencat.javabase.proxy.intercept;
+package com.aliencat.javabase.designpattern.proxy.intercept;
 
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
