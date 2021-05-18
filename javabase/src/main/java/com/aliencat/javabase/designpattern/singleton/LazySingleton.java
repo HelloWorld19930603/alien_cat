@@ -2,7 +2,9 @@ package com.aliencat.javabase.designpattern.singleton;
 
 public class LazySingleton {
 
-    private static LazySingleton singleton = null;
+    private volatile static LazySingleton singleton = null;
+    //private static LazySingleton singleton = null; //不加volatile会产生线程安全的bug
+
     private LazySingleton(){}
 
     public static LazySingleton getSingleton(){
