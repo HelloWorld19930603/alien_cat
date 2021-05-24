@@ -1,4 +1,4 @@
-package com.aliencat.javabase.api.string.thread;
+package com.aliencat.javabase.api.thread;
 
 import java.util.concurrent.*;
 
@@ -21,8 +21,8 @@ public class MyThreadPool {
      *重新检查状态，必要时回滚排队
      *已停止，如果没有，则启动新线程。
      *
-     * 3. 如果无法将任务排队，则尝试添加新的
-     *线程。如果失败了，我们就知道我们已经关闭或者饱和了
+     * 3. 如果无法将任务排队，则尝试添加新的线程。
+     * 如果失败了，我们就知道我们已经关闭或者饱和了
      *所以拒绝这个任务。
      */
     public static void main(String[] args) {
