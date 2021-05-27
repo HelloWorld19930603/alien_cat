@@ -2,6 +2,7 @@ package com.aliencat.javabase.designpattern.strategy;
 
 import com.aliencat.javabase.api.enums.ColorEnum;
 
+//枚举实现策略模式
 public enum ShowColorStrategy {
     EXPRESS {
         @Override
