@@ -198,9 +198,10 @@ public class Arithmetic {
     }
 
     public static void main(String[] args) throws Exception {
-        //check("add");
-        //check("minus");
+        check("add");
+        check("minus");
         check("multiply");
+        check("divide");
 
     }
 
