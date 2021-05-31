@@ -12,8 +12,8 @@ public class LockPC {
         Resource resource = new Resource();
         Producer producer = new Producer(resource);
         Consumer consumer = new Consumer(resource);
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 4, 0,
-                TimeUnit.SECONDS, new LinkedBlockingQueue<>(), Executors.defaultThreadFactory(),
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 4,
+                0, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), Executors.defaultThreadFactory(),
                 new ThreadPoolExecutor.AbortPolicy());
         threadPoolExecutor.execute(producer);
         threadPoolExecutor.execute(consumer);
@@ -121,7 +121,7 @@ public class LockPC {
         public void run() {
             while (true) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(1000);  //生产耗时1s
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -13,7 +13,9 @@ public class BlockingQueuePC {
         Resource resource = new Resource("面包");
         Consumer consumer = new Consumer();
         Producer producer = new Producer(resource);
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 5, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 5, 0,
+                TimeUnit.SECONDS, new LinkedBlockingQueue<>(), Executors.defaultThreadFactory(),
+                new ThreadPoolExecutor.AbortPolicy());
         //启动多个生产者\消费者线程
         threadPoolExecutor.execute(producer);
         threadPoolExecutor.execute(consumer);

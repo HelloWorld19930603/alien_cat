@@ -8,7 +8,7 @@ public class ThreadWithJoin {
             try {
                 t1.join();
             } catch (Exception e) {
-                // TODO: handle exception
+                e.printStackTrace();
             }
             System.out.println(Thread.currentThread().getName());
         },"t2");
@@ -16,7 +16,7 @@ public class ThreadWithJoin {
             try {
                 t2.join();
             } catch (Exception e) {
-                // TODO: handle exception
+                e.printStackTrace();
             }
             System.out.println(Thread.currentThread().getName());
         },"t3");

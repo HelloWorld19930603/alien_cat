@@ -19,9 +19,9 @@ public class CallableImpl implements Callable {
     }
 
     public static void main(String[] args) {
-
-        Callable<Integer> callableImpl = new CallableImpl();    // 创建CallableImpl对象
-        FutureTask<Integer> ft = new FutureTask<>(callableImpl); //使用FutureTask来包装CallableImpl对象
+        Callable<Integer> callableImpl = new CallableImpl();    // 创建Callable对象
+        //事实上FutureTask也实现了Runnable接口
+        FutureTask<Integer> ft = new FutureTask<>(callableImpl); //使用FutureTask来包装Callable对象
 
         Thread thread = new Thread(ft);       //FutureTask对象作为Thread对象的target创建新的线程
         thread.start();                       //线程进入到就绪状态
@@ -29,7 +29,7 @@ public class CallableImpl implements Callable {
         System.out.println("主线程for循环执行完毕..");
 
         try {
-            int sum = ft.get();            //取得新创建的新线程中的call()方法返回的结果
+            int sum = ft.get();            //取得新创建的thread线程中的call()方法返回的结果,这里也会停顿3s，说明该方法是阻塞的
             System.out.println("sum = " + sum);
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class AnnotationTest {
 
@@ -18,6 +19,9 @@ public class AnnotationTest {
             System.out.println(an.toString());
             //判断是否是指定Annotation
         }
+        System.out.println();
+        annotations = cs.getAnnotations();
+        Arrays.stream(annotations).forEach(annotation -> System.out.println(annotation.toString()));
 
         //判断是否包含指定Annotation
         if (method.isAnnotationPresent(MyAnnotation.class)) {
