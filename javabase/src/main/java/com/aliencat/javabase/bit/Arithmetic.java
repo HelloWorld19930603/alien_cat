@@ -120,6 +120,10 @@ public class Arithmetic {
         if(a < b){
             return 0;
         }
+        while((a & 1) == 0 && (b & 1) == 0){   //这里进行了一点小优化，如6/2等价于3/1
+            a >>= 1;
+            b >>= 1;
+        }
         a = minus(a,b);
         while(a >= 0){
             a = minus(a,b);
