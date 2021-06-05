@@ -33,19 +33,10 @@ public class RedBlackTree<T extends Comparable<T>> {
         return !isRed(node);
     }
 
-    private void setBlack(RBTNode<T> node) {
+    //颜色转换
+    private void reverseColor(RBTNode<T> node) {
         if (node != null)
-            node.color = true;
-    }
-
-    private void setRed(RBTNode<T> node) {
-        if (node != null)
-            node.color = false;
-    }
-
-    private void setParent(RBTNode<T> node, RBTNode<T> parent) {
-        if (node != null)
-            node.parent = parent;
+            node.color = !node.color;
     }
 
     private void setColor(RBTNode<T> node, boolean color) {
@@ -53,12 +44,17 @@ public class RedBlackTree<T extends Comparable<T>> {
             node.color = color;
     }
 
+    private void setParent(RBTNode<T> node, RBTNode<T> parent) {
+        if (node != null)
+            node.parent = parent;
+    }
+
     /*
      * 前序遍历"红黑树"
      */
     private void preOrder(RBTNode<T> tree) {
         if (tree != null) {
-            System.out.print(tree.key + " ");
+            System.out.print(tree.value + " ");
             preOrder(tree.left);
             preOrder(tree.right);
         }
@@ -74,7 +70,7 @@ public class RedBlackTree<T extends Comparable<T>> {
     private void inOrder(RBTNode<T> tree) {
         if (tree != null) {
             inOrder(tree.left);
-            System.out.print(tree.key + " ");
+            System.out.print(tree.value + " ");
             inOrder(tree.right);
         }
     }
@@ -90,7 +86,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         if (tree != null) {
             postOrder(tree.left);
             postOrder(tree.right);
-            System.out.print(tree.key + " ");
+            System.out.print(tree.value + " ");
         }
     }
 
@@ -98,32 +94,34 @@ public class RedBlackTree<T extends Comparable<T>> {
         postOrder(root);
     }
 
+
+    public RBTNode<T> search(T value) {
+        return search(root, value);
+    }
+
     /*
-     * (递归实现)查找"红黑树x"中键值为key的节点
+     * (递归实现)查找"红黑树x"中键值为value的节点
      */
-    private RBTNode<T> search(RBTNode<T> x, T key) {
+    private RBTNode<T> search(RBTNode<T> x, T value) {
         if (x == null)
             return null;
 
-        int cmp = key.compareTo(x.key);
+        int cmp = value.compareTo(x.value);
         if (cmp < 0)
-            return search(x.left, key);
+            return search(x.left, value);
         else if (cmp > 0)
-            return search(x.right, key);
+            return search(x.right, value);
         else
             return x;
     }
 
-    public RBTNode<T> search(T key) {
-        return search(root, key);
-    }
 
     /*
-     * (非递归实现)查找"红黑树x"中键值为key的节点
+     * (非递归实现)查找"红黑树x"中键值为value的节点
      */
-    private RBTNode<T> iterativeSearch(RBTNode<T> x, T key) {
+    private RBTNode<T> iterativeSearch(RBTNode<T> x, T value) {
         while (x != null) {
-            int cmp = key.compareTo(x.key);
+            int cmp = value.compareTo(x.value);
             if (cmp < 0)
                 x = x.left;
             else if (cmp > 0)
@@ -135,8 +133,8 @@ public class RedBlackTree<T extends Comparable<T>> {
         return x;
     }
 
-    public RBTNode<T> iterativeSearch(T key) {
-        return iterativeSearch(root, key);
+    public RBTNode<T> iterativeSearch(T value) {
+        return iterativeSearch(root, value);
     }
 
     /*
@@ -154,7 +152,7 @@ public class RedBlackTree<T extends Comparable<T>> {
     public T minimum() {
         RBTNode<T> p = minimum(root);
         if (p != null)
-            return p.key;
+            return p.value;
 
         return null;
     }
@@ -174,7 +172,7 @@ public class RedBlackTree<T extends Comparable<T>> {
     public T maximum() {
         RBTNode<T> p = maximum(root);
         if (p != null)
-            return p.key;
+            return p.value;
 
         return null;
     }
@@ -302,15 +300,10 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     /*
-     * 红黑树插入修正函数
-     *
-     * 在向红黑树中插入节点之后(失去平衡)，再调用该函数；
-     * 目的是将它重新塑造成一颗红黑树。
-     *
-     * 参数说明：
-     *     node 插入的结点        // 对应《算法导论》中的z
+     * 红黑树插入重新平衡
+     * 若向红黑树中插入节点之后破坏了红黑树的约束，则通过对几种特定情况的判断进行再平衡操作
      */
-    private void insertFixUp(RBTNode<T> node) {
+    private void rebalance(RBTNode<T> node) {
         RBTNode<T> parent, gParent;
 
         // 若“父节点存在，并且父节点的颜色是红色”
@@ -319,17 +312,17 @@ public class RedBlackTree<T extends Comparable<T>> {
 
             //若“父节点”是“祖父节点的左孩子”
             if (parent == gParent.left) {
-                // Case 1条件：叔叔节点是红色
+                // 情况1：叔叔节点是红色
                 RBTNode<T> uncle = gParent.right;
                 if ((uncle != null) && isRed(uncle)) {
-                    setBlack(uncle);
-                    setBlack(parent);
-                    setRed(gParent);
+                    reverseColor(uncle);
+                    reverseColor(parent);
+                    reverseColor(gParent);
                     node = gParent;
                     continue;
                 }
 
-                // Case 2条件：叔叔是黑色，且当前节点是右孩子
+                // 情况2：叔叔是黑色，且当前节点是右孩子，则把它左旋转化为情况3的场景
                 if (parent.right == node) {
                     RBTNode<T> tmp;
                     leftRotate(parent);
@@ -338,22 +331,22 @@ public class RedBlackTree<T extends Comparable<T>> {
                     node = tmp;
                 }
 
-                // Case 3条件：叔叔是黑色，且当前节点是左孩子。
-                setBlack(parent);
-                setRed(gParent);
+                // 情况3：叔叔是黑色，且当前节点是左孩子。
+                reverseColor(parent);
+                reverseColor(gParent);
                 rightRotate(gParent);
             } else {    //若“父节点”是“祖父节点的右孩子”
-                // Case 1条件：叔叔节点是红色
+                // 情况1：叔叔节点是红色
                 RBTNode<T> uncle = gParent.left;
                 if ((uncle != null) && isRed(uncle)) {
-                    setBlack(uncle);
-                    setBlack(parent);
-                    setRed(gParent);
+                    reverseColor(uncle);
+                    reverseColor(parent);
+                    reverseColor(gParent);
                     node = gParent;
                     continue;
                 }
 
-                // Case 2条件：叔叔是黑色，且当前节点是左孩子
+                // 情况2：叔叔是黑色，且当前节点是左孩子，则把它左旋转化为情况3的场景
                 if (parent.left == node) {
                     RBTNode<T> tmp;
                     rightRotate(parent);
@@ -362,15 +355,25 @@ public class RedBlackTree<T extends Comparable<T>> {
                     node = tmp;
                 }
 
-                // Case 3条件：叔叔是黑色，且当前节点是右孩子。
-                setBlack(parent);
-                setRed(gParent);
+                // 情况3：叔叔是黑色，且当前节点是右孩子。
+                reverseColor(parent);
+                reverseColor(gParent);
                 leftRotate(gParent);
             }
         }
 
-        // 将根节点设为黑色
-        setBlack(this.root);
+        // 若当前节点父节点不存在则此节点必为根节点，且为红色，则置为黑
+        if(parent == null && !node.color)
+            reverseColor(node);
+    }
+
+
+    /*
+     * 新建结点(其值为value)，默认颜色为红，并将其插入到红黑树中
+     */
+    public void insert(T value) {
+        RBTNode<T> node = new RBTNode<T>(value, false, null, null, null);
+        insert(node);
     }
 
     /*
@@ -381,10 +384,10 @@ public class RedBlackTree<T extends Comparable<T>> {
         RBTNode<T> y = null;
         RBTNode<T> x = this.root;
 
-        // 1. 将红黑树当作一颗二叉查找树，将节点添加到二叉查找树中。
+        // 将节点添加到叶子节点上。
         while (x != null) {
             y = x;
-            cmp = node.key.compareTo(x.key);
+            cmp = node.value.compareTo(x.value);
             if (cmp < 0)
                 x = x.left;
             else
@@ -393,7 +396,7 @@ public class RedBlackTree<T extends Comparable<T>> {
 
         node.parent = y;
         if (y != null) {
-            cmp = node.key.compareTo(y.key);
+            cmp = node.value.compareTo(y.value);
             if (cmp < 0)
                 y.left = node;
             else
@@ -402,28 +405,92 @@ public class RedBlackTree<T extends Comparable<T>> {
             this.root = node;
         }
 
-        // 2. 设置节点的颜色为红色
-        node.color = false;
-
-        // 3. 将它重新修正为一颗二叉查找树
-        insertFixUp(node);
+        // 检查是否破坏红黑树的五个特性，并进行平衡操作
+        rebalance(node);
     }
 
+
     /*
-     * 新建结点(key)，并将其插入到红黑树中
+     * 删除结点
      */
-    public void insert(T key) {
-        RBTNode<T> node = new RBTNode<T>(key, true, null, null, null);
-        insert(node);
+    public boolean remove(T value) {
+        RBTNode<T> node;
+        if ((node = search(root, value)) != null) { //找到键值对应的节点
+            remove(node);
+            return true;
+        }else {
+            return false;  //表示没有找到该值对应的节点
+        }
     }
 
     /*
-     * 红黑树删除修正函数
+     * 删除结点(node)
+     */
+    private void remove(RBTNode<T> node) {
+        RBTNode<T> child, parent;
+        boolean color;
+        //情况1： 被删除节点的"左右孩子都不为空"的情况。
+        if ((node.left != null) && (node.right != null)) {
+            // 被删节点的后继节点。(称为"取代节点")
+            // 用它来取代"被删节点"的位置
+            RBTNode<T> replace =  node.right;
+            while (replace.left != null) {   //这里我找的是比node大的数中最小的那个
+                replace = replace.left;
+            }
+            if(!replace.color){ //取代节点为红色，直接覆盖被取代节点值即可
+                node.value = replace.value;
+                replace.parent.left = null;  //删除取代节点
+            }else{  //取代节点为黑色
+                node.value = replace.value;
+                replace = replace.parent;
+                replace.left = null;  //删除取代节点
+                replace.right.color = false; //取代节点的兄弟节点置为红色
+                rebalance(replace.right);    //从取代节点的兄弟节点开始重新平衡
+            }
+        }else if (node.left != null) { //情况2：左子节点不为空，右子节点为空,此节点必为黑色
+            node.value = node.left.value; //左子节点直接覆盖被当前节点值即可
+            if(node.left.color){  //左子节点为黑色,需要考虑重新平衡
+                node.color = false;
+                node.left = null;  //删除左子节点
+            }else {
+                node.left = null;  //删除左子节点
+            }
+        } else if(node.right !=null){ //情况3：右子节点不为空，左子节点为空,此节点必为黑色
+            node.value = node.right.value; //右子节点直接覆盖被当前节点值即可
+            if(node.right.color){  //右子节点为黑色,需要考虑重新平衡
+                node.color = false;
+                node.right = null;  //删除右子节点
+            }else {
+                node.right = null;  //删除右子节点
+            }
+        }else{  //情况4：左右子节点都为空
+            if(node.parent == null){ //根节点情况
+                root = null;
+            }else if(!node.color){ //节点为红色情况，删除不会破坏平衡
+                if(node.parent.left == node){ //不是父节点左子节点必为右子节点
+                    node.parent.left = null;
+                }else{
+                    node.parent.right = null;
+                }
+            }else{  //节点为黑色情况
+                node.color = false;  //置为红色
+                rebalance(node);     //重新平衡,转化为上面的为红色的情况
+                if(node.parent.left == node){ //不是父节点左子节点必为右子节点
+                    node.parent.left = null;
+                }else{
+                    node.parent.right = null;
+                }
+            }
+        }
+    }
+
+    /*
+     * 红黑树删除重新平衡
      *
      * 在从红黑树中删除插入节点之后(红黑树失去平衡)，再调用该函数；
      * 目的是将它重新塑造成一颗红黑树。
      */
-    private void removeFixUp(RBTNode<T> node, RBTNode<T> parent) {
+    private void removeRebalance(RBTNode<T> node, RBTNode<T> parent) {
         RBTNode<T> other;
 
         while ((node == null || isBlack(node)) && (node != this.root)) {
@@ -431,31 +498,31 @@ public class RedBlackTree<T extends Comparable<T>> {
                 other = parent.right;
                 if (isRed(other)) {
                     // Case 1: x的兄弟w是红色的
-                    setBlack(other);
-                    setRed(parent);
+                    reverseColor(other);
+                    reverseColor(parent);
                     leftRotate(parent);
                     other = parent.right;
                 }
 
                 if ((other.left == null || isBlack(other.left)) &&
                         (other.right == null || isBlack(other.right))) {
-                    // Case 2: x的兄弟w是黑色，且w的俩个孩子也都是黑色的
-                    setRed(other);
+                    // Case 2: x的兄弟是黑色，且x的兄弟的俩个孩子也都是黑色的
+                    reverseColor(other);
                     node = parent;
                     parent = parentOf(node);
                 } else {
 
                     if (other.right == null || isBlack(other.right)) {
                         // Case 3: x的兄弟w是黑色的，并且w的左孩子是红色，右孩子为黑色。
-                        setBlack(other.left);
-                        setRed(other);
+                        reverseColor(other.left);
+                        reverseColor(other);
                         rightRotate(other);
                         other = parent.right;
                     }
                     // Case 4: x的兄弟w是黑色的；并且w的右孩子是红色的，左孩子任意颜色。
                     setColor(other, colorOf(parent));
-                    setBlack(parent);
-                    setBlack(other.right);
+                    reverseColor(parent);
+                    reverseColor(other.right);
                     leftRotate(parent);
                     node = this.root;
                     break;
@@ -465,8 +532,8 @@ public class RedBlackTree<T extends Comparable<T>> {
                 other = parent.left;
                 if (isRed(other)) {
                     // Case 1: x的兄弟w是红色的
-                    setBlack(other);
-                    setRed(parent);
+                    reverseColor(other);
+                    reverseColor(parent);
                     rightRotate(parent);
                     other = parent.left;
                 }
@@ -474,23 +541,23 @@ public class RedBlackTree<T extends Comparable<T>> {
                 if ((other.left == null || isBlack(other.left)) &&
                         (other.right == null || isBlack(other.right))) {
                     // Case 2: x的兄弟w是黑色，且w的俩个孩子也都是黑色的
-                    setRed(other);
+                    reverseColor(other);
                     node = parent;
                     parent = parentOf(node);
                 } else {
 
                     if (other.left == null || isBlack(other.left)) {
                         // Case 3: x的兄弟w是黑色的，并且w的左孩子是红色，右孩子为黑色。
-                        setBlack(other.right);
-                        setRed(other);
+                        reverseColor(other.right);
+                        reverseColor(other);
                         leftRotate(other);
                         other = parent.left;
                     }
 
                     // Case 4: x的兄弟w是黑色的；并且w的右孩子是红色的，左孩子任意颜色。
                     setColor(other, colorOf(parent));
-                    setBlack(parent);
-                    setBlack(other.left);
+                    reverseColor(parent);
+                    reverseColor(other.left);
                     rightRotate(parent);
                     node = this.root;
                     break;
@@ -499,174 +566,63 @@ public class RedBlackTree<T extends Comparable<T>> {
         }
 
         if (node != null)
-            setBlack(node);
-    }
-
-    /*
-     * 删除结点(node)，并返回被删除的结点
-     */
-    private void remove(RBTNode<T> node) {
-        RBTNode<T> child, parent;
-        boolean color;
-
-        // 被删除节点的"左右孩子都不为空"的情况。
-        if ((node.left != null) && (node.right != null)) {
-            // 被删节点的后继节点。(称为"取代节点")
-            // 用它来取代"被删节点"的位置，然后再将"被删节点"去掉。
-            RBTNode<T> replace = node;
-
-            // 获取后继节点
-            replace = replace.right;
-            while (replace.left != null)
-                replace = replace.left;
-
-            // "node节点"不是根节点(只有根节点不存在父节点)
-            if (parentOf(node) != null) {
-                if (parentOf(node).left == node)
-                    parentOf(node).left = replace;
-                else
-                    parentOf(node).right = replace;
-            } else {
-                // "node节点"是根节点，更新根节点。
-                this.root = replace;
-            }
-
-            // child是"取代节点"的右孩子，也是需要"调整的节点"。
-            // "取代节点"肯定不存在左孩子！因为它是一个后继节点。
-            child = replace.right;
-            parent = parentOf(replace);
-            // 保存"取代节点"的颜色
-            color = colorOf(replace);
-
-            // "被删除节点"是"它的后继节点的父节点"
-            if (parent == node) {
-                parent = replace;
-            } else {
-                // child不为空
-                if (child != null)
-                    setParent(child, parent);
-                parent.left = child;
-
-                replace.right = node.right;
-                setParent(node.right, replace);
-            }
-
-            replace.parent = node.parent;
-            replace.color = node.color;
-            replace.left = node.left;
-            node.left.parent = replace;
-
-            if (color == true)
-                removeFixUp(child, parent);
-
-            node = null;
-            return;
-        }
-
-        if (node.left != null) {
-            child = node.left;
-        } else {
-            child = node.right;
-        }
-
-        parent = node.parent;
-        // 保存"取代节点"的颜色
-        color = node.color;
-
-        if (child != null)
-            child.parent = parent;
-
-        // "node节点"不是根节点
-        if (parent != null) {
-            if (parent.left == node)
-                parent.left = child;
-            else
-                parent.right = child;
-        } else {
-            this.root = child;
-        }
-
-        if (color == true)
-            removeFixUp(child, parent);
-        node = null;
-    }
-
-    /*
-     * 删除结点(z)，并返回被删除的结点
-     */
-    public void remove(T key) {
-        RBTNode<T> node;
-
-        if ((node = search(root, key)) != null)
-            remove(node);
+            reverseColor(node);
     }
 
     /*
      * 销毁红黑树
      */
-    private void destroy(RBTNode<T> tree) {
-        if (tree == null)
-            return;
-
-        if (tree.left != null)
-            destroy(tree.left);
-        if (tree.right != null)
-            destroy(tree.right);
-
-        tree = null;
-    }
-
     public void clear() {
-        destroy(root);
         root = null;
     }
+
 
     /*
      * 打印"红黑树"
      *
-     * key        -- 节点的键值
+     * value        -- 节点的键值
      * direction  --  0，表示该节点是根节点;
      *               -1，表示该节点是它的父结点的左孩子;
      *                1，表示该节点是它的父结点的右孩子。
      */
-    private void print(RBTNode<T> tree, T key, int direction) {
+    private void print(RBTNode<T> tree, T value, int direction) {
 
         if (tree != null) {
             if (direction == 0)    // tree是根节点
-                System.out.printf("%2d(B) is root\n", tree.key);
+                System.out.printf("%2d(Black) is root\n", tree.value);
             else                // tree是分支节点
-                System.out.printf("%2d(%s) is %2d's %6s child\n", tree.key, isRed(tree) ? "Red" : "Black", key, direction == 1 ? "right" : "left");
-            print(tree.left, tree.key, -1);
-            print(tree.right, tree.key, 1);
+                System.out.printf("%2d(%s) is %2d's %6s child\n", tree.value, isRed(tree) ? "Red" : "Black", value, direction == 1 ? "right" : "left");
+            print(tree.left, tree.value, -1);
+            print(tree.right, tree.value, 1);
         }
     }
 
     public void print() {
         if (root != null)
-            print(root, root.key, 0);
+            print(root, root.value, 0);
     }
 
     public class RBTNode<T extends Comparable<T>> {
         boolean color;        // 颜色,false为红色，true为黑色；默认为false
-        T key;                // 键值
+        T value;              // 键值
         RBTNode<T> left;      // 左子结点
         RBTNode<T> right;     // 右子结点
         RBTNode<T> parent;    // 父结点
 
-        public RBTNode(T key, boolean color, RBTNode<T> parent, RBTNode<T> left, RBTNode<T> right) {
-            this.key = key;
+        public RBTNode(T value, boolean color, RBTNode<T> parent, RBTNode<T> left, RBTNode<T> right) {
+            this.value = value;
             this.color = color;
             this.parent = parent;
             this.left = left;
             this.right = right;
         }
 
-        public T getKey() {
-            return key;
+        public T getValue() {
+            return value;
         }
 
         public String toString() {
-            return key + "(" + (this.color ? "Black" : "Red") + ")";
+            return value + "(" + (this.color ? "Black" : "Red") + ")";
         }
     }
 }
