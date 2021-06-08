@@ -4,18 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.aliencat</groupId>
-    <artifactId>communication</artifactId>
-    <packaging>pom</packaging>
+    <groupId>com.aliencat.communication</groupId>
+    <artifactId>client</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>server</module>
-        <module>client</module>
-    </modules>
 
-    <name>communication</name>
+    <name>client</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
+
+    <parent>
+        <groupId>com.aliencat</groupId>
+        <artifactId>communication</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,15 +31,13 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.0.32.Final</version>
-        </dependency>
     </dependencies>
 
     <build>
+        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+            <plugins>
 
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
