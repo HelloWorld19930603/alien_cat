@@ -1,6 +1,9 @@
 package com.aliencat.javabase.api.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -39,11 +42,13 @@ class Info implements inter{
         System.out.println(desc);
     }
 
-    @Override
+
     @Deprecated
     @SuppressWarnings({"deprecated","unused"})
     @MyAnnotation
     public void run() {
 
     }
+
+
 }
