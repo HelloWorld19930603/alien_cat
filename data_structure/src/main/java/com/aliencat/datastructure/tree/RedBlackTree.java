@@ -115,7 +115,9 @@ public class RedBlackTree<T extends Comparable<T>> {
             return x;
     }
 
-
+    public RBTNode<T> iterativeSearch(T value) {
+        return iterativeSearch(root, value);
+    }
     /*
      * (非递归实现)查找"红黑树x"中键值为value的节点
      */
@@ -133,9 +135,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         return x;
     }
 
-    public RBTNode<T> iterativeSearch(T value) {
-        return iterativeSearch(root, value);
-    }
+
 
     /*
      * 查找最小结点：返回tree为根结点的红黑树的最小结点。
@@ -427,8 +427,7 @@ public class RedBlackTree<T extends Comparable<T>> {
      * 删除结点(node)
      */
     private void remove(RBTNode<T> node) {
-        RBTNode<T> child, parent;
-        boolean color;
+        RBTNode<T>  parent;
         //情况1： 被删除节点的"左右孩子都不为空"的情况。
         if ((node.left != null) && (node.right != null)) {
             // 被删节点的后继节点。(称为"取代节点")
@@ -442,27 +441,16 @@ public class RedBlackTree<T extends Comparable<T>> {
                 replace.parent.left = null;  //删除取代节点
             }else{  //取代节点为黑色
                 node.value = replace.value;
-                replace = replace.parent;
-                replace.left = null;  //删除取代节点
-                replace.right.color = false; //取代节点的兄弟节点置为红色
-                rebalance(replace.right);    //从取代节点的兄弟节点开始重新平衡
+                parent = replace.parent;
+                parent.left = null;  //删除取代节点
+                removeRebalance(parent);    //从取代节点的父节点开始重新平衡，其实是转换成了情况4的处理逻辑
             }
-        }else if (node.left != null) { //情况2：左子节点不为空，右子节点为空,此节点必为黑色
+        }else if (node.left != null) { //情况2：左子节点不为空，右子节点为空,此节点必为黑色，子节点必为红
             node.value = node.left.value; //左子节点直接覆盖被当前节点值即可
-            if(node.left.color){  //左子节点为黑色,需要考虑重新平衡
-                node.color = false;
-                node.left = null;  //删除左子节点
-            }else {
-                node.left = null;  //删除左子节点
-            }
-        } else if(node.right !=null){ //情况3：右子节点不为空，左子节点为空,此节点必为黑色
+            node.left = null;  //删除左子节点
+        } else if(node.right !=null){ //情况3：右子节点不为空，左子节点为空,此节点必为黑色，子节点必为红
             node.value = node.right.value; //右子节点直接覆盖被当前节点值即可
-            if(node.right.color){  //右子节点为黑色,需要考虑重新平衡
-                node.color = false;
-                node.right = null;  //删除右子节点
-            }else {
-                node.right = null;  //删除右子节点
-            }
+            node.right = null;  //删除右子节点
         }else{  //情况4：左右子节点都为空
             if(node.parent == null){ //根节点情况
                 root = null;
@@ -473,100 +461,87 @@ public class RedBlackTree<T extends Comparable<T>> {
                     node.parent.right = null;
                 }
             }else{  //节点为黑色情况
-                node.color = false;  //置为红色
-                rebalance(node);     //重新平衡,转化为上面的为红色的情况
-                if(node.parent.left == node){ //不是父节点左子节点必为右子节点
-                    node.parent.left = null;
+                parent = node.parent;
+                removeRebalance(parent);
+                if(parent.left == node){
+                    parent.left = null;
                 }else{
-                    node.parent.right = null;
+                    parent.right = null;
                 }
             }
         }
     }
 
     /*
-     * 红黑树删除重新平衡
-     *
-     * 在从红黑树中删除插入节点之后(红黑树失去平衡)，再调用该函数；
+     * 在从红黑树中删除黑色的非空叶子节点之后(红黑树失去平衡)，调用该方法；
      * 目的是将它重新塑造成一颗红黑树。
      */
-    private void removeRebalance(RBTNode<T> node, RBTNode<T> parent) {
-        RBTNode<T> other;
-
-        while ((node == null || isBlack(node)) && (node != this.root)) {
-            if (parent.left == node) {
-                other = parent.right;
-                if (isRed(other)) {
-                    // Case 1: x的兄弟w是红色的
-                    reverseColor(other);
-                    reverseColor(parent);
-                    leftRotate(parent);
-                    other = parent.right;
-                }
-
-                if ((other.left == null || isBlack(other.left)) &&
-                        (other.right == null || isBlack(other.right))) {
-                    // Case 2: x的兄弟是黑色，且x的兄弟的俩个孩子也都是黑色的
-                    reverseColor(other);
-                    node = parent;
-                    parent = parentOf(node);
-                } else {
-
-                    if (other.right == null || isBlack(other.right)) {
-                        // Case 3: x的兄弟w是黑色的，并且w的左孩子是红色，右孩子为黑色。
-                        reverseColor(other.left);
-                        reverseColor(other);
-                        rightRotate(other);
-                        other = parent.right;
-                    }
-                    // Case 4: x的兄弟w是黑色的；并且w的右孩子是红色的，左孩子任意颜色。
-                    setColor(other, colorOf(parent));
-                    reverseColor(parent);
-                    reverseColor(other.right);
-                    leftRotate(parent);
-                    node = this.root;
+    private void removeRebalance(RBTNode<T> node) {
+        RBTNode<T> brother;
+        RBTNode<T> parent;
+        while (node != this.root) {
+            parent = node.parent;
+            if(parent.left == node){
+                brother = parent.right;
+                if(!brother.color){ //兄弟为红色，则侄子必全为黑
+                    parent.left = null;
+                    reverseColor(brother); //变为黑色
+                    leftRotate(parent);    //旋转parent使之平衡
                     break;
-                }
-            } else {
-
-                other = parent.left;
-                if (isRed(other)) {
-                    // Case 1: x的兄弟w是红色的
-                    reverseColor(other);
-                    reverseColor(parent);
-                    rightRotate(parent);
-                    other = parent.left;
-                }
-
-                if ((other.left == null || isBlack(other.left)) &&
-                        (other.right == null || isBlack(other.right))) {
-                    // Case 2: x的兄弟w是黑色，且w的俩个孩子也都是黑色的
-                    reverseColor(other);
-                    node = parent;
-                    parent = parentOf(node);
-                } else {
-
-                    if (other.left == null || isBlack(other.left)) {
-                        // Case 3: x的兄弟w是黑色的，并且w的左孩子是红色，右孩子为黑色。
-                        reverseColor(other.right);
-                        reverseColor(other);
-                        leftRotate(other);
-                        other = parent.left;
+                }else{   //兄弟为黑色，则侄子要么为空，要么为红
+                    if(brother.right != null){
+                        reverseColor(brother.right); //右侄子变为黑色
+                        leftRotate(parent);
+                        if(!parent.color){  //父节点为红
+                            reverseColor(parent);
+                            reverseColor(brother);
+                        }
+                        break;
+                    }else if(brother.left != null){
+                        reverseColor(brother.left);
+                        rightRotate(brother);
+                        leftRotate(parent);
+                        if(!parent.color){  //父节点为红
+                            reverseColor(parent);
+                            reverseColor(brother);
+                        }
+                    }else{
+                        reverseColor(parent.right);
+                        node = parent;
                     }
-
-                    // Case 4: x的兄弟w是黑色的；并且w的右孩子是红色的，左孩子任意颜色。
-                    setColor(other, colorOf(parent));
-                    reverseColor(parent);
-                    reverseColor(other.left);
-                    rightRotate(parent);
-                    node = this.root;
-                    break;
                 }
+            }else{
+                brother = parent.left;
+                if(!brother.color){ //兄弟为红色，则侄子必全为黑
+                    parent.right = null;
+                    reverseColor(brother); //变为黑色
+                    leftRotate(parent);    //旋转parent使之平衡
+                    break;
+                }else{   //兄弟为黑色，则侄子要么为空，要么为红
+                    if(brother.left != null){
+                        reverseColor(brother.left); //右侄子变为黑色
+                        leftRotate(parent);
+                        if(!parent.color){  //父节点为红
+                            reverseColor(parent);
+                            reverseColor(brother);
+                        }
+                        break;
+                    }else if(brother.right != null){
+                        reverseColor(brother.right);
+                        rightRotate(brother);
+                        leftRotate(parent);
+                        if(!parent.color){  //父节点为红
+                            reverseColor(parent);
+                            reverseColor(brother);
+                        }
+                    }else{
+                        reverseColor(parent.left);
+                        node = parent;
+                    }
+                }
+
             }
         }
-
-        if (node != null)
-            reverseColor(node);
     }
 
     /*
