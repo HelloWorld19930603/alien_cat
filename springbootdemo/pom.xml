@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>untitled</module>
+        <module>MyStarter</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -13,7 +13,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.aliencat.springboot</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>springbootdemo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>springbootdemo</name>
     <description>Demo project for Spring Boot</description>
@@ -40,6 +40,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aliencat.springboot.starter</groupId>
+            <artifactId>mystarter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
