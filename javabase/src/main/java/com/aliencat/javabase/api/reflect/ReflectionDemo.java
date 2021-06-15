@@ -1,7 +1,8 @@
 package com.aliencat.javabase.api.reflect;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /*Class:代表一个字节码文件的对象，每当有类被加载进内存，JVM就会在堆上给
  *        该类创建一个代表该类的对象。每个类的Class对象是的。
@@ -46,34 +47,34 @@ public class ReflectionDemo {
         Object obj = clazz2.newInstance();
         //获得该类的构造器---公开的，getDeclaredConstructors()--可以获得私有的
         Constructor[] con = clazz2.getDeclaredConstructors();
-        for(Constructor cc:con){
+        for (Constructor cc : con) {
             System.out.print(cc + " ");
         }
 
         //获得类的方法
         Method[] mm = clazz2.getDeclaredMethods();
-        for(Method mmm:mm){
+        for (Method mmm : mm) {
             System.out.print(mmm + " ");
         }
 
         System.out.println();
         //获取特定的方法
-        Method m = clazz2.getMethod("walk",null);
+        Method m = clazz2.getMethod("walk", null);
         System.out.println(m.toString());
 
         Field[] f = clazz2.getDeclaredFields();
-        for(Field ff:f){
-            System.out.print(ff+ " ");
+        for (Field ff : f) {
+            System.out.print(ff + " ");
         }
 
         //调用指定的方法---先获取，在调用;注意私有方法先设置访问权限
         Method m1 = clazz2.getMethod("walk", null);
         System.out.println("hahahhha");
-        m1.invoke(obj,null);
+        m1.invoke(obj, null);
 
         //调用指定的构造方法创建类实例；先获取在调用
-        Constructor cc = clazz2.getConstructor(int.class,String.class);
-        Object o1 = cc.newInstance(12,"lisi");
+        Constructor cc = clazz2.getConstructor(int.class, String.class);
+        Object o1 = cc.newInstance(12, "lisi");
 
         //获取和修改对象的属性值
         Field ffs = clazz2.getDeclaredField("age");
@@ -88,8 +89,10 @@ public class ReflectionDemo {
 
 class MyObject {
     private int age;
-    public String name = "pink";
-    public MyObject() {}
+    public String name = "zhangsan";
+
+    public MyObject() {
+    }
 
 
     public MyObject(int age) {
@@ -102,11 +105,11 @@ class MyObject {
         System.out.println("hello ");
     }
 
-    public void walk(){
+    public void walk() {
         System.out.println("--->walk--->");
     }
 
-    public void talk(int i){
+    public void talk(int i) {
         System.out.println(i + "----------" + age);
     }
 }
