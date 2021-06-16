@@ -3,7 +3,7 @@ package com.aliencat.leetcode;
 import java.util.Arrays;
 
 //面试题 17.08. 马戏团人塔
-public class Solution {
+public class BestSeqAtIndex {
 
     /**
      * 有个马戏团正在设计叠罗汉的表演节目，一个人要站在另一人的肩膀上。出于实际和美观的考虑，
@@ -41,6 +41,6 @@ public class Solution {
     public static void main(String[] args) {
         int[] height = {2868,5485,1356,1306,6017,8941,7535,4941,6331,6181};
         int[] weight = {5042,3995,7985,1651,5991,7036,9391,428,7561,8594};
-        System.out.println(new Solution().bestSeqAtIndex(height, weight));
+        System.out.println(new BestSeqAtIndex().bestSeqAtIndex(height, weight));
     }
 }
