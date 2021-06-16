@@ -5,12 +5,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Screenshot extends JFrame {
+
+/**
+ * 截图应用入口
+ */
+public class ScreenshotMain extends JFrame {
     JMenuBar menuBar;//初始化菜单栏
     JMenu menu;
     JMenuItem item1, item2, item3, item4;
 
-    public Screenshot() {
+    public ScreenshotMain() {
 
         Container con = getContentPane();
         menuBar = new JMenuBar();
@@ -31,21 +35,21 @@ public class Screenshot extends JFrame {
         add(button);
         setVisible(true);
         setResizable(false);
-        button.addActionListener(new ActionListener() {//按钮事件，采取匿名内部类方法，调用ScreenFrame()操作
+        button.addActionListener(new ActionListener() {//按钮事件，采取匿名内部类方法，调用ScreenCaptureTool()操作
             public void actionPerformed(ActionEvent e) {
                 //repaint(1000, 300, 400, 300, 400) ;
                 setVisible(false);
                 // try{
                 //Thread.sleep(100);
                 // }catch(Exception ee){}
-                new ScreenFrame();
+                new ScreenCaptureTool();
             }
         });
 
         item1.addActionListener(new ActionListener() {//第一个菜单选项截图的事件监听
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);//隐藏主界面
-                new ScreenFrame();
+                new ScreenCaptureTool();
             }
         });
         item2.addActionListener(new ActionListener() { //第二个菜单选项查看图片的事件监听
@@ -71,7 +75,7 @@ public class Screenshot extends JFrame {
     }
 
     public static void main(String[] args) {//程序运行入口
-        new Screenshot();
+        new ScreenshotMain();
         //System.exit(0);
     }
 }

@@ -7,6 +7,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+/**
+ * 截图工具类
+ */
 public class ScreenFrame extends JFrame implements java.awt.event.MouseListener { //实现MouseListener接口
 
     //截图的图片保存的目录

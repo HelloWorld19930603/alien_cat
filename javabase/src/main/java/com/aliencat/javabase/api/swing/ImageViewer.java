@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+/**
+ * 图片查看窗口
+ */
 public class ImageViewer {
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
