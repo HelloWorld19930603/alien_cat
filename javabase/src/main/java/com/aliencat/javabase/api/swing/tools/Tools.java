@@ -11,11 +11,19 @@ import java.util.Date;
 public class Tools {
 
     //获取的屏幕 宽度（screenWidth） 和 高度（screenHeight）
-    public static final int SCREEN_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-    public static final int SCREEN_HEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+    public static final int SCREEN_WIDTH;
+    public static final int SCREEN_HEIGHT;
 
     //系统剪切板
-    public static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    public static Clipboard clipboard;
+
+    static {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = toolkit.getScreenSize();
+        SCREEN_WIDTH = (int) screenSize.getWidth();
+        SCREEN_HEIGHT = (int) screenSize.getHeight();
+        clipboard = toolkit.getSystemClipboard();
+    }
 
     /**
      * 获取当前时间
