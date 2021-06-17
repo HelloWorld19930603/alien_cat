@@ -6,7 +6,7 @@ package com.aliencat.leetcode;
  * 游戏以谁手中的石子最多来决出胜负。石子的总数是奇数，所以没有平局。
  * 亚历克斯和李轮流进行，亚历克斯先开始。 每回合，玩家从行的开始或结束处取走整堆石头。 这种情况一直持续到没有更多的石子堆为止，此时手中石子最多的玩家获胜。
  * 假设亚历克斯和李都发挥出最佳水平，当亚历克斯赢得比赛时返回 true ，当李赢得比赛时返回 false 。
- *
+ * <p>
  * 示例：
  * 输入：[5,3,4,5]
  * 输出：true
@@ -16,7 +16,7 @@ package com.aliencat.leetcode;
  * 如果李拿走前 3 颗，那么剩下的是 [4,5]，亚历克斯拿走后 5 颗赢得 10 分。
  * 如果李拿走后 5 颗，那么剩下的是 [3,4]，亚历克斯拿走后 4 颗赢得 9 分。
  * 这表明，取前 5 颗石子对亚历克斯来说是一个胜利的举动，所以我们返回 true 。
- *
+ * <p>
  * 提示：
  * 2 <= piles.length <= 500
  * piles.length 是偶数。
@@ -34,21 +34,19 @@ public class StoneGame {
         //        [0 3 1 4]
         //        [0 0 4 1]
         //        [0 0 0 5]
-        int n=piles.length;
-        int [][]dps=new int[n][n];
+        int n = piles.length;
+        int[][] dps = new int[n][n];
         //dps[i][i]存储当前i的石子数
-        for(int i=0;i<n;i++)
-            dps[i][i]=piles[i];
-        //d=1,其实代表，先算两个子的时候
-        for(int d=1;d<n;d++)
-        {
+        for (int i = 0; i < n; i++)
+            dps[i][i] = piles[i];
+        //i=1,代表先算两个子的时候
+        for (int i = 1; i < n; i++) {
             //有多少组要比较
-            for(int j=0;j<n-d;j++)
-            {
-                //比较j到d+j
-                dps[j][d+j]=Math.max(piles[j]-dps[j+1][d+j],piles[d+j]-dps[j][d+j-1]);
+            for (int j = 0; j < i; j++) {
+                //比较j到最大能获取的分数
+                dps[j][i + j] = Math.max(piles[j] - dps[j + 1][j], piles[i] - dps[j][j - 1]);
             }
         }
-        return dps[0][n-1]>0;
+        return dps[0][n - 1] > 0;
     }
 }
