@@ -65,6 +65,5 @@ public class MaxEnvelopes {
         });*/
 
         System.out.println(new MaxEnvelopes().maxEnvelopes(envelopes));
-
     }
 }

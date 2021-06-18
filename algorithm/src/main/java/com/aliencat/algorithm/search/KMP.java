@@ -1,4 +1,4 @@
-package com.aliencat.algorithm.string;
+package com.aliencat.algorithm.search;
 
 public class KMP {
 
