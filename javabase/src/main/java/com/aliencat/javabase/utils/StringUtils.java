@@ -544,7 +544,7 @@ public class StringUtils implements Serializable {
         if (ArrayUtil.isEmpty(params) || isBlank(template)) {
             return template.toString();
         }
-        return StrFormatter.format(template.toString(), params);
+        return String.format(template.toString(), params);
     }
 }
 
