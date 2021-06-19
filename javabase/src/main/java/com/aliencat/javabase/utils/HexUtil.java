@@ -1,4 +1,4 @@
-package com.aliencat.javabase.bit;
+package com.aliencat.javabase.utils;
 
 
 /**

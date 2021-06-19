@@ -1,4 +1,4 @@
-package com.aliencat.javabase.api.string;
+package com.aliencat.javabase.utils;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -7,6 +7,8 @@ import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.log4j.spi.Configurator.NULL;
 
 /**
  * 封装常用字符串操作
@@ -534,5 +536,15 @@ public class StringUtils implements Serializable {
     }
 
 
+    public static String format(String template, Object... params) {
+
+        if (null == template) {
+            return NULL;
+        }
+        if (ArrayUtil.isEmpty(params) || isBlank(template)) {
+            return template.toString();
+        }
+        return StrFormatter.format(template.toString(), params);
+    }
 }
 
