@@ -24,7 +24,7 @@ public class MaximumSwap {
         int[] maxIndex = new int[chs.length];
         int max = chs.length - 1;
         //倒过来寻找，当前位置往右，最大的数的下标
-        for(int j = chs.length - 2;j>=0;j--){
+        for(int j = chs.length - 1;j>=0;j--){
             if(chs[j] > chs[max]){
                 max = j;
             }
@@ -32,11 +32,11 @@ public class MaximumSwap {
         }
         //正序遍历，找到第一个不是最大的数，将该位置和右边最大数换位置
         for(int i = 0;i<chs.length;i++){
-            int iValue = chs[i] - '0';
-            int maxValue = chs[maxIndex[i]] - '0';
+            int iValue = chs[i];
+            int maxValue = chs[maxIndex[i]];
             if(maxValue != iValue){
-                chs[i] = (char) (maxValue + '0');
-                chs[maxIndex[i]] = (char) (iValue + '0');
+                chs[i] = (char) maxValue;
+                chs[maxIndex[i]] = (char) iValue;
                 break;
             }
         }
