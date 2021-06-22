@@ -13,7 +13,7 @@ package com.aliencat.leetcode;
  * 输出: 9973
  * 解释: 不需要交换。
  * 注意:
- * 给定数字的范围是 [0, 108]
+ * 给定数字的范围是 [0, 10^8]
  */
 public class MaximumSwap {
 
@@ -24,7 +24,7 @@ public class MaximumSwap {
         int[] maxIndex = new int[chs.length];
         int max = chs.length - 1;
         //倒过来寻找，当前位置往右，最大的数的下标
-        for(int j = chs.length - 1;j>=0;j--){
+        for(int j = chs.length - 2;j>=0;j--){
             if(chs[j] > chs[max]){
                 max = j;
             }
