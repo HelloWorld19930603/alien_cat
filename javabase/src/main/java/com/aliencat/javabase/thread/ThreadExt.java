@@ -1,10 +1,10 @@
-package com.aliencat.javabase.api.thread;
+package com.aliencat.javabase.thread;
 
-public class ThreadExt extends Thread{
+public class ThreadExt extends Thread {
 
     @Override
     public void run() {
-        for(int i = 0;i<10;i++){
+        for (int i = 0; i < 10; i++) {
             System.out.println(Thread.currentThread().getName() + " : " + i);
         }
     }

@@ -1,4 +1,4 @@
-package com.aliencat.javabase.api.thread;
+package com.aliencat.javabase.thread;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;

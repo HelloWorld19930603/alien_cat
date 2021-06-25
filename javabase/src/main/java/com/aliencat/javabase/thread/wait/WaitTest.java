@@ -1,4 +1,4 @@
-package com.aliencat.javabase.api.thread.wait;
+package com.aliencat.javabase.thread.wait;
 
 public class WaitTest {
 

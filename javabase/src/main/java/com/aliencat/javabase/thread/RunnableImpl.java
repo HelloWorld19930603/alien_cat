@@ -1,4 +1,4 @@
-package com.aliencat.javabase.api.thread;
+package com.aliencat.javabase.thread;
 
 //使用实现实现Runnable接口好，原因实现了接口还可以继续继承，继承了类不能再继承。
 public class RunnableImpl implements Runnable{

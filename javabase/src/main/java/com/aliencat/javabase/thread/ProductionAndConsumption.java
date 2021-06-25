@@ -1,4 +1,4 @@
-package com.aliencat.javabase.api.thread;
+package com.aliencat.javabase.thread;
 
 public class ProductionAndConsumption {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package com.aliencat.javabase.api.thread.local;
+package com.aliencat.javabase.thread.local;
 
 public class ThreadLocalDemo {
 
