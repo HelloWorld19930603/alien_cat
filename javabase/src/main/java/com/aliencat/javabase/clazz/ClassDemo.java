@@ -7,12 +7,12 @@ package com.aliencat.javabase.clazz;
  * 4.内部类默认不会被加载
  * <p>
  * 注意：
- * 若是在用成员变量初始化当前class对象，则会报java.lang.StackOverflowError异常。
+ * 若是在用成员变量初始化当前对象，则会报java.lang.StackOverflowError异常。
  */
 public class ClassDemo implements Cloneable {
 
     static int i;
-    private static ClassDemo demo = new ClassDemo();
+    private static ClassDemo staticDemo = new ClassDemo();
     private static Class classDemo = ClassDemo.class;
     //private  Class classDemo = ClassDemo.class;  //此行代码会抛出异常
     private static String staticStr = printStatic(3);
@@ -22,6 +22,7 @@ public class ClassDemo implements Cloneable {
         System.out.println("静态代码块");
     }
 
+    //private ClassDemo demo = new ClassDemo("普通成员变量初始化构造器"); //会报java.lang.StackOverflowError异常。
     private String str = print();
 
     {
@@ -34,6 +35,10 @@ public class ClassDemo implements Cloneable {
         System.out.println("构造器");
     }
 
+    ClassDemo(String s) {
+        i++;
+        System.out.println(s);
+    }
 
     public static void main(String[] args) throws CloneNotSupportedException {
         ClassDemo classDemo = new ClassDemo();
