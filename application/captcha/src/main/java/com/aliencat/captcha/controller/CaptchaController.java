@@ -1,8 +1,8 @@
 package com.aliencat.captcha.controller;
 
+import com.aliencat.captcha.exception.ServiceException;
 import com.aliencat.captcha.model.dto.ImageVerificationDto;
 import com.aliencat.captcha.model.vo.ImageVerificationVo;
-import com.aliencat.captcha.exception.ServiceException;
 import com.aliencat.captcha.service.CaptchaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +28,7 @@ public class CaptchaController {
 
     /**
      * 调用内部freemarker模板
+     *
      * @return 跳转index.ftl
      */
     @RequestMapping("/index")
@@ -37,6 +38,7 @@ public class CaptchaController {
 
     /**
      * 获取验证码
+     *
      * @param imageVerificationDto 验证码参数
      * @return 根据类型参数返回验证码
      */
@@ -55,6 +57,7 @@ public class CaptchaController {
 
     /**
      * 校验验证码
+     *
      * @param x x轴坐标
      * @param y y轴坐标
      * @return 验证结果

@@ -18,7 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -38,6 +41,7 @@ public class ImageVerificationUtil {
 
     /**
      * 获取request对象
+     *
      * @return 返回request对象
      */
     protected static HttpServletRequest getRequest() {
@@ -46,6 +50,7 @@ public class ImageVerificationUtil {
 
     /**
      * 获取response对象
+     *
      * @return 返回response对象
      */
     protected static HttpServletResponse getResponse() {
@@ -54,6 +59,7 @@ public class ImageVerificationUtil {
 
     /**
      * 生成感兴趣区域坐标
+     *
      * @param templateImage 模板图
      * @return 裁剪坐标
      */
@@ -84,12 +90,13 @@ public class ImageVerificationUtil {
 
     /**
      * 根据模板图裁剪图片，生成源图遮罩图和裁剪图
-     * @param originImageFile 源图文件
-     * @param originImageFileType 源图文件扩展名
-     * @param templateImageFile 模板图文件
+     *
+     * @param originImageFile       源图文件
+     * @param originImageFileType   源图文件扩展名
+     * @param templateImageFile     模板图文件
      * @param templateImageFileType 模板图文件扩展名
-     * @param x 感兴趣区域X轴
-     * @param y 感兴趣区域Y轴
+     * @param x                     感兴趣区域X轴
+     * @param y                     感兴趣区域Y轴
      * @return
      * @throws ServiceException
      */
@@ -172,10 +179,11 @@ public class ImageVerificationUtil {
 
     /**
      * 根据模板图生成遮罩图
-     * @param originImage 源图
+     *
+     * @param originImage   源图
      * @param templateImage 模板图
-     * @param x 感兴趣区域X轴
-     * @param y 感兴趣区域Y轴
+     * @param x             感兴趣区域X轴
+     * @param y             感兴趣区域Y轴
      * @return 遮罩图
      * @throws IOException 数据转换异常
      */
@@ -231,9 +239,10 @@ public class ImageVerificationUtil {
 
     /**
      * 根据模板图抠图
+     *
      * @param interestArea  感兴趣区域图
-     * @param templateImage  模板图
-     * @param cutoutImage 裁剪图
+     * @param templateImage 模板图
+     * @param cutoutImage   裁剪图
      * @return 裁剪图
      */
     private static BufferedImage cutoutImageByTemplateImage(BufferedImage interestArea, BufferedImage templateImage, BufferedImage cutoutImage) {
@@ -257,7 +266,8 @@ public class ImageVerificationUtil {
 
     /**
      * 图片生成图像矩阵
-     * @param bufferedImage  图片源
+     *
+     * @param bufferedImage 图片源
      * @return 图片矩阵
      */
     private static int[][] getMatrix(BufferedImage bufferedImage) {
@@ -272,12 +282,13 @@ public class ImageVerificationUtil {
 
     /**
      * 获取感兴趣区域
-     * @param x 感兴趣区域X轴
-     * @param y 感兴趣区域Y轴
+     *
+     * @param x                   感兴趣区域X轴
+     * @param y                   感兴趣区域Y轴
      * @param templateImageWidth  模板图宽度
      * @param templateImageHeight 模板图高度
-     * @param originImage 源图
-     * @param originImageType 源图扩展名
+     * @param originImage         源图
+     * @param originImageType     源图扩展名
      * @return
      * @throws ServiceException
      */
@@ -314,13 +325,14 @@ public class ImageVerificationUtil {
 
     /**
      * 切块图描边
+     *
      * @param imageVerificationVo 图片容器
-     * @param borderImage 描边图
+     * @param borderImage         描边图
      * @param borderImageFileType 描边图类型
      * @return 图片容器
      * @throws ServiceException 图片描边异常
      */
-    public static ImageVerificationVo cutoutImageEdge(ImageVerificationVo imageVerificationVo, BufferedImage borderImage, String borderImageFileType) throws ServiceException{
+    public static ImageVerificationVo cutoutImageEdge(ImageVerificationVo imageVerificationVo, BufferedImage borderImage, String borderImageFileType) throws ServiceException {
 
         ByteArrayInputStream byteArrayInputStream = null;
         ByteArrayOutputStream byteArrayOutputStream = null;
@@ -338,7 +350,7 @@ public class ImageVerificationUtil {
                 for (int j = 0; j < borderImageMatrix[0].length; j++) {
                     int rgb = borderImage.getRGB(i, j);
                     if (rgb < 0) {
-                        cutoutImage.setRGB(i, j , -7237488);
+                        cutoutImage.setRGB(i, j, -7237488);
                     }
                 }
             }

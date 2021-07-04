@@ -12,6 +12,7 @@ public class KaptchaMathTextCreator extends DefaultTextCreator {
 
     /**
      * 获取运算验证码
+     *
      * @return 返回运算验证码
      */
     @Override
@@ -22,17 +23,28 @@ public class KaptchaMathTextCreator extends DefaultTextCreator {
         int operationalRules = random.nextInt(4);
 
         switch (operationalRules) {
-            case 0 : add(x, y); break;
-            case 1 : subtract(x, y); break;
-            case 2 : multiply(x, y); break;
-            case 3 : divide(x, y); break;
-            default : multiply(x, y); break;
+            case 0:
+                add(x, y);
+                break;
+            case 1:
+                subtract(x, y);
+                break;
+            case 2:
+                multiply(x, y);
+                break;
+            case 3:
+                divide(x, y);
+                break;
+            default:
+                multiply(x, y);
+                break;
         }
         return result.toString();
     }
 
     /**
      * 加法运算
+     *
      * @param x 变量x
      * @param y 变量y
      */
@@ -46,6 +58,7 @@ public class KaptchaMathTextCreator extends DefaultTextCreator {
 
     /**
      * 减法运算
+     *
      * @param x 变量x
      * @param y 变量y
      */
@@ -61,6 +74,7 @@ public class KaptchaMathTextCreator extends DefaultTextCreator {
 
     /**
      * 乘法运算
+     *
      * @param x 变量x
      * @param y 变量y
      */
@@ -75,6 +89,7 @@ public class KaptchaMathTextCreator extends DefaultTextCreator {
 
     /**
      * 除法运算
+     *
      * @param x 变量x
      * @param y 变量y
      */
@@ -83,7 +98,7 @@ public class KaptchaMathTextCreator extends DefaultTextCreator {
         int min = Math.min(x, y);
         if (min == 0) {
             multiply(max, min);
-        } else if(max % min == 0) {
+        } else if (max % min == 0) {
             result.append(max);
             result.append(" / ");
             result.append(min);

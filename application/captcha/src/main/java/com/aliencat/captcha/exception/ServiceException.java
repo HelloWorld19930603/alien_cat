@@ -14,6 +14,20 @@ public class ServiceException extends Exception {
      */
     private String msg;
 
+    public ServiceException(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+
+    public ServiceException(ServiceExceptionCode serviceExceptionCode) {
+        this.code = serviceExceptionCode.getCode();
+        this.msg = serviceExceptionCode.getName();
+    }
+
+    public ServiceException(String msg) {
+        this.msg = msg;
+    }
+
     public String getMsg() {
         return msg;
     }
@@ -28,19 +42,5 @@ public class ServiceException extends Exception {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public ServiceException(String code, String msg) {
-        this.code = code;
-        this.msg = msg;
-    }
-
-    public ServiceException(ServiceExceptionCode serviceExceptionCode) {
-        this.code = serviceExceptionCode.getCode();
-        this.msg = serviceExceptionCode.getName();
-    }
-
-    public ServiceException(String msg) {
-        this.msg = msg;
     }
 }
