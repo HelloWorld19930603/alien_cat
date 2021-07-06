@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SSO单点登录</title>
+</head>
+<body>
+<h1>欢迎访问单点登录系统</h1>
+<form action="doLogin" method="post">
+    <input name="username" placeholder="请输入用户名" type="text"/>
+    <input name="password" placeholder="请输入密码" type="password"/>
+    <input name="returnUrl" th:value="${returnUrl}" type="hidden">
+    <input type="submit" value="提交登录"/>
+</form>
+<span style="color:red" th:text="${errmsg}"> </span>
+
+</body>
+</html>
