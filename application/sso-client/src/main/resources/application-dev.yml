@@ -1,0 +1,27 @@
+server:
+  port: 8090
+
+spring:
+  datasource: # 数据源的相关配置
+    url: jdbc:mysql://192.168.124.17:3306/demo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+    password: root_123456
+  redis:
+    # Redis 单机单实例
+    database: 0
+    host: 192.168.124.17
+    port: 6379
+    password: aliencat
+    # Redis 哨兵模式
+    #    database: 1
+    #    password: aliencat
+    #    sentinel:
+    #      master: aliencat-master
+    #      nodes: 192.168.1.191:26379,192.168.1.192:26379,192.168.1.193:26379
+    # Redis 集群模式
+#    password: aliencat
+#    cluster:
+#      nodes: 192.168.1.201:6379,192.168.1.202:6379,192.168.1.203:6379,192.168.1.204:6379,192.168.1.205:6379,192.168.1.206:6379
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -2,7 +2,7 @@ package org.n3r.idworker.strategy;
 
 import org.n3r.idworker.Id;
 import org.n3r.idworker.RandomCodeStrategy;
-import org.n3r.idworker.utils.Utils;
+import org.n3r.idworker.utils.IdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,18 +15,17 @@ import java.util.Queue;
 
 public class DefaultRandomCodeStrategy implements RandomCodeStrategy {
     public static final int MAX_BITS = 1000000;
-
+    static final int CACHE_CODES_NUM = 1000;
     Logger log = LoggerFactory.getLogger(DefaultRandomCodeStrategy.class);
-
-    File idWorkerHome = Utils.createIdWorkerHome();
+    File idWorkerHome = IdUtils.createIdWorkerHome();
     volatile FileLock fileLock;
     BitSet codesFilter;
-
     int prefixIndex = -1;
     File codePrefixIndex;
-
     int minRandomSize = 6;
     int maxRandomSize = 6;
+    SecureRandom secureRandom = new SecureRandom();
+    Queue<Integer> availableCodes = new ArrayDeque<Integer>(CACHE_CODES_NUM);
 
     public DefaultRandomCodeStrategy() {
         destroyFileLockWhenShutdown();
@@ -112,11 +111,6 @@ public class DefaultRandomCodeStrategy implements RandomCodeStrategy {
     public int prefix() {
         return prefixIndex;
     }
-
-    static final int CACHE_CODES_NUM = 1000;
-
-    SecureRandom secureRandom = new SecureRandom();
-    Queue<Integer> availableCodes = new ArrayDeque<Integer>(CACHE_CODES_NUM);
 
     @Override
     public int next() {

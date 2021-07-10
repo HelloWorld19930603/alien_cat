@@ -27,9 +27,6 @@ public class Props {
         return properties;
     }
 
-
-    enum Silent {ON, OFF}
-
     public static InputStream tryResource(String propertiesFileName, String userHomeBasePath, Silent silent) {
         InputStream is = currentDirResource(new File(propertiesFileName));
         if (is != null) return is;
@@ -66,5 +63,7 @@ public class Props {
     public static InputStream classpathResource(String resourceName) {
         return Props.class.getClassLoader().getResourceAsStream(resourceName);
     }
+
+    enum Silent {ON, OFF}
 
 }

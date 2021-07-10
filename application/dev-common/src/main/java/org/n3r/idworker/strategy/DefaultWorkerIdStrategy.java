@@ -2,9 +2,9 @@ package org.n3r.idworker.strategy;
 
 import org.n3r.idworker.WorkerIdStrategy;
 import org.n3r.idworker.utils.HttpReq;
+import org.n3r.idworker.utils.IdUtils;
 import org.n3r.idworker.utils.Ip;
 import org.n3r.idworker.utils.Props;
-import org.n3r.idworker.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,14 +15,12 @@ import java.util.Properties;
 import java.util.Random;
 
 public class DefaultWorkerIdStrategy implements WorkerIdStrategy {
+    public static final WorkerIdStrategy instance = new DefaultWorkerIdStrategy();
     static long workerIdBits = 10L;
     static long maxWorkerId = -1L ^ (-1L << workerIdBits);
     static Random random = new SecureRandom();
-
-    public static final WorkerIdStrategy instance = new DefaultWorkerIdStrategy();
-
     private final Properties props =
-            Props.tryProperties("idworker-client.properties", Utils.DOT_IDWORKERS);
+            Props.tryProperties("idworker-client.properties", IdUtils.DOT_IDWORKERS);
     private final String idWorkerServerUrl =
             props.getProperty("server.address", "http://id.worker.server:18001");
 
@@ -112,7 +110,7 @@ public class DefaultWorkerIdStrategy implements WorkerIdStrategy {
     private long checkAvail(long wid) {
         long availWorkerId = -1L;
         try {
-            File idWorkerHome = Utils.createIdWorkerHome();
+            File idWorkerHome = IdUtils.createIdWorkerHome();
             new File(idWorkerHome, ipudotlock + String.format("%04d", wid)).createNewFile();
             availWorkerId = findAvailWorkerId();
         } catch (IOException e) {
@@ -129,7 +127,7 @@ public class DefaultWorkerIdStrategy implements WorkerIdStrategy {
         if (syncIds == null || syncIds.trim().isEmpty()) return;
 
         String[] syncIdsArr = syncIds.split(",");
-        File idWorkerHome = Utils.createIdWorkerHome();
+        File idWorkerHome = IdUtils.createIdWorkerHome();
         for (String syncId : syncIdsArr) {
             try {
                 new File(idWorkerHome, ipudotlock + syncId).createNewFile();
@@ -141,7 +139,7 @@ public class DefaultWorkerIdStrategy implements WorkerIdStrategy {
 
     private String buildWorkerIdsOfCurrentIp() {
         StringBuilder sb = new StringBuilder();
-        File idWorkerHome = Utils.createIdWorkerHome();
+        File idWorkerHome = IdUtils.createIdWorkerHome();
         for (File lockFile : idWorkerHome.listFiles()) {
             // check the format like 10.142.1.151.lock.0001
             if (!lockFile.getName().startsWith(ipudotlock)) continue;
@@ -163,7 +161,7 @@ public class DefaultWorkerIdStrategy implements WorkerIdStrategy {
      * @return -1 when N/A
      */
     private long findAvailWorkerId() {
-        File idWorkerHome = Utils.createIdWorkerHome();
+        File idWorkerHome = IdUtils.createIdWorkerHome();
 
         for (File lockFile : idWorkerHome.listFiles()) {
             // check the format like 10.142.1.151.lock.0001

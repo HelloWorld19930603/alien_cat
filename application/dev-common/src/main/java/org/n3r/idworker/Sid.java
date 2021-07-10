@@ -1,7 +1,7 @@
 package org.n3r.idworker;
 
 import org.n3r.idworker.strategy.DefaultWorkerIdStrategy;
-import org.n3r.idworker.utils.Utils;
+import org.n3r.idworker.utils.IdUtils;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
@@ -23,7 +23,7 @@ public class Sid {
         idWorker = new IdWorker(workerIdStrategy.availableWorkerId()) {
             @Override
             public long getEpoch() {
-                return Utils.midnightMillis();
+                return IdUtils.midnightMillis();
             }
         };
     }
@@ -49,9 +49,9 @@ public class Sid {
     public String nextShort() {
         long id = idWorker.nextId();
         String yyMMdd = new SimpleDateFormat("yyMMdd").format(new Date());
-        return yyMMdd + Utils.padLeft(Utils.encode(id), 10, '0');
+        return yyMMdd + IdUtils.padLeft(IdUtils.encode(id), 10, '0');
     }
-    
+
 //    public static void main(String[] args) {
 //		String aa = new Sid().nextShort();
 //		String bb = new Sid().next();

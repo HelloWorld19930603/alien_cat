@@ -7,13 +7,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class HttpReq {
     private final String baseUrl;
+    Logger logger = LoggerFactory.getLogger(HttpReq.class);
     private String req;
     private StringBuilder params = new StringBuilder();
-    Logger logger = LoggerFactory.getLogger(HttpReq.class);
 
     public HttpReq(String baseUrl) {
         this.baseUrl = baseUrl;
@@ -21,6 +23,48 @@ public class HttpReq {
 
     public static HttpReq get(String baseUrl) {
         return new HttpReq(baseUrl);
+    }
+
+    private static String readErrorResponseBody(HttpURLConnection http, int status, String charset) throws IOException {
+        InputStream errorStream = http.getErrorStream();
+        if (errorStream != null) {
+            String error = toString(charset, errorStream);
+            return ("STATUS CODE =" + status + "\n\n" + error);
+        } else {
+            return ("STATUS CODE =" + status);
+        }
+    }
+
+    private static String readResponseBody(HttpURLConnection http, String charset) throws IOException {
+        InputStream inputStream = http.getInputStream();
+
+        return toString(charset, inputStream);
+    }
+
+    private static String toString(String charset, InputStream inputStream) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+
+        int length;
+        while ((length = inputStream.read(buffer)) != -1) {
+            baos.write(buffer, 0, length);
+        }
+
+        return new String(baos.toByteArray(), charset);
+    }
+
+    private static String getCharset(String contentType) {
+        if (contentType == null) return "UTF-8";
+
+        String charset = null;
+        for (String param : contentType.replace(" ", "").split(";")) {
+            if (param.startsWith("charset=")) {
+                charset = param.split("=", 2)[1];
+                break;
+            }
+        }
+
+        return charset == null ? "UTF-8" : charset;
     }
 
     public HttpReq req(String req) {
@@ -67,47 +111,5 @@ public class HttpReq {
             if (http != null) http.disconnect();
         }
 
-    }
-
-    private static String readErrorResponseBody(HttpURLConnection http, int status, String charset) throws IOException {
-        InputStream errorStream = http.getErrorStream();
-        if (errorStream != null) {
-            String error = toString(charset, errorStream);
-            return ("STATUS CODE =" + status + "\n\n" + error);
-        } else {
-            return ("STATUS CODE =" + status);
-        }
-    }
-
-    private static String readResponseBody(HttpURLConnection http, String charset) throws IOException {
-        InputStream inputStream = http.getInputStream();
-
-        return toString(charset, inputStream);
-    }
-
-    private static String toString(String charset, InputStream inputStream) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-
-        int length;
-        while ((length = inputStream.read(buffer)) != -1) {
-            baos.write(buffer, 0, length);
-        }
-
-        return new String(baos.toByteArray(), charset);
-    }
-
-    private static String getCharset(String contentType) {
-        if (contentType == null) return "UTF-8";
-
-        String charset = null;
-        for (String param : contentType.replace(" ", "").split(";")) {
-            if (param.startsWith("charset=")) {
-                charset = param.split("=", 2)[1];
-                break;
-            }
-        }
-
-        return charset == null ? "UTF-8" : charset;
     }
 }

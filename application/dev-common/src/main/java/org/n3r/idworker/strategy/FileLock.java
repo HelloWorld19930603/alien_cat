@@ -17,9 +17,9 @@ import java.nio.channels.OverlappingFileLockException;
  */
 public class FileLock {
     private final File file;
+    Logger logger = LoggerFactory.getLogger(FileLock.class);
     private FileChannel channel;
     private java.nio.channels.FileLock flock = null;
-    Logger logger = LoggerFactory.getLogger(FileLock.class);
 
     public FileLock(File file) {
         this.file = file;
