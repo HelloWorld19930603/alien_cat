@@ -1,9 +1,15 @@
-package com.aliencat.leetcode;
+package com.aliencat.leetcode.medium;
 
 import java.util.Arrays;
 
 //面试题 17.08. 马戏团人塔
 public class BestSeqAtIndex {
+
+    public static void main(String[] args) {
+        int[] height = {2868, 5485, 1356, 1306, 6017, 8941, 7535, 4941, 6331, 6181};
+        int[] weight = {5042, 3995, 7985, 1651, 5991, 7036, 9391, 428, 7561, 8594};
+        System.out.println(new BestSeqAtIndex().bestSeqAtIndex(height, weight));
+    }
 
     /**
      * 有个马戏团正在设计叠罗汉的表演节目，一个人要站在另一人的肩膀上。出于实际和美观的考虑，
@@ -14,6 +20,7 @@ public class BestSeqAtIndex {
      * 解释：从上往下数，叠罗汉最多能叠 6 层：(56,90), (60,95), (65,100), (68,110), (70,150), (75,190)
      * 提示：
      * height.length == weight.length <= 10000
+     *
      * @param height
      * @param weight
      * @return
@@ -36,11 +43,5 @@ public class BestSeqAtIndex {
                 ++res;
         }
         return res;
-    }
-
-    public static void main(String[] args) {
-        int[] height = {2868,5485,1356,1306,6017,8941,7535,4941,6331,6181};
-        int[] weight = {5042,3995,7985,1651,5991,7036,9391,428,7561,8594};
-        System.out.println(new BestSeqAtIndex().bestSeqAtIndex(height, weight));
     }
 }

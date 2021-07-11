@@ -1,11 +1,11 @@
-package com.aliencat.leetcode;
+package com.aliencat.leetcode.hard;
 
 /**
  * 1397. 找到所有好字符串
  * 给你两个长度为 n 的字符串 s1 和 s2 ，以及一个字符串 evil 。请你返回 好字符串 的数目。
  * 好字符串 的定义为：它的长度为 n ，字典序大于等于 s1 ，字典序小于等于 s2 ，且不包含 evil 为子字符串。
  * 由于答案可能很大，请你返回答案对 10^9 + 7 取余的结果。
- *
+ * <p>
  * 示例 1：
  * 输入：n = 2, s1 = "aa", s2 = "da", evil = "b"
  * 输出：51
@@ -17,7 +17,7 @@ package com.aliencat.leetcode;
  * 示例 3：
  * 输入：n = 2, s1 = "gx", s2 = "gz", evil = "x"
  * 输出：2
- *
+ * <p>
  * s1.length == n
  * s2.length == n
  * s1 <= s2

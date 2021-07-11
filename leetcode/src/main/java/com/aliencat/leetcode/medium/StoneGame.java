@@ -1,4 +1,4 @@
-package com.aliencat.leetcode;
+package com.aliencat.leetcode.medium;
 
 /**
  * 877. 石子游戏

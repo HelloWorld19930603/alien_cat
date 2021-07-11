@@ -1,4 +1,4 @@
-package com.aliencat.leetcode;
+package com.aliencat.leetcode.medium;
 
 /**
  * 1551. 使数组中所有元素相等的最小操作数

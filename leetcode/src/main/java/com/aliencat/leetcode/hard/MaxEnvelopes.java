@@ -1,4 +1,4 @@
-package com.aliencat.leetcode;
+package com.aliencat.leetcode.hard;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,6 +25,26 @@ import java.util.Comparator;
  */
 public class MaxEnvelopes {
 
+    public static void main(String[] args) {
+        //int[][] envelopes = {{1, 3}, {3, 5}, {6, 7}, {6, 8}, {8, 4}, {9, 5}};
+        //int[][] envelopes = {{1, 1}, {1, 1}, {1, 1}};
+        //int[][] envelopes = {{7, 8}, {12, 16}, {12, 5}, {1, 8}, {4, 19}, {3, 15}, {4, 10}, {9, 16}};
+        int[][] envelopes = {{46, 89}, {50, 53}, {52, 68}, {72, 45}, {77, 81}};
+
+        //int[][] envelopes = {{5, 4}, {6, 4}, {6, 7}, {2, 3}};
+/*        Arrays.sort(envelopes, (o1, o2) -> {
+            if (o1[0] > o2[0]) {
+                return 1;
+            } else if (o1[0] == o2[0]) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });*/
+
+        System.out.println(new MaxEnvelopes().maxEnvelopes(envelopes));
+    }
+
     public int maxEnvelopes(int[][] envelopes) {
         //对一维数组排序，在一维数组单调递增的情况下转化为求二维数组最长上升子序列问题
         Arrays.sort(envelopes, Comparator.comparingInt(o -> o[0]));
@@ -45,25 +65,5 @@ public class MaxEnvelopes {
             max = Math.max(result[i], max);
         }
         return max;
-    }
-
-    public static void main(String[] args) {
-        //int[][] envelopes = {{1, 3}, {3, 5}, {6, 7}, {6, 8}, {8, 4}, {9, 5}};
-        //int[][] envelopes = {{1, 1}, {1, 1}, {1, 1}};
-        //int[][] envelopes = {{7, 8}, {12, 16}, {12, 5}, {1, 8}, {4, 19}, {3, 15}, {4, 10}, {9, 16}};
-        int[][] envelopes = {{46, 89}, {50, 53}, {52, 68}, {72, 45}, {77, 81}};
-
-        //int[][] envelopes = {{5, 4}, {6, 4}, {6, 7}, {2, 3}};
-/*        Arrays.sort(envelopes, (o1, o2) -> {
-            if (o1[0] > o2[0]) {
-                return 1;
-            } else if (o1[0] == o2[0]) {
-                return 1;
-            } else {
-                return -1;
-            }
-        });*/
-
-        System.out.println(new MaxEnvelopes().maxEnvelopes(envelopes));
     }
 }

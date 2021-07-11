@@ -1,4 +1,4 @@
-package com.aliencat.leetcode;
+package com.aliencat.leetcode.medium;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

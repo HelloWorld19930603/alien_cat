@@ -1,4 +1,4 @@
-package com.aliencat.leetcode;
+package com.aliencat.leetcode.hard;
 
 /**
  * 5. 最长回文子串

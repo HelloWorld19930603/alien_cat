@@ -1,11 +1,11 @@
-package com.aliencat.leetcode;
+package com.aliencat.leetcode.medium;
 
 /**
  * 901. 股票价格跨度
  * 编写一个 StockSpanner 类，它收集某些股票的每日报价，并返回该股票当日价格的跨度。
  * 今天股票价格的跨度被定义为股票价格小于或等于今天价格的最大连续日数（从今天开始往回数，包括今天）。
  * 例如，如果未来7天股票的价格是 [100, 80, 60, 70, 60, 75, 85]，那么股票跨度将是 [1, 1, 1, 2, 1, 4, 6]。
- *
+ * <p>
  * 示例：
  * 输入：["StockSpanner","next","next","next","next","next","next","next"], [[],[100],[80],[60],[70],[60],[75],[85]]
  * 输出：[null,1,1,1,2,1,4,6]
@@ -18,10 +18,10 @@ package com.aliencat.leetcode;
  * S.next(60) 被调用并返回 1，
  * S.next(75) 被调用并返回 4，
  * S.next(85) 被调用并返回 6。
- *
+ * <p>
  * 注意 (例如) S.next(75) 返回 4，因为截至今天的最后 4 个价格
  * (包括今天的价格 75) 小于或等于今天的价格。
- *
+ * <p>
  * 提示：
  * 调用 StockSpanner.next(int price) 时，将有 1 <= price <= 10^5。
  * 每个测试用例最多可以调用  10000 次 StockSpanner.next。
@@ -34,7 +34,7 @@ public class StockSpanner {
     short t = 0, day = 0;
 
     public StockSpanner() {
-        stack[0][++t] =  10001;
+        stack[0][++t] = 10001;
         stack[1][t] = day++;
     }
 
@@ -42,7 +42,7 @@ public class StockSpanner {
         while (stack[0][t] <= price)
             t--;
         int res = day - stack[1][t];
-        stack[0][++t] = (short)price;
+        stack[0][++t] = (short) price;
         stack[1][t] = day++;
         return res;
     }
