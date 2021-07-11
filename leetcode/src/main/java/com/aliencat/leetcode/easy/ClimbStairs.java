@@ -1,4 +1,4 @@
-package com.aliencat.leetcode;
+package com.aliencat.leetcode.easy;
 
 /**
  * 70. 爬楼梯

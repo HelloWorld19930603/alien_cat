@@ -1,4 +1,4 @@
-package com.aliencat.leetcode;
+package com.aliencat.leetcode.easy;
 
 /**
  * 难度：简单
