@@ -34,10 +34,7 @@ public class SSOController {
     private RedisOperator redisOperator;
 
     @GetMapping("/login")
-    public String login(String returnUrl,
-                        Model model,
-                        HttpServletRequest request,
-                        HttpServletResponse response) {
+    public String login(String returnUrl, Model model, HttpServletRequest request) {
 
         model.addAttribute("returnUrl", returnUrl);
 
@@ -45,11 +42,10 @@ public class SSOController {
         String userTicket = getCookie(request, COOKIE_USER_TICKET);
 
         boolean isVerified = verifyUserTicket(userTicket);
-        if (isVerified) {
+        if (isVerified && StringUtils.isNotBlank(returnUrl)) {
             String tmpTicket = createTmpTicket();
             return "redirect:" + returnUrl + "?tmpTicket=" + tmpTicket;
         }
-
         // 2. 用户从未登录过，第一次进入则跳转到CAS的统一登录页面
         return "login";
     }
@@ -90,11 +86,7 @@ public class SSOController {
      * 3. 创建用户的临时票据，用于回跳回传          ->  tmpTicket
      */
     @PostMapping("/doLogin")
-    public String doLogin(String username,
-                          String password,
-                          String returnUrl,
-                          Model model,
-                          HttpServletRequest request,
+    public String doLogin(String username, String password, String returnUrl, Model model,
                           HttpServletResponse response) throws Exception {
 
         model.addAttribute("returnUrl", returnUrl);
@@ -118,8 +110,7 @@ public class SSOController {
         UsersVO usersVO = new UsersVO();
         BeanUtils.copyProperties(userResult, usersVO);
         usersVO.setUserUniqueToken(uniqueToken);
-        redisOperator.set(REDIS_USER_TOKEN + ":" + userResult.getId(),
-                JsonUtils.objectToJson(usersVO));
+        redisOperator.set(REDIS_USER_TOKEN + ":" + userResult.getId(), JsonUtils.objectToJson(usersVO));
 
         // 3. 生成ticket门票，全局门票，代表用户在CAS端登录过
         String userTicket = UUID.randomUUID().toString().trim();
@@ -143,9 +134,7 @@ public class SSOController {
 
     @PostMapping("/verifyTmpTicket")
     @ResponseBody
-    public JSONResult verifyTmpTicket(String tmpTicket,
-                                      HttpServletRequest request,
-                                      HttpServletResponse response) throws Exception {
+    public JSONResult verifyTmpTicket(String tmpTicket, HttpServletRequest request) throws Exception {
 
         // 使用一次性临时票据来验证用户是否登录，如果登录过，把用户会话信息返回给站点
         // 使用完毕后，需要销毁临时票据
@@ -153,7 +142,6 @@ public class SSOController {
         if (StringUtils.isBlank(tmpTicketValue)) {
             return JSONResult.errorUserTicket("用户票据异常");
         }
-
         // 0. 如果临时票据OK，则需要销毁，并且拿到CAS端cookie中的全局userTicket，以此再获取用户会话
         if (!tmpTicketValue.equals(MD5Utils.getMD5Str(tmpTicket))) {
             return JSONResult.errorUserTicket("用户票据异常");
@@ -161,29 +149,24 @@ public class SSOController {
             // 销毁临时票据
             redisOperator.del(REDIS_TMP_TICKET + ":" + tmpTicket);
         }
-
         // 1. 验证并且获取用户的userTicket
         String userTicket = getCookie(request, COOKIE_USER_TICKET);
         String userId = redisOperator.get(REDIS_USER_TICKET + ":" + userTicket);
         if (StringUtils.isBlank(userId)) {
             return JSONResult.errorUserTicket("用户票据异常");
         }
-
         // 2. 验证门票对应的user会话是否存在
         String userRedis = redisOperator.get(REDIS_USER_TOKEN + ":" + userId);
         if (StringUtils.isBlank(userRedis)) {
             return JSONResult.errorUserTicket("用户票据异常");
         }
-
         // 验证成功，返回OK，携带用户会话
         return JSONResult.ok(JsonUtils.jsonToPojo(userRedis, UsersVO.class));
     }
 
     @PostMapping("/logout")
     @ResponseBody
-    public JSONResult logout(String userId,
-                             HttpServletRequest request,
-                             HttpServletResponse response) throws Exception {
+    public JSONResult logout(String userId, HttpServletRequest request, HttpServletResponse response) {
 
         // 0. 获取CAS中的用户门票
         String userTicket = getCookie(request, COOKIE_USER_TICKET);
@@ -214,21 +197,18 @@ public class SSOController {
         return tmpTicket;
     }
 
-    private void setCookie(String key,
-                           String val,
-                           HttpServletResponse response) {
+    private void setCookie(String key, String val, HttpServletResponse response) {
 
         Cookie cookie = new Cookie(key, val);
-        cookie.setDomain("sso.com");
+        cookie.setDomain("localhost");
         cookie.setPath("/");
         response.addCookie(cookie);
     }
 
-    private void deleteCookie(String key,
-                              HttpServletResponse response) {
+    private void deleteCookie(String key, HttpServletResponse response) {
 
         Cookie cookie = new Cookie(key, null);
-        cookie.setDomain("sso.com");
+        cookie.setDomain("localhost");
         cookie.setPath("/");
         cookie.setMaxAge(-1);
         response.addCookie(cookie);
@@ -240,7 +220,6 @@ public class SSOController {
         if (cookieList == null || StringUtils.isBlank(key)) {
             return null;
         }
-
         String cookieValue = null;
         for (int i = 0; i < cookieList.length; i++) {
             if (cookieList[i].getName().equals(key)) {
@@ -248,9 +227,6 @@ public class SSOController {
                 break;
             }
         }
-
         return cookieValue;
     }
-
-
 }

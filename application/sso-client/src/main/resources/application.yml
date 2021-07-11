@@ -1,6 +1,6 @@
-# web访问端口号  约定：8088
+# web访问端口号  约定：8080
 server:
-  #  port: 8088
+  #  port: 8080
   tomcat:
     uri-encoding: UTF-8
   max-http-header-size: 80KB

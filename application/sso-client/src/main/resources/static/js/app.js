@@ -1,14 +1,16 @@
 window.app = {
-    SSOServerUrl: "http://www.sso.com:8090",
-    cookieDomain: ".mtv.com",
+    SSOServerUrl: "http://localhost:8090",
+    cookieDomain: ".sso.com",
 
     getCookie: function (cname) {
         var name = cname + "=";
         var ca = document.cookie.split(';');
+        console.log(document.cookie);
         for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
             // console.log(c)
-            while (c.charAt(0) == ' ') c = c.substring(1);
+            while (c.charAt(0) == ' ')
+                c = c.substring(1);
             if (c.indexOf(name) != -1) {
                 return c.substring(name.length, c.length);
             }
@@ -17,7 +19,7 @@ window.app = {
     },
 
     goErrorPage() {
-        window.location.href = "http://www.aliencat.com/error/noexists";
+        window.location.href = "http://localhost:8080/error/noexists";
     },
 
     setCookie: function (name, value) {

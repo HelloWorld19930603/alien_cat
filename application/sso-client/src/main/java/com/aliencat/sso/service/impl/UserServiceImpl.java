@@ -16,8 +16,6 @@ import tk.mybatis.mapper.entity.Example;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final String USER_FACE = "http://122.152.205.72:88/group1/M00/00/05/CpoxxFw_8_qAIlFXAAAcIhVPdSg994.png";
-
     @Autowired
     public UsersMapper usersMapper;
 
@@ -41,13 +39,6 @@ public class UserServiceImpl implements UserService {
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Users createUser(UserBO userBO) {
-
-//        try {
-//            Thread.sleep(3500);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
         String userId = sid.nextShort();
 
         Users user = new Users();
