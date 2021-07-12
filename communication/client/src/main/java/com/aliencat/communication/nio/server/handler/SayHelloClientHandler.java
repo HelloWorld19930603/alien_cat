@@ -23,7 +23,7 @@ public class SayHelloClientHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf m = (ByteBuf) msg; // 将消息转化成bytebuf
         try {
-            System.out.println("客户端直接打印接收到的消息: " + m.toString(Charset.defaultCharset()));
+            System.out.println("收到来自服务器的消息: " + m.toString(Charset.defaultCharset()));
             long currentTimeMillis = (m.readUnsignedInt() - 2208988800L) * 1000L;
             System.out.println(new Date(currentTimeMillis));
             /**

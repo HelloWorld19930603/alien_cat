@@ -15,7 +15,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.util.Scanner;
 
 /**
- * sayhello 客户端
+ * 客户端程序
  */
 public class SayHelloClient {
 
@@ -28,21 +28,14 @@ public class SayHelloClient {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        /**
-         * 创建netty客户端
-         */
-        SayHelloClient client = new SayHelloClient(8686);
-        /**
-         * 新建一个线程让它单独去跑,我们可以main方法测试一下发送消息和接受消息
-         */
-        Thread clientThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    client.run();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        // 创建客户端
+        SayHelloClient client = new SayHelloClient(8888);
+        //新建一个线程让它单独去跑,我们可以main方法测试一下发送消息和接受消息
+        Thread clientThread = new Thread(() -> {
+            try {
+                client.run();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         });
         clientThread.start();
@@ -59,7 +52,7 @@ public class SayHelloClient {
                 isStart = true;
             }
         }
-        String helo = "你好呀!我这里是客户端, 收到请回答";
+        String helo = "你好!我这里是客户端, 收到请回答";
         ByteBuf byteBuf = Unpooled.wrappedBuffer(helo.getBytes());
         channel.writeAndFlush(byteBuf);
         /**
@@ -100,26 +93,18 @@ public class SayHelloClient {
                             socketChannel.pipeline().addLast(new SayHelloClientHandler());
                         }
                     });
-            /**
-             * 客户端绑定端口并且开始发起连接请求
-             */
+            //客户端绑定端口并且开始发起连接请求
             ChannelFuture future = bootstrap.connect(host, port).sync();
             if (future.isSuccess()) {
                 System.out.println("客户端连接服务器成功!");
             }
-            /**
-             * 将通道设置好, 以便外面获取
-             */
+            //将通道设置好, 以便外面获取
             this.channel = future.channel();
-            /**
-             * 关闭客户端
-             */
+            //关闭客户端
             future.channel().closeFuture().sync();
             System.out.println("客户端即将关闭!");
         } finally {
-            /**
-             * 关闭事件处理组
-             */
+            //关闭事件处理组
             clientWorker.shutdownGracefully();
             System.out.println("客户端已关闭!");
         }
