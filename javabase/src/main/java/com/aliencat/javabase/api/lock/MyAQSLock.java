@@ -1,11 +1,13 @@
 package com.aliencat.javabase.api.lock;
 
+import lombok.extern.slf4j.Slf4j;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.LockSupport;
 
+@Slf4j
 public class MyAQSLock {
 
 
@@ -58,6 +60,8 @@ public class MyAQSLock {
     }
 
     public void setState(int state) {
+        if (state < 0)
+            throw new Error("Maximum lock count exceeded");
         this.state = state;
     }
 
@@ -69,56 +73,24 @@ public class MyAQSLock {
         this.exclusiveOwnerThread = exclusiveOwnerThread;
     }
 
+
+    private boolean hasQueuedPredecessors() {
+        return waiters != null && waiters.size() > 0;
+    }
+
+    //加锁
+    public void lock() {
+        Thread p = Thread.currentThread();
+        log.debug(p.getName() + " 开始加锁--" + state);
+        //首先尝试去获取锁
+        acquire(1);
+        log.debug(p.getName() + " 加锁成功--" + state);
+    }
+
     public final void acquire(int arg) {
         if (!tryAcquire(arg) && acquireQueued())
             selfInterrupt();
     }
-
-    private boolean acquireQueued() {
-        Thread p = Thread.currentThread(); //当前线程
-        //如果队列没有节点或者当前线程为队列头节点，就尝试获取锁
-        if (!hasQueuedPredecessors() && compareAndSwapState(0, 1)) {
-            return false;
-        }
-        waiters.add(p); //当前线程入队
-        boolean failed = true;
-        try {
-            boolean interrupted = parkAndCheckInterrupt(p);   //是否被中断过
-            //如果没有加锁成功，则使此线程一直自旋在本方法
-            while (!compareAndSwapState(0, 1)) {
-            }
-            //如果队列没有节点或者当前线程为队列头节点，就尝试获取锁
-            failed = false;
-            waiters.poll(); //移除头节点
-            return interrupted;
-        } finally {
-            return failed; //返回true则中断当前线程
-        }
-    }
-
-    private boolean parkAndCheckInterrupt(Thread p) {
-        //让步出线程
-        //1：Thread.yield();但是循环之后还是在占用cpu，不推荐
-        //2：Thread.sleep(1000);不推荐，原因如下
-        //（1）：设置时常大之后，其他线程已经释放锁，本线程还在睡眠，浪费时间
-        //（2）：设置时常小之后，导致不停的睡眠启动线程，系统开销大
-        //3：Thread.wait();不推荐，因为在唤醒线程的时候，无法准确指定唤醒那一个线程；
-        //4：使用Unsafe类中的park()和unpark()方法，进行手动的释放和开启线程（此两种方法已经重写在了jdk的LockSupport类中）
-        /*
-            //jdk中的方法体
-            public static void park(Object blocker) {
-                Thread t = Thread.currentThread();
-                setBlocker(t, blocker);
-                U.park(false, 0L);
-                setBlocker(t, (Object)null);
-            }
-         */
-        LockSupport.park(p);   //阻塞该线程
-        //interrupted()方法 作用是测试当前线程是否被中断（检查中断标志），返回一个boolean并清除中断状态，
-        // 第二次再调用时中断状态已经被清除，将返回一个false。
-        return Thread.interrupted();
-    }
-
 
     //尝试进行加锁,次数为num
     public boolean tryAcquire(int num) {
@@ -145,33 +117,72 @@ public class MyAQSLock {
         }
     }
 
-    private boolean hasQueuedPredecessors() {
-        return waiters != null && waiters.size() > 0;
+    private boolean acquireQueued() {
+        Thread p = Thread.currentThread(); //当前线程
+        waiters.add(p); //当前线程入队
+        try {
+            //如果当前线程为队列头节点且没有加锁成功，则使此线程一直自旋在本方法
+            while (true) {
+                if (getLocalHolder() == null && p == waiters.peek() && compareAndSwapState(0, 1)) {
+                    break;
+                }
+                if (checkInterruptAndPark(p)) {
+                    return true;
+                }
+            }
+            setLocalHolder(p);  //设置当前线程持有锁
+            waiters.poll(); //移除头节点
+            return p.isInterrupted();
+        } finally {
+            return true; //返回true则中断当前线程
+        }
     }
 
-    //加锁
-    public void lock() {
-        //首先尝试去获取锁
-        acquire(1);
+    private boolean checkInterruptAndPark(Thread p) {
+        //让步出线程
+        //1：Thread.yield();但是循环之后还是在占用cpu，不推荐
+        //2：Thread.sleep(1000);不推荐，原因如下
+        //（1）：设置时常大之后，其他线程已经释放锁，本线程还在睡眠，浪费时间
+        //（2）：设置时常小之后，导致不停的睡眠启动线程，系统开销大
+        //3：Thread.wait();不推荐，因为在唤醒线程的时候，无法准确指定唤醒那一个线程；
+        //4：使用Unsafe类中的park()和unpark()方法，进行手动的释放和开启线程（此两种方法已经重写在了jdk的LockSupport类中）
+        /*
+            //jdk中的方法体
+            public static void park(Object blocker) {
+                Thread t = Thread.currentThread();
+                setBlocker(t, blocker);
+                U.park(false, 0L);
+                setBlocker(t, (Object)null);
+            }
+         */
+        if (p.isInterrupted())
+            LockSupport.park(p);   //阻塞该线程
+        //interrupted()方法 作用是测试当前线程是否被中断（检查中断标志），返回一个boolean并清除中断状态，
+        // 第二次再调用时中断状态已经被清除，将返回一个false。
+        return Thread.interrupted();
     }
 
     //解锁方法
     public void unLock() {
+        Thread p = Thread.currentThread();
+        log.debug(p.getName() + " 开始解锁--" + state);
         //判断当前对象是不是持有锁的对象
-        if (Thread.currentThread() != exclusiveOwnerThread) {
+        if (p != exclusiveOwnerThread) {
             throw new RuntimeException("LocalHolder is not current thread");
         }
         release(1); //一层一层的减
+        log.debug(p.getName() + " 解锁成功--" + state);
     }
 
     public final void release(int arg) {
-        if (tryRelease(arg)) {
+        tryRelease(1);
+/*        if (tryRelease(arg)) {
             //当前锁空闲后，如果等待队列中有线程，则唤醒此线程
-            Thread head = waiters.peek();
+            Thread head = waiters.poll();
             if (head != null) {
                 LockSupport.unpark(head); //唤醒head线程
             }
-        }
+        }*/
     }
 
 
@@ -200,6 +211,6 @@ public class MyAQSLock {
     private void readObject(java.io.ObjectInputStream s)
             throws java.io.IOException, ClassNotFoundException {
         s.defaultReadObject();
-        setState(0); // reset to unlocked state
+        setState(0); // 重置锁，防止死锁发生
     }
 }

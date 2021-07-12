@@ -17,10 +17,14 @@ public class AQSTest implements Runnable {
 
     @Override
     public void run() {
-        lock.lock();
-        for (int i = 0; i < 10000; i++)
-            count++;
-        log.info("count:" + count);
-        lock.unLock();
+        try {
+            lock.lock();
+            for (int i = 0; i < 10000; i++)
+                count++;
+            log.info(Thread.currentThread().getName() + " count:" + count);
+        } finally {
+            lock.unLock();
+        }
+
     }
 }
