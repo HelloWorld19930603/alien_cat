@@ -29,10 +29,10 @@ public class MyAQSLock {
     //值为0/1，为1时表示已经有一个线程持有了锁
     private volatile int state = 0;
     //表示当前持有锁的线程对象
-    private Thread exclusiveOwnerThread;
+    private transient Thread exclusiveOwnerThread;
     //定义一个线程安全(底层是使用CAS算法保证线程安全的)的队列，用于保存此时没有获取到锁的线程
-    //注意AQS是使用的CHL队列，为了好理解我这里用ConcurrentLinkedQueue替代了
-    private ConcurrentLinkedQueue<Thread> waiters = new ConcurrentLinkedQueue<>();
+    //注意AQS是使用的CHL队列，为了好理解我这里用ConcurrentLinkedQueue替代了,当然性能要低不少了
+    private transient ConcurrentLinkedQueue<Thread> waiters = new ConcurrentLinkedQueue<>();
 
     //处理当前线程中断情况
     static void selfInterrupt() {
