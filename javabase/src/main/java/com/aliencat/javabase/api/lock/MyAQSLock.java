@@ -174,6 +174,18 @@ public class MyAQSLock {
         log.debug(p.getName() + " 解锁成功--" + state);
     }
 
+    //解除该对象上所有重入锁方法
+    public void unLockAll() {
+        Thread p = Thread.currentThread();
+        log.debug(p.getName() + " 开始解锁--" + state);
+        //判断当前对象是不是持有锁的对象
+        if (p != exclusiveOwnerThread) {
+            throw new RuntimeException("LocalHolder is not current thread");
+        }
+        release(getState()); //直接解完
+        log.debug(p.getName() + " 解锁成功--" + state);
+    }
+
     public final void release(int arg) {
         tryRelease(1);
 /*        if (tryRelease(arg)) {
