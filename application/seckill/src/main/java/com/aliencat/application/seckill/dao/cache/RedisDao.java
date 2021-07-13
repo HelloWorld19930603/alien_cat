@@ -16,10 +16,11 @@ public class RedisDao {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final JedisPool jedisPool;
-
+    String ip;
+    int port;
     private RuntimeSchema<Seckill> schema = RuntimeSchema.createFrom(Seckill.class);
 
-    public RedisDao(String ip, int port) {
+    public RedisDao() {
         jedisPool = new JedisPool(ip, port);
     }
 
