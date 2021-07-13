@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>netty-demo</module>
-        <module>client</module>
+        <module>webchat</module>
         <module>nio-demo</module>
     </modules>
 

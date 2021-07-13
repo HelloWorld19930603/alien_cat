@@ -1,4 +1,4 @@
-package com.aliencat.communication.nio.server;
+package com.aliencat.communication.nio.client;
 
 import com.aliencat.communication.nio.server.handler.SayHelloClientHandler;
 import io.netty.bootstrap.Bootstrap;

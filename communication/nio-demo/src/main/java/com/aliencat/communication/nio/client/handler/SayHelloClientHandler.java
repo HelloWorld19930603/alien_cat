@@ -1,4 +1,4 @@
-package com.aliencat.communication.nio.server.handler;
+package com.aliencat.communication.nio.client.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
