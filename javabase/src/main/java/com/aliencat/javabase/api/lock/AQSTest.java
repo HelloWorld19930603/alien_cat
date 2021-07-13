@@ -19,11 +19,14 @@ public class AQSTest implements Runnable {
     public void run() {
         try {
             lock.lock();
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 10000; i++) {
+                lock.lock();
                 count++;
+                lock.unLock();
+            }
             log.info(Thread.currentThread().getName() + " count:" + count);
         } finally {
-            lock.unLock();
+            lock.unLockAll();  //解除所有锁，这样里面的unlock就不用加try语句包裹了
         }
 
     }
