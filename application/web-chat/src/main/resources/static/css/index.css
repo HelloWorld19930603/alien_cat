@@ -1,0 +1,36 @@
+.liveDiv {
+    float: right;
+    width: 115px;
+}
+
+.liveSpan button {
+    margin: 5px;
+    width: 80px;
+}
+
+.container {
+    width: 500px;
+    height: 800px;
+    margin: 0 auto;
+}
+
+.send-btn {
+    width: 120px;
+    margin: 50px 180px;
+}
+
+.show-message {
+    width: 100%;
+    height: 250px;
+    border: 1px solid red;
+    overflow: auto;
+}
+
+.myname_span {
+    display: inline-block;
+    width: 130px;
+}
+
+.msg-context {
+    width: 100%;
+}

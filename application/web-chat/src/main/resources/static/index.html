@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebChat使用示例</title>
+    <script src="js/jquery-1.11.3.js" type="text/javascript"></script>
+    <script src="js/webchat.js" type="text/javascript"></script>
+    <link href="css/index.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="liveDiv">
+    <p>当前在线用户</p>
+    <span class="liveSpan">
+        </span>
+</div>
+<div class="container">
+    <div class="item">
+        <span>我的名字:</span>
+        <span class="myname_span"></span>
+        <span style="margin-left: 50px">联系人:</span>
+        <span class="to-user"></span>
+    </div>
+    <div class="show-message">
+
+    </div>
+    <div class="item">
+        <p></p>
+        <textarea class="msg-context" placeholder="请输入:"></textarea>
+    </div>
+    <button class="send-btn" onclick="send()">发送</button>
+</div>
+<script>
+    $(function () {
+        var item = sessionStorage.getItem("user");
+        var parse = JSON.parse(item);
+        $('.myname_span').html(parse.username)
+        console.log(parse)
+        connection(parse.username);
+    })
+</script>
+</body>
+</html>

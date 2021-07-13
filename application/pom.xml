@@ -8,6 +8,7 @@
         <module>sso-client</module>
         <module>dev-common</module>
         <module>seckill</module>
+        <module>web-chat</module>
     </modules>
 
     <parent>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.webchat.demo.dao.UserMapper" >
+
+    <select id="selectUserByName"  resultType="User">
+        SELECT * FROM user WHERE username = #{name}
+    </select>
+
+    <select id="selectUserByNAP"  parameterType="User" resultType="User">
+        SELECT * FROM user WHERE username = #{username} AND password = #{password}
+    </select>
+
+    <insert id="signUp"  parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO  user(username,password,mobile)
+        VALUES (#{username},#{password},#{mobile})
+    </insert>
+</mapper>
