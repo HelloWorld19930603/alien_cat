@@ -85,6 +85,12 @@
             <version>2.5</version>
         </dependency>
 
+        <!--用于解析xml -->
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
     </dependencies>
 
     <build>

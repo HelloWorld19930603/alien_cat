@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="user1" class="com.aliencat.javabase.ioc.User">
+        <property name="userId" value="1"></property>
+        <property name="userName" value="张三"></property>
+    </bean>
+    <bean id="user2" class="com.aliencat.javabase.ioc.User">
+        <property name="userId" value="2"></property>
+        <property name="userName" value="李四"></property>
+    </bean>
+</beans>
