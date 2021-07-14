@@ -1,4 +1,4 @@
-package math;
+package com.aliencat.algorithm.math;
 
 import java.util.Scanner;
 
