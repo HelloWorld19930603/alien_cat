@@ -9,6 +9,7 @@
         <module>dev-common</module>
         <module>seckill</module>
         <module>web-chat</module>
+        <module>file-server</module>
     </modules>
 
     <parent>
