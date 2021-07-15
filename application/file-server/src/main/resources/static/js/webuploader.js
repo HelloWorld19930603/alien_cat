@@ -1,9 +1,5 @@
 /*! WebUploader 0.1.5 */
-
-
 /**
- * @fileOverview 让内部各个部件的代码可以用[amd](https://github.com/amdjs/amdjs-api/wiki/AMD)模块定义方式组织起来。
- *
  * AMD API 内部的简单不完全实现，请忽略。只有当WebUploader被合并成一个文件的时候才会引入。
  */
 (function (root, factory) {
@@ -8090,5 +8086,5 @@
     ], function (preset) {
         return preset;
     });
-    return require('static/js/webuploader');
+    return require('webuploader');
 });
