@@ -10,19 +10,20 @@ import java.net.URLEncoder;
 
 @Controller
 public class DownLoadController {
-    private final static String utf8 = "utf-8";
+    private final static String UTF_8 = "utf-8";
+    private final static String DOWNLOAD_PATH = DownLoadController.class.getClassLoader().getResource("").getPath();
 
     @RequestMapping("/download")
     public void downLoadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        File file = new File("C:\\Users\\admin\\nginx原理.mp4");
-        response.setCharacterEncoding(utf8);
+        File file = new File(DOWNLOAD_PATH, "application.yml");
+        response.setCharacterEncoding(UTF_8);
         InputStream is = null;
         OutputStream os = null;
         try {
             //分片下载   http  Range bytes=100-1000   bytes=100-
             long fSize = file.length();
             response.setContentType("application/x-download");
-            String fileName = URLEncoder.encode(file.getName(), utf8);
+            String fileName = URLEncoder.encode(file.getName(), UTF_8);
             response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
             response.setHeader("Accept-Range", "bytes");
 

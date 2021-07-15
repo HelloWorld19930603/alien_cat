@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 public class DownloadClient {
 
     private final static long PER_PAGE = 1024l * 1024l * 50l;
-    private final static String DOWNPATH = "F:\\fileItem";
+    private final static String FILE_PATH = DownloadClient.class.getClassLoader().getResource("").getPath() + "static/file";
     ExecutorService pool = Executors.newFixedThreadPool(10);
 
     @RequestMapping("/downloadFile")
@@ -38,7 +38,7 @@ public class DownloadClient {
     }
 
     private FileInfo download(long start, long end, long page, String fName) throws Exception {
-        File file = new File(DOWNPATH, page + "-" + fName);
+        File file = new File(FILE_PATH, page + "-" + fName);
         if (file.exists()) {
             return null;
         }
@@ -70,11 +70,11 @@ public class DownloadClient {
     }
 
     private void mergeFile(String fName, long page) throws Exception {
-        File tempFile = new File(DOWNPATH, fName);
+        File tempFile = new File(FILE_PATH, fName);
         BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(tempFile));
 
         for (int i = 0; i <= page; i++) {
-            File file = new File(DOWNPATH, i + "-" + fName);
+            File file = new File(FILE_PATH, i + "-" + fName);
             while (!file.exists() || (i != page && file.length() < PER_PAGE)) {
                 Thread.sleep(100);
             }
@@ -83,7 +83,7 @@ public class DownloadClient {
             os.flush();
             file.delete();
         }
-        File file = new File(DOWNPATH, -1 + "-null");
+        File file = new File(FILE_PATH, -1 + "-null");
         file.delete();
         os.flush();
         os.close();
