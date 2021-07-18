@@ -43,10 +43,18 @@
             <scope>test</scope>
         </dependency>
 
+        <!--lombok插件 -->
         <dependency>
-            <groupId>com.aliencat.springboot.starter</groupId>
-            <artifactId>mystarter</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!--热部署工具dev-tools-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

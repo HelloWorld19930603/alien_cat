@@ -1,8 +1,11 @@
+spring:
+  application:
+    name: springboot-redis
 redis:
   host: localhost # Redis服务器地址
   database: 0 # Redis数据库索引（默认为0）
   port: 6379 # Redis服务器连接端口
-  password: test # Redis服务器连接密码（默认为空，以及这里带引号！！！）
+  password:  # Redis服务器连接密码（默认为空）
   jedis:
     pool:
       max-active: 8 # 连接池最大连接数（使用负值表示没有限制），能制造出来的最大的连接数
