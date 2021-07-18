@@ -13,7 +13,7 @@ import java.net.URL;
 /**
  * 处理 Http 请求
  */
-public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> { //1
+public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     private static final File INDEX;
 
     static {
@@ -41,45 +41,38 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
     @Override
     public void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         if (wsUri.equalsIgnoreCase(request.getUri())) {
-            ctx.fireChannelRead(request.retain());                  //2
+            ctx.fireChannelRead(request.retain());
         } else {
             if (HttpHeaders.is100ContinueExpected(request)) {
-                send100Continue(ctx);                               //3
+                send100Continue(ctx);
             }
-
-            RandomAccessFile file = new RandomAccessFile(INDEX, "r");//4
-
+            RandomAccessFile file = new RandomAccessFile(INDEX, "r");
             HttpResponse response = new DefaultHttpResponse(request.getProtocolVersion(), HttpResponseStatus.OK);
             response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8");
-
             boolean keepAlive = HttpHeaders.isKeepAlive(request);
-
-            if (keepAlive) {                                        //5
+            if (keepAlive) {
                 response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, file.length());
                 response.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
             }
-            ctx.write(response);                    //6
-
-            if (ctx.pipeline().get(SslHandler.class) == null) {     //7
+            ctx.write(response);
+            if (ctx.pipeline().get(SslHandler.class) == null) {
                 ctx.write(new DefaultFileRegion(file.getChannel(), 0, file.length()));
             } else {
                 ctx.write(new ChunkedNioFile(file.getChannel()));
             }
-            ChannelFuture future = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);           //8
+            ChannelFuture future = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
             if (!keepAlive) {
-                future.addListener(ChannelFutureListener.CLOSE);        //9
+                future.addListener(ChannelFutureListener.CLOSE);
             }
-
             file.close();
         }
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-            throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         Channel incoming = ctx.channel();
         System.out.println("Client:" + incoming.remoteAddress() + "异常");
-        // 当出现异常就关闭连接
+        //当出现异常就关闭连接
         cause.printStackTrace();
         ctx.close();
     }
