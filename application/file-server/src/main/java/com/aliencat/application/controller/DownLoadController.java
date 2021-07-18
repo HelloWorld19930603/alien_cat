@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.URLEncoder;
 
 @Controller
+
 public class DownLoadController {
     private final static String UTF_8 = "utf-8";
     private final static String DOWNLOAD_PATH = DownLoadController.class.getClassLoader().getResource("").getPath();
