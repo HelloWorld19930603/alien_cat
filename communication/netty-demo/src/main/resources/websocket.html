@@ -5,9 +5,9 @@
     <title>WebSocket Client</title>
 </head>
 <body>
-<form onsubmit="return false;">
+<form onsubmit="return false;" style="text-align:center;">
     <h3>WebSocket 聊天室：</h3>
-    <textarea id="responseText" style="width: 500px; height: 300px;"></textarea>
+    <textarea disabled="disabled" id="responseText" style="width: 500px; height: 300px;"></textarea>
     <br>
     <input name="message" style="width: 300px" type="text" value="欢迎使用websocket客户端">
     <input onclick="send(this.form.message.value)" type="button" value="发送消息">
