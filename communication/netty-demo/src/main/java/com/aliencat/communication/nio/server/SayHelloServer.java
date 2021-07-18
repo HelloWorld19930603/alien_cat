@@ -31,7 +31,7 @@ public class SayHelloServer {
         /**
          * 启动netty服务器
          */
-        SayHelloServer sayHelloServer = new SayHelloServer(8686);
+        SayHelloServer sayHelloServer = new SayHelloServer(8002);
         sayHelloServer.run();
     }
 

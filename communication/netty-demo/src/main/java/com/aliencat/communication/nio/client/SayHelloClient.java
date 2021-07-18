@@ -31,7 +31,7 @@ public class SayHelloClient {
         /**
          * 创建netty客户端
          */
-        SayHelloClient client = new SayHelloClient(8686);
+        SayHelloClient client = new SayHelloClient(8002);
         /**
          * 新建一个线程让它单独去跑,我们可以main方法测试一下发送消息和接受消息
          */
