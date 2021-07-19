@@ -1,7 +1,7 @@
 package com.aliencat.javabase.utils;
 
 
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -14,17 +14,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class HttpUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
     private static final CloseableHttpClient httpclient = HttpClients.createDefault();
     private static final String userAgent = "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.87 Safari/537.36";
 
@@ -59,8 +57,8 @@ public class HttpUtils {
         return result;
     }
 
-    public static String sendGet(String url){
-        return sendGet(url,"");
+    public static String sendGet(String url) {
+        return sendGet(url, "");
     }
 
     /**
@@ -72,7 +70,7 @@ public class HttpUtils {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             formparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
-        return sendPost(url,formparams);
+        return sendPost(url, formparams);
     }
 
     public static String sendPost(String url, List<NameValuePair> formparams) {
