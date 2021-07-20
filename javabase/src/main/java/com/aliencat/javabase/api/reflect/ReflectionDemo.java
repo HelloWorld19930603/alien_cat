@@ -1,5 +1,7 @@
 package com.aliencat.javabase.api.reflect;
 
+import com.aliencat.javabase.api.annotation.MyAnnotation;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -27,8 +29,8 @@ public class ReflectionDemo {
     public static void main(String[] args) throws Exception {
 
         //第一种方式获得Class对象，比较麻烦，要先创建对象，再使用对象调用方法
-        MyObject ht = new MyObject();
-        Class clazz = ht.getClass();
+        MyObject myObject = new MyObject();
+        Class clazz = myObject.getClass();
 
         //第二种方式获得Class对象。使用静态的属性创建
         Class clazz1 = MyObject.class;
@@ -59,18 +61,23 @@ public class ReflectionDemo {
 
         System.out.println();
         //获取特定的方法
-        Method m = clazz2.getMethod("walk", null);
-        System.out.println(m.toString());
+        Method m1 = clazz2.getMethod("walk", null);
+        System.out.println(m1.toString());
 
         Field[] f = clazz2.getDeclaredFields();
         for (Field ff : f) {
             System.out.print(ff + " ");
         }
+        System.out.println();
+        //调用指定的方法-
+        Method m2 = clazz2.getMethod("talk", int.class);
+        m2.invoke(obj, 1);
 
-        //调用指定的方法---先获取，在调用;注意私有方法先设置访问权限
-        Method m1 = clazz2.getMethod("walk", null);
-        System.out.println("hahahhha");
-        m1.invoke(obj, null);
+        //在调用私有方法先设置访问权限
+        Method m3 = clazz2.getDeclaredMethod("play", null);
+        m3.setAccessible(true);
+        m3.invoke(obj, null);
+
 
         //调用指定的构造方法创建类实例；先获取在调用
         Constructor cc = clazz2.getConstructor(int.class, String.class);
@@ -87,9 +94,12 @@ public class ReflectionDemo {
 
 }
 
+@MyAnnotation(key = "class")
 class MyObject {
-    private int age;
+
+    @MyAnnotation(key = "field")
     public String name = "zhangsan";
+    private int age;
 
     public MyObject() {
     }
@@ -99,17 +109,23 @@ class MyObject {
         this.age = age;
     }
 
-    public MyObject(int age, String name) {
+    public MyObject(int age, @MyAnnotation(value = "name") String name) {
         this.age = age;
         this.name = name;
         System.out.println("hello ");
+    }
+
+    @MyAnnotation(key = "method")
+    private void play(@MyAnnotation("玩具") String toy) {
+        System.out.println("--->play--->" + toy);
     }
 
     public void walk() {
         System.out.println("--->walk--->");
     }
 
+    @Deprecated
     public void talk(int i) {
-        System.out.println(i + "----------" + age);
+        System.out.println("talk---------->" + i);
     }
 }

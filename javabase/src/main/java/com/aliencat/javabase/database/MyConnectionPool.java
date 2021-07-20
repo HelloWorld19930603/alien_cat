@@ -11,13 +11,7 @@ import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-/**
- * Created by cc on 2017/9/21.
- */
 public class MyConnectionPool {
-
-    //包装真实的Connetion对象
-    private Connection connection = null;
 
     //这里采用的是BlockingQueue阻塞队列作为连接池
     private static BlockingQueue<MyConnectionPool> pool;
@@ -52,44 +46,15 @@ public class MyConnectionPool {
         }
     }
 
+    //包装真实的Connetion对象
+    private Connection connection = null;
+
     public MyConnectionPool() throws SQLException {
         connection = DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
     public MyConnectionPool(Connection conn) {
         connection = conn;
-    }
-
-    /**
-     * 向线程池添加MyConnection对象
-     * 返回true代表成功
-     *
-     * @return
-     */
-    public boolean addConnection() {
-        return pool.offer(this);
-    }
-
-    /**
-     * 这里的关闭并不是真正意义上的关闭，而是将MyConnection对象返送给连接池中
-     * offer的用法在于在队列中添加对象，若是队列满了则返回false
-     * 所以这里有个判断，若是为null，则真正关闭connetion
-     *
-     * @throws SQLException
-     */
-    public void close() throws SQLException {
-        if (!pool.offer(this)) {
-            connection.close();
-        }
-    }
-
-    /**
-     * 这里是真正意义上关闭数据库连接
-     *
-     * @throws SQLException
-     */
-    public void closeConnetion() throws SQLException {
-        connection.close();
     }
 
     /**
@@ -128,6 +93,38 @@ public class MyConnectionPool {
      */
     public static MyConnectionPool takeConnection() throws InterruptedException {
         return pool.take();
+    }
+
+    /**
+     * 向线程池添加MyConnection对象
+     * 返回true代表成功
+     *
+     * @return
+     */
+    public boolean addConnection() {
+        return pool.offer(this);
+    }
+
+    /**
+     * 这里的关闭并不是真正意义上的关闭，而是将MyConnection对象返送给连接池中
+     * offer的用法在于在队列中添加对象，若是队列满了则返回false
+     * 所以这里有个判断，若是为null，则真正关闭connetion
+     *
+     * @throws SQLException
+     */
+    public void close() throws SQLException {
+        if (!pool.offer(this)) {
+            connection.close();
+        }
+    }
+
+    /**
+     * 这里是真正意义上关闭数据库连接
+     *
+     * @throws SQLException
+     */
+    public void closeConnetion() throws SQLException {
+        connection.close();
     }
 
     //获取PreparedStatement对象
