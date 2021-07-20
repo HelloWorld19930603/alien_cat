@@ -2,8 +2,6 @@ package com.aliencat.javabase.utils;
 
 /**
  * 工具类异常
- *
- * @author xiaoleilu
  */
 public class UtilException extends RuntimeException {
     private static final long serialVersionUID = 1L;

@@ -8,10 +8,7 @@ import java.util.List;
 
 /**
  * 组合，即C(n, m)<br>
- * 排列组合相关类 参考：http://cgs1999.iteye.com/blog/2327664
- *
- * @author looly
- * @since 4.0.6
+ * 排列组合相关类
  */
 public class Combination implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -2,7 +2,7 @@ package com.aliencat.javabase.utils;
 
 
 /**
- * Created by cc
+ * 16进制字节码工具类
  */
 public class HexUtil {
 
