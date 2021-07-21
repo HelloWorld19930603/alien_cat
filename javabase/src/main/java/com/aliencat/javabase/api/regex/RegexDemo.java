@@ -59,4 +59,17 @@ public class RegexDemo {
     }
 
 
+    @Test
+    public void test3() {
+        String info = "123abc";
+        Pattern p = Pattern.compile("\\d+");
+        Pattern p1 = Pattern.compile("\\d+\\w+");
+        Matcher matcher = p.matcher(info);
+        Matcher matcher1 = p1.matcher(info);
+
+        System.out.println(matcher.matches());//false
+        System.out.println(matcher1.matches());//true
+
+    }
+
 }
