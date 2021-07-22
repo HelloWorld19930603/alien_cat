@@ -1,0 +1,17 @@
+package com.aliencat.springboot.ssm.$!{cfg.abc}.mapper;
+
+import com.aliencat.springboot.ssm.common.mapper.CommonMapper;
+import com.aliencat.springboot.ssm.$!{cfg.abc}.entity.${entity};
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ * $!{table.comment} Mapper 接口
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Mapper
+public interface ${table.mapperName} extends CommonMapper<${entity}> {
+
+        }
+
