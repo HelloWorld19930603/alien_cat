@@ -1,6 +1,6 @@
 package ${package.Entity};
 
-import cn.huanzi.qch.springbootmybatisplus.common.entity.PageCondition;
+import com.aliencat.springboot.ssm.common.entity.PageCondition;
     #foreach($pkg in ${table.importPackages})
     import ${pkg};
     #end

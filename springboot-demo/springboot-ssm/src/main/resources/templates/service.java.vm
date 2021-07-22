@@ -1,8 +1,8 @@
-package cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.service;
+package com.aliencat.springboot.ssm.$!{cfg.abc}.service;
 
-import cn.huanzi.qch.springbootmybatisplus.common.service.CommonService;
-import cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.entity.${entity};
-import cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.entity.${entity}Vo;
+import com.aliencat.springboot.ssm.common.service.CommonService;
+import com.aliencat.springboot.ssm.$!{cfg.abc}.entity.${entity};
+import com.aliencat.springboot.ssm.$!{cfg.abc}.entity.${entity}Vo;
 
 /**
  * $!{table.comment} 服务类

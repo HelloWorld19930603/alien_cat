@@ -52,7 +52,7 @@ public class CodeGenerator {
     /**
      * 请自定义自己的包名，后续的代码生成会在这个包下
      */
-    private static final String PACKAGE_NAME = "cn.huanzi.qch.springbootmybatisplus";
+    private static final String PACKAGE_NAME = "com.aliencat.springboot.ssm";
 
     /**
      * 项目根路径

@@ -1,7 +1,7 @@
-package cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.mapper;
+package com.aliencat.springboot.ssm.$!{cfg.abc}.mapper;
 
-import cn.huanzi.qch.springbootmybatisplus.common.mapper.CommonMapper;
-import cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.entity.${entity};
+import com.aliencat.springboot.ssm.common.mapper.CommonMapper;
+import com.aliencat.springboot.ssm.$!{cfg.abc}.entity.${entity};
 import org.apache.ibatis.annotations.Mapper;
 
 /**

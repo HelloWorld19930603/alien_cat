@@ -1,9 +1,9 @@
-package cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.controller;
+package com.aliencat.springboot.ssm.$!{cfg.abc}.controller;
 
-import cn.huanzi.qch.springbootmybatisplus.common.controller.CommonController;
-import cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.entity.${entity};
-import cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.entity.${entity}Vo;
-import cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.service.${entity}Service;
+import com.aliencat.springboot.ssm.common.controller.CommonController;
+import com.aliencat.springboot.ssm.$!{cfg.abc}.entity.${entity};
+import com.aliencat.springboot.ssm.$!{cfg.abc}.entity.${entity}Vo;
+import com.aliencat.springboot.ssm.$!{cfg.abc}.service.${entity}Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
