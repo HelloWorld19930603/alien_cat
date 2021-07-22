@@ -1,4 +1,4 @@
-package com.aliencat.springboot.redis.config;
+package com.aliencat.springboot.boostrap.redis.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

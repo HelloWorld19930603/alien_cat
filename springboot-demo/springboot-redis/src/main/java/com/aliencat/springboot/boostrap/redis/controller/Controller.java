@@ -1,4 +1,4 @@
-package com.aliencat.springboot.redis.controller;
+package com.aliencat.springboot.boostrap.redis.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

@@ -1,11 +1,9 @@
-package com.aliencat.springboot;
+package com.aliencat.springboot.boostrap;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * Hello world!
- */
+
 @SpringBootApplication
 public class BoostrapApplication {
 

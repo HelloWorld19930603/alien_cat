@@ -1,4 +1,4 @@
-package com.aliencat.springboot.response;
+package com.aliencat.springboot.boostrap.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;

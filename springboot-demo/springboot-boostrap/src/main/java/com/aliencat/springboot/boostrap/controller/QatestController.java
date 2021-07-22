@@ -1,6 +1,6 @@
-package com.aliencat.springboot.controller;
+package com.aliencat.springboot.boostrap.controller;
 
-import com.aliencat.springboot.response.JSONResult;
+import com.aliencat.springboot.boostrap.response.JSONResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
