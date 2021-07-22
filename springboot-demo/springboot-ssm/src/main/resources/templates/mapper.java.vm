@@ -1,0 +1,17 @@
+package cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.mapper;
+
+import cn.huanzi.qch.springbootmybatisplus.common.mapper.CommonMapper;
+import cn.huanzi.qch.springbootmybatisplus.$!{cfg.abc}.entity.${entity};
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ * $!{table.comment} Mapper 接口
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Mapper
+public interface ${table.mapperName} extends CommonMapper<${entity}> {
+
+        }
+
