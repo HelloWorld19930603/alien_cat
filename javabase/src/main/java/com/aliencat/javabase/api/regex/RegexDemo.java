@@ -59,4 +59,33 @@ public class RegexDemo {
     }
 
 
+    /**
+     * Matcher.matches()/ Matcher.lookingAt()/ Matcher.find(),三个方法均返回boolean类型
+     * matches()：尝试对整个目标字符展开匹配检测，也就是只有整个目标字符串完全匹配时才返回真值。
+     * lookingAt()：对前面的字符串进行匹配，只有匹配到的字符串在最前面才会返回true。
+     * find()：对字符串进行匹配，匹配到的字符串可以在任何位置。
+     */
+    @Test
+    public void test3() {
+        String info = "xyz123abc";
+        Pattern p1 = Pattern.compile("\\d+");
+        Pattern p2 = Pattern.compile("\\w+\\d+\\w+");
+        Matcher matcher = p1.matcher(info);
+        Matcher matcher1 = p2.matcher(info);
+        //matches()对整个字符串进行匹配,只有整个字符串都匹配了才返回true 。
+        System.out.println(matcher.matches());//false
+        System.out.println(matcher1.matches());//true
+
+        Pattern p = Pattern.compile("a+");
+        Matcher m1 = p.matcher("aabbaa");
+        System.out.println("this is the first :");
+        System.out.println(m1.find() + " : " + m1.lookingAt() + " : " + m1.matches());
+        Matcher m2 = p.matcher("bbaa");
+        System.out.println("this is the second :");
+        System.out.println(m2.find() + " : " + m2.lookingAt() + " : " + m2.matches());
+        Matcher m3 = p.matcher("bb");
+        System.out.println("this is the last :");
+        System.out.println(m3.find() + " : " + m3.lookingAt() + " : " + m3.matches());
+    }
+
 }
