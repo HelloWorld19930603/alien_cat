@@ -2,12 +2,6 @@ package com.aliencat.application.common.utils;
 
 import java.util.List;
 
-/**
- * @Title: PagedGridResult.java
- * @Package com.aliencat.common.utils
- * @Description: 用来返回分页Grid的数据格式
- * Copyright: Copyright (c) 2019
- */
 public class PagedGridResult {
 
     private int page;            // 当前页数

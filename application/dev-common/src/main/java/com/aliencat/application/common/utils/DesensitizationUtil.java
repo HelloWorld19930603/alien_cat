@@ -14,7 +14,7 @@ public class DesensitizationUtil {
     private static final String SYMBOL = "*";
 
     public static void main(String[] args) {
-        String name = commonDisplay("慕课网");
+        String name = commonDisplay("淘宝");
         String mobile = commonDisplay("13900000000");
         String mail = commonDisplay("admin@aliencat.com");
         String address = commonDisplay("北京大运河东路888号");

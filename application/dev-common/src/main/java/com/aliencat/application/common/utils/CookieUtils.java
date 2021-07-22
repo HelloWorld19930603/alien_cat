@@ -10,16 +10,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
-
-/**
- * @author aliencat
- * @version V1.0
- * @Title: CookieUtils.java
- * @Package com.aliencat.common.utils
- * @Description: Cookie 工具类
- * Copyright: Copyright (c)
- * Company: www.aliencat.com
- */
 public final class CookieUtils {
 
     final static Logger logger = LoggerFactory.getLogger(CookieUtils.class);
