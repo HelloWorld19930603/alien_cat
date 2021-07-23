@@ -72,17 +72,15 @@ public class NIOClient {
                     // 如果正在连接，则完成连接
                     if (channel.isConnectionPending()) {
                         channel.finishConnect();
-
                     }
                     // 设置成非阻塞
                     channel.configureBlocking(false);
 
                     System.out.println("连接服务器成功，发送一条下次过去。");
                     // 在这里可以给服务端发送信息哦
-                    channel.write(ByteBuffer.wrap(new String("我是www.gameboys.cn").getBytes()));
+                    channel.write(ByteBuffer.wrap(new String("我是外星喵").getBytes()));
                     // 在和服务端连接成功之后，为了可以接收到服务端的信息，需要给通道设置读的权限。
                     channel.register(this.selector, SelectionKey.OP_READ);
-
 
                     // 获得了可读的事件
                 } else if (key.isReadable()) {

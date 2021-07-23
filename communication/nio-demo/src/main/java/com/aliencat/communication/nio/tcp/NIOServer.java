@@ -7,7 +7,9 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * NIO服务端
@@ -16,6 +18,7 @@ public class NIOServer {
     private static int port = 8001;
     // 通道管理器
     private Selector selector;
+    private Set<SocketChannel> channelSet = new HashSet<>();
 
     /**
      * 启动服务端测试
@@ -46,7 +49,6 @@ public class NIOServer {
     /**
      * 采用轮询的方式监听selector上是否有需要处理的事件，如果有，则进行处理
      */
-    @SuppressWarnings("unchecked")
     public void listen() throws IOException {
         System.out.println("服务端启动成功！");
         // 轮询访问selector
@@ -66,15 +68,15 @@ public class NIOServer {
                     SocketChannel channel = server.accept();
                     // 设置成非阻塞
                     channel.configureBlocking(false);
-
                     // 在这里可以给客户端发送信息哦
-                    channel.write(ByteBuffer.wrap(new String("向客户端发送了一条信息").getBytes()));
+                    channel.write(ByteBuffer.wrap("向客户端发送了一条信息".getBytes()));
                     // 在和客户端连接成功之后，为了可以接收到客户端的信息，需要给通道设置读的权限。
                     channel.register(this.selector, SelectionKey.OP_READ);
-
+                    channelSet.add(channel);
                     // 获得了可读的事件
                 } else if (key.isReadable()) {
-                    read(key);
+                    String msg = read(key);
+                    broadcast(key, msg);
                 }
 
             }
@@ -85,7 +87,7 @@ public class NIOServer {
     /**
      * 处理读取客户端发来的信息 的事件
      */
-    public void read(SelectionKey key) throws IOException {
+    public String read(SelectionKey key) throws IOException {
         // 服务器可读取消息:得到事件发生的Socket通道
         SocketChannel channel = (SocketChannel) key.channel();
         // 创建读取的缓冲区
@@ -94,8 +96,22 @@ public class NIOServer {
         byte[] data = buffer.array();
         String msg = new String(data).trim();
         System.out.println("服务端收到信息：" + msg);
-        ByteBuffer outBuffer = ByteBuffer.wrap(msg.getBytes());
-        channel.write(outBuffer);// 将消息回送给客户端
+        return msg;
     }
 
+    /**
+     * 将消息广播给其它客户端
+     */
+    public void broadcast(SelectionKey key, String msg) throws IOException {
+        // 服务器可读取消息:得到事件发生的Socket通道
+        SocketChannel channel = (SocketChannel) key.channel();
+
+        for (SocketChannel otherChannel : channelSet) {
+            if (otherChannel == channel) {
+                continue;
+            }
+            ByteBuffer outBuffer = ByteBuffer.wrap(msg.getBytes());
+            otherChannel.write(outBuffer);// 将消息回送给其它客户端
+        }
+    }
 }
