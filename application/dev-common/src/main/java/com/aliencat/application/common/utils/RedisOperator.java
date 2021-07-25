@@ -13,10 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author 慕课网
- * @Title: Redis 工具类
- */
 @Component
 public class RedisOperator {
 

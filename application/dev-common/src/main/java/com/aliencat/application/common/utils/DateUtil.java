@@ -48,21 +48,12 @@ public class DateUtil {
     }
 
     /**
-     * Returns the Date from a julian. The Julian date will be converted to noon GMT,
-     * such that it matches the nearest half-integer (i.e., a julian date of 1.4 gets
-     * changed to 1.5, and 0.9 gets changed to 0.5.)
-     *
-     * @param JD the Julian date
-     * @return the Gregorian date
+     * 转换为格林威治标准时间中午，以便它匹配最接近的半整数
      */
     public static final Date toDate(float JD) {
 
-        /* To convert a Julian Day Number to a Gregorian date, assume that it is for 0 hours, Greenwich time (so
-         * that it ends in 0.5). Do the following calculations, again dropping the fractional part of all
-         * multiplicatons and divisions. Note: This method will not give dates accurately on the
-         * Gregorian Proleptic Calendar, i.e., the calendar you get by extending the Gregorian
-         * calendar backwards to years earlier than 1582. using the Gregorian leap year
-         * rules. In particular, the method fails if Y<400. */
+        /* 注意：此方法不会准确地给出公历预测日历上的日期，即通过使用公历闰年规则将公历向后扩展到早于 1582 年的日历。
+        特别是，如果 Y<400，该方法将失败*/
         float Z = (normalizedJulian(JD)) + 0.5f;
         float W = (int) ((Z - 1867216.25f) / 36524.25f);
         float X = (int) (W / 4f);
@@ -94,13 +85,8 @@ public class DateUtil {
     }
 
     /**
-     * Returns the days between two dates. Positive values indicate that
-     * the second date is after the first, and negative values indicate, well,
-     * the opposite. Relying on specific times is problematic.
-     *
-     * @param early the "first date"
-     * @param late  the "second date"
-     * @return the days between the two dates
+     * 返回两个日期之间的天数。
+     * 正值表示第二个日期在第一个日期之后，负值表示正好相反。依靠特定的时间是有问题的。
      */
     public static final int daysBetween(Date early, Date late) {
 
@@ -113,28 +99,14 @@ public class DateUtil {
     }
 
     /**
-     * Returns the days between two dates. Positive values indicate that
-     * the second date is after the first, and negative values indicate, well,
-     * the opposite.
-     *
-     * @param early
-     * @param late
-     * @return the days between two dates.
+     * 返回两个日期之间的天数
      */
     public static final int daysBetween(Calendar early, Calendar late) {
 
         return (int) (toJulian(late) - toJulian(early));
     }
 
-    /**
-     * Return a Julian date based on the input parameter. This is
-     * based from calculations found at
-     * <a href="http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html">Julian Day Calculations
-     * (Gregorian Calendar)</a>, provided by Bill Jeffrys.
-     *
-     * @param c a calendar instance
-     * @return the julian day number
-     */
+
     public static final float toJulian(Calendar c) {
 
         int Y = c.get(Calendar.YEAR);
@@ -150,15 +122,7 @@ public class DateUtil {
         return JD;
     }
 
-    /**
-     * Return a Julian date based on the input parameter. This is
-     * based from calculations found at
-     * <a href="http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html">Julian Day Calculations
-     * (Gregorian Calendar)</a>, provided by Bill Jeffrys.
-     *
-     * @param date
-     * @return the julian day number
-     */
+
     public static final float toJulian(Date date) {
 
         Calendar c = Calendar.getInstance();
@@ -167,14 +131,7 @@ public class DateUtil {
         return toJulian(c);
     }
 
-    /**
-     * @param isoString
-     * @param fmt
-     * @param field     Calendar.YEAR/Calendar.MONTH/Calendar.DATE
-     * @param amount
-     * @return
-     * @throws ParseException
-     */
+
     public static final String dateIncrease(String isoString, String fmt,
                                             int field, int amount) {
 
@@ -192,14 +149,7 @@ public class DateUtil {
     }
 
     /**
-     * Time Field Rolling function.
-     * Rolls (up/down) a single unit of time on the given time field.
-     *
-     * @param isoString
-     * @param field     the time field.
-     * @param up        Indicates if rolling up or rolling down the field value.
-     * @param expanded  use formating char's
-     * @throws ParseException if an unknown field value is given.
+     * 时间滚动功能
      */
     public static final String roll(String isoString, String fmt, int field,
                                     boolean up) throws ParseException {
@@ -285,18 +235,12 @@ public class DateUtil {
 
     /**
      * java.util.Date
-     *
-     * @param dateText
      */
     public static Date stringToDate(String dateString) {
         return stringToDate(dateString, ISO_EXPANDED_DATE_FORMAT, LENIENT_DATE);
     }
 
-    /**
-     * @param pattern
-     * @param date
-     * @return
-     */
+
     public static String dateToString(Date date, String pattern) {
 
         if (date == null) {
@@ -318,17 +262,12 @@ public class DateUtil {
 
     /**
      * yyyy-MM-dd
-     *
-     * @param date
-     * @return
      */
     public static String dateToString(Date date) {
         return dateToString(date, ISO_EXPANDED_DATE_FORMAT);
     }
 
-    /**
-     * @return
-     */
+
     public static Date getCurrentDateTime() {
         Calendar calNow = Calendar.getInstance();
         Date dtNow = calNow.getTime();
@@ -336,10 +275,7 @@ public class DateUtil {
         return dtNow;
     }
 
-    /**
-     * @param pattern
-     * @return
-     */
+
     public static String getCurrentDateString(String pattern) {
         return dateToString(getCurrentDateTime(), pattern);
     }
@@ -356,9 +292,6 @@ public class DateUtil {
     /**
      * 返回固定格式的当前时间
      * yyyy-MM-dd hh:mm:ss
-     *
-     * @param date
-     * @return
      */
     public static String dateToStringWithTime() {
 
@@ -368,9 +301,6 @@ public class DateUtil {
 
     /**
      * yyyy-MM-dd hh:mm:ss
-     *
-     * @param date
-     * @return
      */
     public static String dateToStringWithTime(Date date) {
 
@@ -392,11 +322,6 @@ public class DateUtil {
         return cal.getTime();
     }
 
-    /**
-     * @param date
-     * @param days
-     * @return java.util.Date
-     */
     public static Date dateIncreaseByMonth(Date date, int mnt) {
 
         Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone(
@@ -407,11 +332,6 @@ public class DateUtil {
         return cal.getTime();
     }
 
-    /**
-     * @param date
-     * @param mnt
-     * @return java.util.Date
-     */
     public static Date dateIncreaseByYear(Date date, int mnt) {
 
         Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone(
@@ -512,8 +432,7 @@ public class DateUtil {
     }
 
     /**
-     * Function to convert String to Date Object. If invalid input then current or next day date
-     * is returned (Added by Ali Naqvi on 2006-5-16).
+     * 将字符串转换为日期对象的函数。如果输入无效，则返回当前或第二天的日期。
      *
      * @param str      String input in YYYY-MM-DD HH:MM[:SS] format.
      * @param isExpiry boolean if set and input string is invalid then next day date is returned
@@ -577,10 +496,7 @@ public class DateUtil {
     }
 
     /**
-     * @return
-     * @Description: 获得本月的第一天日期
-     * @author leechenxiang
-     * @date 2017年5月31日 下午1:37:34
+     * 获得本月的第一天日期
      */
     public static String getFirstDateOfThisMonth() {
 
@@ -596,10 +512,7 @@ public class DateUtil {
     }
 
     /**
-     * @return
-     * @Description: 获得本月的最后一天日期
-     * @author leechenxiang
-     * @date 2017年5月31日 下午1:37:50
+     * 获得本月的最后一天日期
      */
     public static String getLastDateOfThisMonth() {
         SimpleDateFormat format = new SimpleDateFormat(ISO_EXPANDED_DATE_FORMAT);
@@ -613,7 +526,7 @@ public class DateUtil {
     }
 
     /**
-     * @Description: 判断字符串日期是否匹配指定的格式化日期
+     * 判断字符串日期是否匹配指定的格式化日期
      */
     public static boolean isValidDate(String strDate, String formatter) {
         SimpleDateFormat sdf = null;

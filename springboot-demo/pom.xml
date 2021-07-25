@@ -6,6 +6,9 @@
     <modules>
         <module>MyStarter</module>
         <module>springboot-redis</module>
+        <module>springboot-boostrap</module>
+        <module>springboot-oauth2</module>
+        <module>springboot-ssm</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

@@ -6,14 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
-/**
- * @author aliencat
- * @Title: JsonUtils.java
- * @Package com.aliencat.common.utils
- * @Description: json转换类
- * Copyright: Copyright (c)
- * Company: www.aliencat.com
- */
 public class JsonUtils {
 
     // 定义jackson对象

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>qatest</title>
+
+    <!-- Bootstrap -->
+    <link href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<style type="text/css">
+    .row {
+        margin-top: 8px;
+        margin-bottom: 4px;
+    }
+
+    label {
+        font-size: 22px;
+    }
+</style>
+
+<body>
+
+<h1 style="text-align: center;">
+    <span class="label label-default">测试专用</span>
+</h1>
+<div class="row">
+
+    <div class="input-lg-3">
+
+    </div><!-- /.col-lg-6 -->
+
+</div><!-- /.row -->
+<div class="row">
+    <div class="col-lg-3">
+    </div>
+
+    <div class="col-lg-6">
+
+        <div class="form-group">
+            <label for="input" style="width: 100%"><span class="label label-info">输入：</span>
+                <div class="btn btn-info pull-right" id="templateWithParam" style="float: right;">有参模板</div>
+                <div class="btn btn-info pull-right" id="templateNoParam" style="float: right;margin-right: 10px;">
+                    无参模板
+                </div>
+            </label>
+            <textarea class="form-control" id='input' placeholder="请输入JSON参数" rows="12"></textarea>
+        </div>
+
+    </div>
+    <div class="col-lg-3">
+        <button class="btn btn-primary btn-lg" id='submit' style="margin-top: 24%;">提交</button>
+    </div>
+</div>
+
+
+<div class='row'>
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label for="output"><span class="label label-info">输出：</span></label>
+            <textarea class="form-control" disabled="disabled" id='output' name='textarea' rows="20"
+                      style="cursor:pointer;">
+            </textarea>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <button class="btn btn-default btn-lg" id='clear' style="margin-top: 24%;">清空</button>
+    </div>
+</div>
+
+
+</body>
+</html>
+
+
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+<script src="webjars/jquery/3.1.1/jquery.min.js"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<script type="text/javascript">
+
+    $("#submit").on('click', function () {
+
+        var data = $("#input").val();
+        /* {
+                "appCode": "GW_YDSCA_APP01",
+                "mainAcct": "17815833640",
+                "appSecret": "b9fd74b4349e064caa7c6a42b2f2f84b"
+            }
+        */
+        $.ajax({
+            url: '/qatest',
+            type: 'POST',
+            data: {'data': data},
+            cache: false,//false是不缓存，true为缓存
+            async: true,//true为异步，false为同步
+            beforeSend: function () {
+                //请求前
+            },
+            success: function (data) {
+                if (data) {
+                    //Authorization=data;
+                    //$.cookie("Authorization","Bearer "+Authorization,{expires:0.02,path: '/'});
+                }
+
+                var output = $("#output").val();
+                $("#output").val('[' + dateFormat("YYYY-mm-dd HH:MM:SS", new Date()) + ']:' + data.msg + "-" + data.data + "\n\n" + output);
+            },
+            error: function () {
+                //请求失败时
+            }
+        })
+
+    })
+
+    var part1 = "   {\n" +
+        "        \"appCode\": \"GW_YDSCA_APP01\",\n" +
+        "        \"mainAcct\": \"17815833640\",\n" +
+        "        \"appSecret\": \"b9fd74b4349e064caa7c6a42b2f2f84b\",\n" +
+        "        \"pageCode\": \"authentication\",\n" +
+        "        \"apiCode\": \"GW_ESOPBUSIBOOT_QRY_SESSIONQRY_TOKENINFO_001\",\n" +
+        "        \"apiVersion\": \"1.0.0\",\n" +
+        "        \"format\": \"html+json\",\n" +
+        "        \"contentType\": \"application/json\",\n" +
+        "        \"applyToken\": \"http://aifgwym-qatest.yw.zj.chinamobile.com:2333/oauth2/authorization/applyToken\",\n" +
+        "        \"serviceUrl\": \"http://aifgwym-qatest.yw.zj.chinamobile.com:2333/http\"";
+    var part2 = ",\n        \"param\" : {\"custName\":\"zhangsan\",  \"contPhone\":\"123\", \"custAddress\":\"abc\"}";
+    var part3 = "\n   }";
+
+    $("#templateWithParam").on("click", function () {
+        var jsonData = part1 + part2 + part3;
+        $("#input").val(jsonData);
+    })
+
+    $("#templateNoParam").on("click", function () {
+        var jsonData = part1 + part3;
+        $("#input").val(jsonData);
+    })
+
+    $("#clear").on('click', function () {
+
+        $("#output").val("");
+    })
+
+
+    function dateFormat(fmt, date) {
+        let ret;
+        const opt = {
+            "Y+": date.getFullYear().toString(),        // 年
+            "m+": (date.getMonth() + 1).toString(),     // 月
+            "d+": date.getDate().toString(),            // 日
+            "H+": date.getHours().toString(),           // 时
+            "M+": date.getMinutes().toString(),         // 分
+            "S+": date.getSeconds().toString()          // 秒
+            // 有其他格式化字符需求可以继续添加，必须转化成字符串
+        };
+        for (let k in opt) {
+            ret = new RegExp("(" + k + ")").exec(fmt);
+            if (ret) {
+                fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+            }
+            ;
+        }
+        ;
+        return fmt;
+    }
+
+</script>
