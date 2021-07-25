@@ -1,6 +1,6 @@
 package com.aliencat.springboot.controller;
 
-import com.example.shopgoods.controller.zookeeper.zookeeperImpl.ZooKeeperImpl;
+import com.aliencat.springboot.service.impl.ZooKeeperServiceImpl;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,13 @@ public class ZooKeeperController {
     private CuratorFramework zkClient;
 
     @Autowired
-    private ZooKeeperImpl zooKeeper;
+    private ZooKeeperServiceImpl zooKeeperServiceImpl;
 
 
     /**
      * zookeeper 获取节点下的数据
      * <p>
-     * post请求： http://localhost:8082/zookeeper/makeOrder?path=/task
+     * post请求： http://localhost:8080/makeOrder?path=/task
      *
      * @param path
      * @return
@@ -119,9 +119,9 @@ public class ZooKeeperController {
      * @param product
      * @return
      */
-    @PostMapping("/makeOrder")
+    @RequestMapping("/makeOrder")
     public String makeOrder(@RequestParam(value = "product") String product) {
-        zooKeeper.makeOrder(product);
+        zooKeeperServiceImpl.makeOrder(product);
         return "success";
     }
 }
