@@ -1,4 +1,4 @@
-package com.aliencat.communication.nio.websocketchat;
+package com.aliencat.communication.webchat;
 
 
 import io.netty.channel.Channel;
