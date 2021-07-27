@@ -12,4 +12,9 @@ public class Request {
     private String command;
     private Object content;
 
+
+    public Request() {
+        id = nid.incrementAndGet();
+    }
+
 }

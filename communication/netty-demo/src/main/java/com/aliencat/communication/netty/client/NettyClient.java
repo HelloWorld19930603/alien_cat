@@ -51,7 +51,7 @@ public class NettyClient {
             ChannelFuture future = boostrap.connect("localhost", 8080).sync();
 
             User user = new User();
-            user.setAge("11");
+            user.setAge("33");
             user.setId(1);
             user.setName("张三");
 
@@ -63,8 +63,6 @@ public class NettyClient {
             future.channel().closeFuture().sync();
             Object result = future.channel().attr(AttributeKey.valueOf("ChannelKey")).get();
             //System.out.println(result);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
