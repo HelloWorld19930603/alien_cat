@@ -1,4 +1,4 @@
-package com.aliencat.communication.nio.server.example.nio;
+package com.aliencat.communication.nio.buffer;
 
 import org.junit.Test;
 

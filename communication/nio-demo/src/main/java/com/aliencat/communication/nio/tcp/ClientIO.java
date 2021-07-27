@@ -1,4 +1,4 @@
-package com.aliencat.communication.nio.server.example.client;
+package com.aliencat.communication.nio.tcp;
 
 import java.io.*;
 import java.net.Socket;

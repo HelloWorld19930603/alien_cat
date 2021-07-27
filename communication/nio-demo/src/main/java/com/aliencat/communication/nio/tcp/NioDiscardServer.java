@@ -1,4 +1,4 @@
-package com.aliencat.communication.nio.server.example.nio;
+package com.aliencat.communication.nio.tcp;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
