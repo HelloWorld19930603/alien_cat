@@ -35,14 +35,11 @@ public class SayHelloClient {
         /**
          * 新建一个线程让它单独去跑,我们可以main方法测试一下发送消息和接受消息
          */
-        Thread clientThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    client.run();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        Thread clientThread = new Thread(() -> {
+            try {
+                client.run();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         });
         clientThread.start();
