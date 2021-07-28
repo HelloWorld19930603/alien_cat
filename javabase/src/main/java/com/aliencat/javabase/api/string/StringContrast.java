@@ -1,14 +1,17 @@
 package com.aliencat.javabase.api.string;
 
 
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * - String：String对象是不可变的。对String对象的任何改变都不影响到原对象的内容，
- *          相关的任何change操作都会导致该字符串变量指向新的对象的地址。
+ * 相关的任何change操作都会导致该字符串变量指向新的对象的地址。
  * - StringBuilder：StringBuilder是可变的（存入的值的内容和长度都是可改变的，且引用地址不变），它不是线程安全的。
  * - StringBuffer：StringBuffer也是可变的，它是线程安全的，所以它的开销比StringBuilder大
  */
 public final class StringContrast {
 
+    static ReentrantLock lock = new ReentrantLock();
 
     public static void performanceTest(int frequency) {
         String str = "";
@@ -29,7 +32,7 @@ public final class StringContrast {
             str = "";
         }
         str = null;
-        System.gc();//进行一次垃圾回收，避免缓存对后续测试的影响。
+        //System.gc();//进行一次垃圾回收，避免缓存对后续测试的影响。
         System.out.println("str          累加" + frequency + "个长度为1的字符串,平均耗时为："
                 + totalTime / cycle);
 
@@ -42,8 +45,7 @@ public final class StringContrast {
             totalTime += System.nanoTime() - time;
             stringBuffer = new StringBuffer();
         }
-        stringBuffer = null;
-        System.gc();
+        stringBuffer = new StringBuffer();
         System.out.println("stringBuffer 累加" + frequency + "个长度为1的字符串,平均耗时为："
                 + totalTime / cycle);
 
@@ -57,8 +59,27 @@ public final class StringContrast {
             stringBuilder = new StringBuilder();
         }
         stringBuilder = null;
-        System.gc();
         System.out.println("stringBuilder累加" + frequency + "个长度为1的字符串,平均耗时为："
+                + totalTime / cycle);
+
+
+        //由于JIT对单线程下锁优化，所以即使这里加锁，也几乎不会影响效率
+        totalTime = i = 0;
+        for (int j = 0; j < cycle; j++) {
+            lock.lock();
+            try {
+                time = System.nanoTime();
+                while (i++ < frequency) {
+                    stringBuffer.append("A");
+                }
+                totalTime += System.nanoTime() - time;
+                stringBuffer = new StringBuffer();
+            } finally {
+                lock.unlock();
+            }
+        }
+        stringBuffer = null;
+        System.out.println("stringBuffer 累加" + frequency + "个长度为1的字符串,平均耗时为："
                 + totalTime / cycle);
 
         System.out.println();
@@ -67,7 +88,7 @@ public final class StringContrast {
     public static void main(String[] args) {
         performanceTest(100);
         performanceTest(10000);
-        performanceTest(1000000);
+        performanceTest(100000);
     }
 
 }
