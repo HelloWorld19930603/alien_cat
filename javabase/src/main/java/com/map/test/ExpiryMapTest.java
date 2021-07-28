@@ -1,19 +1,19 @@
 package com.map.test;
 
-import com.map.ExpiryMap;
+import com.map.ExpiryHashMap;
 
 public class ExpiryMapTest {
-  public static void main(String[] args) {
-    //
-      ExpiryMap<String, String> expiryMap = new ExpiryMap<String,String>();
-      String key="key";
-      expiryMap.put(key,"value",1);
-      System.out.println("时间内取值："+expiryMap.get(key));
-      try {
-          Thread.sleep(5000);
-      } catch (InterruptedException e) {
-          e.printStackTrace();
-      }
-      System.out.println("过期后取值："+expiryMap.get(key));
-  }
+    public static void main(String[] args) {
+        //
+        ExpiryHashMap<String, String> expiryHashMap = new ExpiryHashMap<String, String>();
+        String key = "key";
+        expiryHashMap.put(key, "value", 888);
+        System.out.println("有效期内取值：" + expiryHashMap.get(key));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("过期后取值：" + expiryHashMap.get(key));
+    }
 }
