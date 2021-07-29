@@ -31,8 +31,6 @@ public final class StringContrast {
             totalTime += System.nanoTime() - time;
             str = "";
         }
-        str = null;
-        //System.gc();//进行一次垃圾回收，避免缓存对后续测试的影响。
         System.out.println("str          累加" + frequency + "个长度为1的字符串,平均耗时为："
                 + totalTime / cycle);
 
@@ -45,7 +43,6 @@ public final class StringContrast {
             totalTime += System.nanoTime() - time;
             stringBuffer = new StringBuffer();
         }
-        stringBuffer = new StringBuffer();
         System.out.println("stringBuffer 累加" + frequency + "个长度为1的字符串,平均耗时为："
                 + totalTime / cycle);
 
@@ -58,11 +55,10 @@ public final class StringContrast {
             totalTime += System.nanoTime() - time;
             stringBuilder = new StringBuilder();
         }
-        stringBuilder = null;
         System.out.println("stringBuilder累加" + frequency + "个长度为1的字符串,平均耗时为："
                 + totalTime / cycle);
 
-
+        stringBuffer = new StringBuffer();
         //由于JIT对单线程下锁优化，所以即使这里加锁，也几乎不会影响效率
         totalTime = i = 0;
         for (int j = 0; j < cycle; j++) {
@@ -78,7 +74,6 @@ public final class StringContrast {
                 lock.unlock();
             }
         }
-        stringBuffer = null;
         System.out.println("stringBuffer 累加" + frequency + "个长度为1的字符串,平均耗时为："
                 + totalTime / cycle);
 
