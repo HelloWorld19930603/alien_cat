@@ -14,12 +14,21 @@ import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
 
-public class CuatorTest {
+public class CuratorTest {
 
     private CuratorFramework client;
 
     /**
      * 连接测试
+     * 使用CuratorFrameworkFactory的两个静态工厂方法来创建zookeeper客户端对象。
+     * 参数1：connectString，zookeeper服务器地址及端口号，多个zookeeper服务器地址以“,”分隔。
+     * 参数2：sessionTimeoutMs，会话超时时间，单位毫秒，默认为60000ms。
+     * 参数3：connectionTimeoutMs，连接超时时间，单位毫秒，默认为15000ms。
+     * 参数4：retryPolicy，重试连接策略，有四种实现，分别为：
+     * ExponentialBackoffRetry（重试指定的次数, 且每一次重试之间停顿的时间逐渐增加）、
+     * RetryNtimes（指定最大重试次数的重试策略）、
+     * RetryOneTimes（仅重试一次）、
+     * RetryUntilElapsed（一直重试直到达到规定的时间）
      */
     @Before
     public void testConnect() {
