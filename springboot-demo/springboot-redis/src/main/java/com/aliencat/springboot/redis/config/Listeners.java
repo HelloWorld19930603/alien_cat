@@ -1,4 +1,4 @@
-package com.aliencat.springboot.boostrap.redis.config;
+package com.aliencat.springboot.redis.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +21,7 @@ public class Listeners {
     public RedisMessageListenerContainer container(
             MessageListenerAdapter listenerAdapter1,
             MessageListenerAdapter listenerAdapter2,
-            RedisConnectionFactory connectionFactory
-    ) {
+            RedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
 
@@ -38,13 +37,13 @@ public class Listeners {
      * 监听
      */
     @Bean
-    MessageListenerAdapter listenerAdapter1(Receiver1 receiver) {
-        return new MessageListenerAdapter(receiver);
+    MessageListenerAdapter listenerAdapter1(Receiver1 receiver1) {
+        return new MessageListenerAdapter(receiver1);
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapter2(Receiver2 receiver) {
-        return new MessageListenerAdapter(receiver);
+    MessageListenerAdapter listenerAdapter2(Receiver2 receiver2) {
+        return new MessageListenerAdapter(receiver2);
     }
 
     /**

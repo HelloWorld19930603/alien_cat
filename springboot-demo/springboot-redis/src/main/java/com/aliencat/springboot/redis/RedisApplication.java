@@ -1,12 +1,12 @@
-package com.aliencat.springboot.boostrap.redis;
+package com.aliencat.springboot.redis;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringbootRedisApplication {
+public class RedisApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringbootRedisApplication.class, args);
+        SpringApplication.run(RedisApplication.class, args);
     }
 }

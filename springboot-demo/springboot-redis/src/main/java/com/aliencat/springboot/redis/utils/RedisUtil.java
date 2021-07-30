@@ -1,4 +1,4 @@
-package com.aliencat.springboot.boostrap.redis.utils;
+package com.aliencat.springboot.redis.utils;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;

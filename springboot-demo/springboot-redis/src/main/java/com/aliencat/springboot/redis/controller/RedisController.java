@@ -1,4 +1,4 @@
-package com.aliencat.springboot.boostrap.redis.controller;
+package com.aliencat.springboot.redis.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.TimeUnit;
 
-@RestController
-public class Controller {
+@RestController("/redis")
+public class RedisController {
 
     @Autowired
     private StringRedisTemplate template;
@@ -18,7 +18,7 @@ public class Controller {
      * 获取缓存
      */
     //测试：http://localhost:8080/redis/get/demo
-    @RequestMapping("/redis/get/{key}")
+    @RequestMapping("/get/{key}")
     public String get(@PathVariable("key") String key) {
         return template.opsForValue().get(key);
     }
@@ -27,7 +27,7 @@ public class Controller {
      * 设置缓存
      */
     //测试：http://localhost:8080/redis/set/demo/val
-    @RequestMapping("/redis/set/{key}/{value}")
+    @RequestMapping("/set/{key}/{value}")
     public Boolean set(@PathVariable("key") String key, @PathVariable("value") String value) {
         boolean flag = true;
         try {
@@ -46,7 +46,7 @@ public class Controller {
      * 发布消息
      */
     //测试：http://localhost:8080/redis/eventPush
-    @RequestMapping("/redis/eventPush")
+    @RequestMapping("/eventPush")
     public Boolean eventPush() {
         template.convertAndSend("topic1", "topic1-第一种事件消息");
         template.convertAndSend("topic2", "topic2-第二种事件消息");
