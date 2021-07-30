@@ -3,6 +3,9 @@ package com.aliencat.algorithm.limiting;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 漏桶限流算法
+ */
 public class LeakyBucketLimiter {
 
     private int capacity;

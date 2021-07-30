@@ -10,22 +10,24 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * 固定窗口限流算法
+ */
 @Slf4j
 public class FixedWindowLimiter {
 
     //本地缓存，以时间戳为key，以原子类计数器为value
-    private LoadingCache<Long, AtomicLong> counter =
-            CacheBuilder.newBuilder()
-                    .expireAfterWrite(10, TimeUnit.SECONDS)
-                    .build(new CacheLoader<Long, AtomicLong>() {
-                        @Override
-                        public AtomicLong load(Long seconds) throws Exception {
-                            return new AtomicLong(0);
-                        }
-                    });
-    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
+    private final LoadingCache<Long, AtomicLong> counter = CacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .build(new CacheLoader<Long, AtomicLong>() {
+                @Override
+                public AtomicLong load(Long seconds) throws Exception {
+                    return new AtomicLong(0);
+                }
+            });
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
     //设置限流阈值为15
-    private long limit = 15;
+    private final long limit = 15;
 
     /**
      * 固定时间窗口
