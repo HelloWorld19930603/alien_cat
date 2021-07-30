@@ -2,6 +2,8 @@ package com.aliencat.springboot.client;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.api.transaction.CuratorOp;
+import org.apache.curator.framework.api.transaction.CuratorTransactionResult;
 import org.apache.curator.framework.recipes.cache.NodeCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.TreeCache;
@@ -13,9 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class CuratorTest {
 
+    //Zookeeper客户端
     private CuratorFramework client;
 
     /**
@@ -36,6 +40,7 @@ public class CuratorTest {
                 .connectString("192.168.124.18:2181")  //连接地址和端口号
                 .sessionTimeoutMs(10000)     //会话超时时间
                 .connectionTimeoutMs(1000)   // 连接超时时间
+                .namespace("/test")      //名称空间
                 .retryPolicy(new ExponentialBackoffRetry(1000, 10))  //重试策略
                 .build();
         client.start();//开启连接
@@ -63,8 +68,10 @@ public class CuratorTest {
      */
     @Test
     public void testUpdateNode() throws Exception {
-        //指定版本更新节点数据
-        client.setData().withVersion(0).forPath("/test4", "test4 has updated!".getBytes());
+        //更新一个节点的数据内容
+        client.setData().forPath("/test4", "第一次更新".getBytes());
+        //更新一个节点的数据内容，强制指定版本进行更新
+        client.setData().withVersion(1).forPath("/test4", "第二次更新".getBytes());
     }
 
     /**
@@ -72,10 +79,16 @@ public class CuratorTest {
      */
     @Test
     public void testQueryNode() throws Exception {
-        Stat stat = new Stat();
-        byte[] bytes = client.getData().storingStatIn(stat).forPath("/test4");
+        Stat stat1 = client.checkExists().forPath("/test1");
+        System.out.println("路径节点/test1是否存在：" + (stat1 != null));
+
+        byte[] bytes = client.getData().forPath("/test2");
+        System.out.println("路径/test2的数据是：" + new String(bytes));
+
+        Stat stat2 = new Stat();
+        bytes = client.getData().storingStatIn(stat2).forPath("/test4");
         System.out.println("路径/test4的数据是：" + new String(bytes));
-        System.out.println("路径/test4的数据的版本是:" + stat.getVersion());
+        System.out.println("路径/test4的数据的版本是:" + stat2.getVersion());
     }
 
     /**
@@ -202,6 +215,36 @@ public class CuratorTest {
         Thread.sleep(5000);
 
     }
+
+
+    /**
+     * 事务测试
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testTransaction() throws Exception {
+        //定义几个基本操作
+        CuratorOp createOp = client.transactionOp().create()
+                .forPath("/transaction/one_path", "some transaction".getBytes());
+
+        CuratorOp setDataOp = client.transactionOp().setData()
+                .forPath("/transaction", "other transaction".getBytes());
+
+        CuratorOp deleteOp = client.transactionOp().delete()
+                .forPath("/transaction");
+
+        //事务执行结果
+        List<CuratorTransactionResult> results = client.transaction()
+                .forOperations(createOp, setDataOp, deleteOp);
+
+        //遍历输出结果
+        //因为节点“/transaction”存在子节点，所以在删除的时候将会报错，事务回滚
+        for (CuratorTransactionResult result : results) {
+            System.out.println("执行结果是： " + result.getForPath() + "--" + result.getType());
+        }
+    }
+
 
     /**
      * 关闭测试
