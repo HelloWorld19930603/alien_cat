@@ -2,19 +2,23 @@ package com.aliencat.springboot.client;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
+
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Data
 public class ZkClient {
 
 
-    //Zk集群地址
-    //private static final String ZK_ADDRESS = "192.168.233.128:2181";
-    private static final String ZK_ADDRESS = "127.0.0.1:2181";
     public static ZkClient instance = null;
 
     static {
@@ -22,21 +26,26 @@ public class ZkClient {
         instance.init();
     }
 
+    //Zk集群地址
+    private String zkUrl;
+    private int sessionTimeoutMs;
+    private int connectionTimeoutMs;
+    private int baseSleepTimeMs;
+    private int maxRetries;
     private CuratorFramework client;
 
-    private ZkClient() {
+    public ZkClient() {
 
     }
 
     public void init() {
-
-        if (null != client) {
-            return;
-        }
-        //创建客户端
-        client = ClientFactory.createSimple(ZK_ADDRESS);
-
-        //启动客户端实例,连接服务器
+        RetryPolicy retryPolicy = new ExponentialBackoffRetry(baseSleepTimeMs, maxRetries);
+        client = CuratorFrameworkFactory.builder()
+                .connectString(zkUrl)
+                .retryPolicy(retryPolicy)
+                .sessionTimeoutMs(sessionTimeoutMs)
+                .connectionTimeoutMs(connectionTimeoutMs)
+                .build();
         client.start();
     }
 
@@ -44,6 +53,9 @@ public class ZkClient {
         CloseableUtils.closeQuietly(client);
     }
 
+    public CuratorFramework getClient() {
+        return client;
+    }
 
     /**
      * 创建节点
@@ -81,7 +93,6 @@ public class ZkClient {
             e.printStackTrace();
         }
     }
-
 
     /**
      * 检查节点
@@ -126,5 +137,37 @@ public class ZkClient {
         return null;
     }
 
+    public void register() {
+        try {
+            String rootPath = "/" + "services";
+            String hostAddress = InetAddress.getLocalHost().getHostAddress();
+            String serviceInstance = "prometheus" + "-" + hostAddress + "-";
+            client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(rootPath + "/" + serviceInstance);
+        } catch (Exception e) {
+            log.error("注册出错", e);
+        }
+    }
+
+    public List<String> getChildren(String path) {
+        List<String> childrenList = new ArrayList<>();
+        try {
+            childrenList = client.getChildren().forPath(path);
+        } catch (Exception e) {
+            log.error("获取子节点出错", e);
+        }
+        return childrenList;
+    }
+
+    public int getChildrenCount(String path) {
+        return getChildren(path).size();
+    }
+
+    public List<String> getInstances() {
+        return getChildren("/services");
+    }
+
+    public int getInstancesCount() {
+        return getInstances().size();
+    }
 }
 

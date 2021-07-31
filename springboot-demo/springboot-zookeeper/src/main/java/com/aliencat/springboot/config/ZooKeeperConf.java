@@ -1,5 +1,6 @@
 package com.aliencat.springboot.config;
 
+import com.aliencat.springboot.client.ZkClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -13,8 +14,16 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class ZooKeeperConf {
 
-    @Value("${zk.url}")
+    @Value("${zookeeper.url}")
     private String zkUrl;
+    @Value(("${zookeeper.sessionTimeoutMs}"))
+    private int sessionTimeoutMs;
+    @Value("${zookeeper.connectionTimeoutMs}")
+    private int connectionTimeoutMs;
+    @Value("${zookeeper.maxRetries}")
+    private int maxRetries;
+    @Value("${zookeeper.baseSleepTimeMs}")
+    private int baseSleepTimeMs;
 
     @Bean
     public CuratorFramework getCuratorFramework() {
@@ -24,6 +33,18 @@ public class ZooKeeperConf {
         //必须调用start开始连接ZooKeeper
         client.start();
         return client;
+    }
+
+
+    @Bean(initMethod = "init", destroyMethod = "destroy")
+    public ZkClient zkClient() {
+        ZkClient zkClient = new ZkClient();
+        zkClient.setZkUrl(zkUrl);
+        zkClient.setSessionTimeoutMs(sessionTimeoutMs);
+        zkClient.setConnectionTimeoutMs(connectionTimeoutMs);
+        zkClient.setMaxRetries(maxRetries);
+        zkClient.setBaseSleepTimeMs(baseSleepTimeMs);
+        return zkClient;
     }
 
 }
