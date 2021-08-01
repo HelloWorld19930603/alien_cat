@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Implementation-Title: lg-rpc-provider
+Implementation-Title: rpc-service-provider
 Implementation-Version: 1.0-SNAPSHOT
 Build-Jdk-Spec: 1.8
 Created-By: Maven Archiver 3.4.0
