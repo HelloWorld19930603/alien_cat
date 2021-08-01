@@ -23,7 +23,6 @@ public class ZkClient {
 
     static {
         instance = new ZkClient();
-        instance.init();
     }
 
     //Zk集群地址
