@@ -13,6 +13,7 @@
     <modules>
         <module>rpc-service-api</module>
         <module>rpc-service-consumer</module>
+        <module>rpc-service-provider</module>
     </modules>
 
 
@@ -30,6 +31,13 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.75</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+            <version>4.2.0</version>
         </dependency>
     </dependencies>
 

@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>com.aliencat.communication</groupId>
-    <artifactId>rpc-service-consumer</artifactId>
+    <artifactId>rpc-service-provider</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>rpc-service-consumer</name>
+    <name>rpc-service-provider</name>
 
 
     <dependencies>
@@ -23,17 +23,17 @@
             <artifactId>rpc-service-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
         <!--spring相关依赖 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
     </dependencies>
-
 
 </project>
