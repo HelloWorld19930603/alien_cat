@@ -2,7 +2,7 @@ package com.aliencat.javabase.api.string;
 
 import org.junit.Test;
 
-public class StringTest {
+public class StringApiTest {
 
     @Test
     public void testReplace() {
