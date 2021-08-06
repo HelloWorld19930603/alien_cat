@@ -111,6 +111,14 @@
             <version>5.2.0</version>
         </dependency>
 
+
+        <!-- spring 相关 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.3.9</version>
+        </dependency>
+
     </dependencies>
 
     <build>
