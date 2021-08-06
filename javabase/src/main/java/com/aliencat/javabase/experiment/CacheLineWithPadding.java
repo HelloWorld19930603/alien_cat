@@ -15,6 +15,7 @@ import java.util.concurrent.CountDownLatch;
  * 但是通过缓存行填充，使得v1和v9不在一个缓存行(64字节)内，就可以避免缓存行失效
  * <p>
  * 注意：如果不是volatile修饰的变量，缓存行应该是不会立即失效的，也就是还会读到脏数据。
+ * 有人说@Contended注解也可以实现缓存行填充，但是我试过却没有效果，不知道什么原因，先记下
  */
 public class CacheLineWithPadding {
 
@@ -60,7 +61,7 @@ public class CacheLineWithPadding {
             }
             long start = System.currentTimeMillis();
             for (int i = 0; i < 100000000; i++) {
-                //v2++;    //耗时:3831
+                //cache.v2++;    //耗时:3831
                 cache.v9++;     //耗时:586    可见，通过使用缓存行填充可以提高cpu执行效率
             }
             System.out.println("t2耗时:" + (System.currentTimeMillis() - start));
