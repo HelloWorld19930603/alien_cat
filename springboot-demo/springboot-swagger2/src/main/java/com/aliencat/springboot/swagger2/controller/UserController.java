@@ -1,11 +1,14 @@
 package com.aliencat.springboot.swagger2.controller;
 
-import com.aliencat.springboot.swagger2.vo.UserVo;
+import com.aliencat.springboot.swagger2.pojo.User;
 import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 用户控制器
+ */
 @RestController
 @RequestMapping("user")
 @Api(tags = "user模块")
@@ -40,11 +43,11 @@ public class UserController {
     @ApiOperation(value = "根据UserVo对象查询用户信息", notes = "查询数据库中符合条件的用户信息")
     @ApiImplicitParam(paramType = "UserVo")
     @PostMapping("list")
-    public String list(UserVo userVo) {
-        if (userVo.getId() == 0) {
+    public String list(User user) {
+        if (user.getId() == 0) {
             return "查无此人";
         } else {
-            return userVo.toString();
+            return user.toString();
         }
     }
 
@@ -57,11 +60,11 @@ public class UserController {
             @ApiResponse(code = 10001, message = "xx业务规则不符合")
     })
     @PostMapping("page")
-    public String page(Integer page, Integer pageSize, UserVo userVo) {
-        if (userVo.getId() == 0) {
+    public String page(Integer page, Integer pageSize, User user) {
+        if (user.getId() == 0) {
             return "查无此人";
         } else {
-            return "page:" + page + ",pageSize:" + pageSize + "," + userVo.toString();
+            return "page:" + page + ",pageSize:" + pageSize + "," + user.toString();
         }
     }
 
