@@ -11,6 +11,7 @@
         <module>springboot-ssm</module>
         <module>springboot-zookeeper</module>
         <module>springboot-aop</module>
+        <module>springboot-swagger2</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
