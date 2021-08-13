@@ -28,6 +28,15 @@
             <artifactId>spring-session-data-redis</artifactId>
             <version>2.0.5.RELEASE</version>
         </dependency>
+
+        <!-- Redis-Jedis -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>
