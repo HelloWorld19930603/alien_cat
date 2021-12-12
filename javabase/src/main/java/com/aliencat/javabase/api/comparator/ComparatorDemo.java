@@ -1,9 +1,6 @@
 package com.aliencat.javabase.api.comparator;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class ComparatorDemo {
     public static void main(String[] args) {
@@ -12,7 +9,6 @@ public class ComparatorDemo {
                 new Person("李四", 19),
                 new Person("王五", 21)
         );
-        Collections.sort(people, new LexicographicComparator());
         System.out.println(people);
         Collections.sort(people, new Comparator<Person>() {
             @Override
@@ -22,13 +18,18 @@ public class ComparatorDemo {
             }
         });
         System.out.println(people);
-    }
-}
+        System.out.println("--------------------------------");
 
-class LexicographicComparator implements Comparator<Person> {
-    @Override
-    public int compare(Person a, Person b) {
-        return a.name.compareToIgnoreCase(b.name);
+
+        ArrayList<Student> students = new ArrayList<>();
+        students.add(new Student("小米", 12,80));
+        students.add(new Student("小红", 13,70));
+        students.add(new Student("小明", 11,66));
+        students.add(new Student("小方", 15,91));
+        System.out.println(students);
+        //这里会自动调用Person中重写的compareTo方法。
+        Collections.sort(students);
+        System.out.println(students);
     }
 }
 
@@ -42,5 +43,25 @@ class Person {
     @Override
     public String toString() {
         return String.format("{name=%s, age=%d}", name, age);
+    }
+}
+
+class Student extends Person implements Comparable<Student>{
+
+    int score;
+
+    Student(String n, int a,int s) {
+        super(n,a);
+        score = s;
+    }
+    @Override
+    public int compareTo(Student person) {
+        return name.compareTo(person.name);
+        //相当于 return this.name - person.name;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("{name=%s, age=%d, score=%d}", name, age, score);
     }
 }
