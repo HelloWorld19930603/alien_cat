@@ -30,6 +30,7 @@ public class CheckInclusion {
         }
         int[] cnt1 = new int[26];
         int[] cnt2 = new int[26];
+        //滑动窗口法比较
         for (int i = 0; i < m; i++) {
             cnt1[s1.charAt(i) - 'a']++;
             cnt2[s2.charAt(i) - 'a']++;
