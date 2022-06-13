@@ -12,6 +12,7 @@
         <module>springboot-zookeeper</module>
         <module>springboot-aop</module>
         <module>springboot-swagger2</module>
+        <module>springboot-mongodb</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -25,7 +26,10 @@
     <name>springboot-demo</name>
     <description>Demo project for Spring Boot</description>
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <dependencies>
 
