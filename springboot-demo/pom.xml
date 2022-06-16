@@ -13,6 +13,7 @@
         <module>springboot-aop</module>
         <module>springboot-swagger2</module>
         <module>springboot-mongodb</module>
+        <module>springboot-rocketmq</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
