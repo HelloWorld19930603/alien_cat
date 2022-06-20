@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>MyStarter</module>
+        <module>spring-boot-starter-mystarter</module>
         <module>springboot-redis</module>
         <module>springboot-boostrap</module>
         <module>springboot-oauth2</module>
@@ -15,6 +15,7 @@
         <module>springboot-mongodb</module>
         <module>springboot-rocketmq</module>
         <module>springboog-elesticsearch</module>
+        <module>springboot-solr</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
