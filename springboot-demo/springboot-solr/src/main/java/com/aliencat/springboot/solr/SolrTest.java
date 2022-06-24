@@ -18,7 +18,10 @@ public class SolrTest {
     static String baseSolrUrl = "http://localhost:8983/solr/new_core";
 
     public static void main(String[] args) {
-        update();
+        for(int i = 1;i<10;i++) {
+            String key = Long.toString(System.nanoTime()+i);
+            update(key,"新增数据-"+key);
+        }
         query();
         delete();
     }
@@ -82,12 +85,12 @@ public class SolrTest {
     }
 
     //包括新增和更新。 主键一致-更新。主键不存在-新增
-    public static void update() {
+    public static void update(String id,String content) {
         HttpSolrClient client = new HttpSolrClient.Builder(baseSolrUrl).build();
         //新增或更新。新增文档类型都是SolrInputDocument
         SolrInputDocument doc = new SolrInputDocument();
-        doc.addField("id", "007");
-        doc.addField("content", "测试Solr新增数据");
+        doc.addField("id", id);
+        doc.addField("content", content);
         try {
             UpdateResponse response = client.add(doc);
             System.out.println(String.format("status = %s ; QTime = %s", response.getStatus(), response.getQTime()));
