@@ -1,0 +1,47 @@
+{
+  "index": {
+    "number_of_replicas": 0,
+    "analysis": {
+      "filter": {
+        "english_stop": {
+          "type": "stop",
+          "stopwords": "_english_"
+        },
+        "chines_stop": {
+          "type": "stop",
+          "stopwords_path": "stopword/stop.txt"
+        }
+      },
+      "analyzer": {
+        "default_ts": {
+          "filter": [
+            "lowercase",
+            "english_stop",
+            "chines_stop"
+          ],
+          "char_filter": [
+            "tsconvert"
+          ],
+          "tokenizer": "standard"
+        },
+        "ik_ts_analyzer": {
+          "filter": [
+            "lowercase",
+            "english_stop",
+            "chines_stop"
+          ],
+          "char_filter": [
+            "tsconvert"
+          ],
+          "tokenizer": "ik_max_word"
+        }
+      },
+      "char_filter": {
+        "tsconvert": {
+          "convert_type": "t2s",
+          "type": "stconvert"
+        }
+      }
+    }
+  }
+}

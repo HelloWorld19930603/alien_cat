@@ -1,8 +1,11 @@
-package com.aliencat.springboot;
+package com.aliencat.springboot.elasticsearch;
 
 import com.alibaba.fastjson.JSONObject;
+import com.aliencat.springboot.elesticsearch.ElasticsearchApplication;
+import com.aliencat.springboot.elesticsearch.dao.EsArticleDao;
 import com.aliencat.springboot.elesticsearch.pojo.User;
-import org.apache.http.HttpHost;
+import com.aliencat.springboot.elesticsearch.repository.ArticleRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -18,33 +21,42 @@ import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.core.TimeValue;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.xcontent.XContentType;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = ElasticsearchApplication.class)
+@Slf4j
 public class ElasticsearchApiTest {
 
-    private RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
-            RestClient.builder(
-                    //若有多个，可以传一个数组
-                    new HttpHost("127.0.0.1", 9200, "http")));
-    ;
+    @Autowired
+    ArticleRepository articleRepository;
 
+    @Autowired
+    RestHighLevelClient restHighLevelClient;
+
+
+    @Autowired
+    EsArticleDao esArticleDao;
     /**
      * 创建索引测试
      */
@@ -116,7 +128,7 @@ public class ElasticsearchApiTest {
     @Test
     public void getDocument() throws IOException {
         //获取id为1的文档的信息
-        GetRequest request = new GetRequest("user_index", "1");
+        GetRequest request = new GetRequest("search4message", "qXE2kIEBKOvMc_HSXxZt");
 
         boolean exists = restHighLevelClient.exists(request, RequestOptions.DEFAULT);
         System.out.println("文档是否存在：" + exists);
@@ -124,6 +136,7 @@ public class ElasticsearchApiTest {
         if (exists) {
             GetResponse response = restHighLevelClient.get(request, RequestOptions.DEFAULT);
             System.out.println("文档内容为：" + response.getSourceAsString());
+            response.getSource().entrySet().stream().forEach(System.out::println);
         }
     }
 
@@ -220,4 +233,22 @@ public class ElasticsearchApiTest {
         }
     }
 
+
+    String indexName = "search4message";
+    public long countArticle(QueryBuilder query) throws IOException {
+        CountRequest countRequest = new CountRequest(indexName);
+        countRequest.query(query);
+        long count = restHighLevelClient.count(countRequest, RequestOptions.DEFAULT).getCount();
+        return count;
+    }
+
+    @Test
+    public void testCount() throws IOException {
+        System.out.println(countArticle(QueryBuilders.matchAllQuery()));
+    }
+
+    @Test
+    public void testSearch() throws IOException {
+        System.out.println(esArticleDao.searchArticle(QueryBuilders.matchAllQuery(),null,null,10000,0));
+    }
 }

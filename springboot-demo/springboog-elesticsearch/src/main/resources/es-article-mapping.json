@@ -1,0 +1,317 @@
+{
+  "properties": {
+    "article_id": {
+      "type": "keyword",
+      "index": true
+    },
+    "collection_timestamp": {
+      "type": "date",
+      "format": "date_hour_minute_second_millis"
+    },
+    "relate_article_gen_uuid": {
+      "type": "keyword"
+    },
+    "website_id": {
+      "type": "integer"
+    },
+    "site_type": {
+      "type": "integer"
+    },
+    "data_source_name": {
+      "fielddata": true,
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "area_type": {
+      "type": "integer"
+    },
+    "article_time": {
+      "type": "integer"
+    },
+    "article_timestamp": {
+      "type": "date",
+      "format": "date_hour_minute_second_millis"
+    },
+    "week_day": {
+      "type": "integer"
+    },
+    "time_period": {
+      "type": "integer"
+    },
+    "article_type": {
+      "type": "integer"
+    },
+    "author_obj": {
+      "properties": {
+        "account_gen_uuid": {
+          "type": "keyword"
+        },
+        "author": {
+          "fielddata": true,
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "author_id": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "author_nick_name": {
+          "fielddata": true,
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "key_mark": {
+          "type": "boolean"
+        },
+        "fans_count": {
+          "type": "integer"
+        },
+        "fans_other_count": {
+          "type": "integer"
+        },
+        "liked_count": {
+          "type": "integer"
+        },
+        "like_count": {
+          "type": "integer"
+        },
+        "join_time": {
+          "type": "integer"
+        },
+        "is_verify": {
+          "type": "boolean"
+        },
+        "is_protect": {
+          "type": "boolean"
+        }
+      }
+    },
+    "language": {
+      "type": "keyword"
+    },
+    "device": {
+      "fielddata": true,
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "domain": {
+      "fielddata": true,
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "url": {
+      "fielddata": true,
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "emotions": {
+      "fielddata": true,
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "original_tags": {
+      "fielddata": true,
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "title": {
+      "fielddata": true,
+      "type": "text",
+      "analyzer": "default_ts",
+      "search_analyzer": "default_ts"
+    },
+    "title_cn": {
+      "fielddata": true,
+      "type": "text",
+      "analyzer": "ik_ts_analyzer",
+      "search_analyzer": "ik_ts_analyzer",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "content_type": {
+      "type": "integer"
+    },
+    "content": {
+      "fielddata": true,
+      "type": "text",
+      "analyzer": "default_ts",
+      "search_analyzer": "default_ts"
+    },
+    "content_cn": {
+      "fielddata": true,
+      "type": "text",
+      "analyzer": "ik_ts_analyzer",
+      "search_analyzer": "ik_ts_analyzer"
+    },
+    "content_participle": {
+      "type": "nested",
+      "properties": {
+        "participle": {
+          "type": "keyword"
+        },
+        "participle_count": {
+          "type": "integer"
+        },
+        "participle_type": {
+          "type": "integer"
+        }
+      }
+    },
+    "title_participle": {
+      "type": "nested",
+      "properties": {
+        "participle": {
+          "type": "keyword"
+        },
+        "participle_count": {
+          "type": "integer"
+        },
+        "participle_type": {
+          "type": "integer"
+        }
+      }
+    },
+    "entity_url_list": {
+      "fielddata": true,
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "entity_domain_list": {
+      "fielddata": true,
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "at_list": {
+      "fielddata": true,
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "relate_article_user_gen_uuid": {
+      "type": "keyword"
+    },
+    "relate_article_url": {
+      "fielddata": true,
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "reply_count": {
+      "type": "integer"
+    },
+    "retransmission_count": {
+      "type": "integer"
+    },
+    "quote_count": {
+      "type": "integer"
+    },
+    "like_count": {
+      "type": "integer"
+    },
+    "tread_count": {
+      "type": "integer"
+    },
+    "read_count": {
+      "type": "integer"
+    },
+    "video_view_count": {
+      "type": "integer"
+    },
+    "business": {
+      "properties": {
+        "reported_user": {
+          "type": "integer"
+        },
+        "read_user": {
+          "type": "integer"
+        },
+        "warns": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "user_id": {
+              "type": "integer"
+            },
+            "condition_id": {
+              "type": "integer"
+            },
+            "model_id": {
+              "type": "keyword"
+            }
+          }
+        },
+        "collected_user": {
+          "type": "integer"
+        }
+      }
+    },
+    "packageKeyList": {
+      "type": "keyword"
+    },
+    "packageMemberKeyList": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}

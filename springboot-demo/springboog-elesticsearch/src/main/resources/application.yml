@@ -1,0 +1,14 @@
+#如禁止es的健康检查如下，默认均为开启状态
+management:
+  health:
+    elasticsearch:
+      enabled: false
+
+es:
+  ip: 192.168.3.91
+  port: 9200
+  articleType: /search4message/
+
+elasticsearch:
+  url: 192.168.3.91
+  port: 9200
