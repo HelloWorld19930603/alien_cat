@@ -1,8 +1,7 @@
-/*
 package com.aliencat.springboot.elasticsearch;
 
 import com.aliencat.springboot.elesticsearch.ElasticsearchApplication;
-import com.aliencat.springboot.solr.search.SearchSolr;
+import com.aliencat.springboot.elesticsearch.solr.SearchSolr;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -27,14 +26,14 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
-*/
 /**
  * @Author chengcheng
  * @Date 2022-07-04
- **//*
-
+ **/
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ElasticsearchApplication.class)
 @Slf4j
@@ -58,7 +57,7 @@ public class SearchSolrToEsTest {
         String nextCursor = CursorMarkParams.CURSOR_MARK_START;//游标初始化
         do {
             cursorMark = nextCursor;
-            QueryResponse queryResponse = SearchSolr.queryContactByCursor(index, cursorMark);
+            QueryResponse queryResponse = SearchSolr.queryByCursor(index, cursorMark);
             nextCursor = queryResponse.getNextCursorMark();
             SolrDocumentList results = queryResponse.getResults();
             total += results.size();
@@ -82,7 +81,7 @@ public class SearchSolrToEsTest {
         String nextCursor = CursorMarkParams.CURSOR_MARK_START;//游标初始化
         do {
             cursorMark = nextCursor;
-            QueryResponse queryResponse = SearchSolr.queryContactByCursor(index, cursorMark);
+            QueryResponse queryResponse = SearchSolr.queryByCursor(index, cursorMark);
             nextCursor = queryResponse.getNextCursorMark();
             SolrDocumentList results = queryResponse.getResults();
             total += results.size();
@@ -441,4 +440,3 @@ public class SearchSolrToEsTest {
         System.out.println(createIndexResponse.isAcknowledged());
     }
 }
-*/

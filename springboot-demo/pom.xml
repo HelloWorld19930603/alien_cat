@@ -14,7 +14,7 @@
         <module>springboot-swagger2</module>
         <module>springboot-mongodb</module>
         <module>springboot-rocketmq</module>
-        <module>springboog-elesticsearch</module>
+        <module>springboot-elasticsearch</module>
         <module>springboot-solr</module>
     </modules>
     <parent>
@@ -52,11 +52,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <!--lombok插件 -->
@@ -107,5 +102,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

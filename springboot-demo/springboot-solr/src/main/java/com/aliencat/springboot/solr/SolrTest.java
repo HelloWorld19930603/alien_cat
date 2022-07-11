@@ -55,7 +55,6 @@ public class SolrTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void delete() {
