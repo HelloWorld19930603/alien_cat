@@ -17,9 +17,6 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
     @Value("${spring.elasticsearch.rest.uris}")
     private String uris;
 
-    @Value("${index.name}")
-    private String articleIndex;
-
     /**
      * 配置RestHighLevelClient对象
      * 将该对象交给Spring容器去管理

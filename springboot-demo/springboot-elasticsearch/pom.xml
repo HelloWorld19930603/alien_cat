@@ -9,9 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>springboog-elesticsearch</artifactId>
+    <artifactId>springboot-elasticsearch</artifactId>
 
-    <name>springboog-elesticsearch</name>
+    <name>springboot-elasticsearch</name>
 
     <!-- 修改elasticsearch的版本 -->
     <properties>
@@ -24,17 +24,29 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
-<!--        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>7.17.4</version>
-        </dependency>
         <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>7.17.4</version>
-            <scope>compile</scope>
-        </dependency>-->
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>8.11.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-solr</artifactId>
+            <version>2.3.2.RELEASE</version>
+        </dependency>
+
+        <!--        <dependency>
+                    <groupId>org.elasticsearch.client</groupId>
+                    <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                    <version>7.17.4</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.elasticsearch</groupId>
+                    <artifactId>elasticsearch</artifactId>
+                    <version>7.17.4</version>
+                    <scope>compile</scope>
+                </dependency>-->
     </dependencies>
 
     <build>

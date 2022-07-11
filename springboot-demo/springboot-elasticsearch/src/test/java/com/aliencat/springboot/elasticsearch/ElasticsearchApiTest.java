@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.aliencat.springboot.elesticsearch.ElasticsearchApplication;
 import com.aliencat.springboot.elesticsearch.dao.EsArticleDao;
 import com.aliencat.springboot.elesticsearch.pojo.User;
-import com.aliencat.springboot.elesticsearch.repository.ArticleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -49,9 +48,6 @@ import java.util.List;
 public class ElasticsearchApiTest {
 
     @Autowired
-    ArticleRepository articleRepository;
-
-    @Autowired
     RestHighLevelClient restHighLevelClient;
 
 
@@ -90,7 +86,7 @@ public class ElasticsearchApiTest {
     @Test
     public void deleteIndex() throws IOException {
         //1、构建 删除索引请求
-        DeleteIndexRequest request = new DeleteIndexRequest("my_index");
+        DeleteIndexRequest request = new DeleteIndexRequest("search4contact");
         //2、客户段执行删除的请求
         AcknowledgedResponse response = restHighLevelClient.indices().delete(request, RequestOptions.DEFAULT);
         //3、打印
@@ -251,4 +247,6 @@ public class ElasticsearchApiTest {
     public void testSearch() throws IOException {
         System.out.println(esArticleDao.searchArticle(QueryBuilders.matchAllQuery(),null,null,10000,0));
     }
+
+
 }
