@@ -1,7 +1,7 @@
-package com.aliencat.springboot.elesticsearch.service;
+package com.aliencat.springboot.elasticsearch.service;
 
-import com.aliencat.springboot.elesticsearch.pojo.Order;
-import com.aliencat.springboot.elesticsearch.pojo.PageResponse;
+import com.aliencat.springboot.elasticsearch.pojo.Order;
+import com.aliencat.springboot.elasticsearch.pojo.PageResponse;
 
 import java.util.List;
 

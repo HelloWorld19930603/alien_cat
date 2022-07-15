@@ -1,4 +1,4 @@
-package com.aliencat.springboot.elesticsearch.pojo;
+package com.aliencat.springboot.elasticsearch.pojo;
 
 /**
  * @Author chengcheng
@@ -8,6 +8,11 @@ public class IndexConstant {
 
     public static final String SEARCH4MESSAGE = "search4message";
     public static final String SEARCH4CONTACT = "search4contact";
+
+
+    public static void main(String[] args) {
+        System.out.println(SEARCH4CONTACT_MAPPING);
+    }
 
     public static final String SEARCH4MESSAGE_MAPPING = "{\n" +
             "    \"properties\" : {\n" +

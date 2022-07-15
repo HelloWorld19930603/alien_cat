@@ -1,9 +1,7 @@
 package com.aliencat.springboot.elasticsearch;
 
 import com.alibaba.fastjson.JSONObject;
-import com.aliencat.springboot.elesticsearch.ElasticsearchApplication;
-import com.aliencat.springboot.elesticsearch.dao.EsArticleDao;
-import com.aliencat.springboot.elesticsearch.pojo.User;
+import com.aliencat.springboot.elasticsearch.pojo.User;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -25,13 +23,13 @@ import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.core.TimeValue;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.xcontent.XContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +48,6 @@ public class ElasticsearchApiTest {
     @Autowired
     RestHighLevelClient restHighLevelClient;
 
-
-    @Autowired
-    EsArticleDao esArticleDao;
     /**
      * 创建索引测试
      */
@@ -241,11 +236,6 @@ public class ElasticsearchApiTest {
     @Test
     public void testCount() throws IOException {
         System.out.println(countArticle(QueryBuilders.matchAllQuery()));
-    }
-
-    @Test
-    public void testSearch() throws IOException {
-        System.out.println(esArticleDao.searchArticle(QueryBuilders.matchAllQuery(),null,null,10000,0));
     }
 
 

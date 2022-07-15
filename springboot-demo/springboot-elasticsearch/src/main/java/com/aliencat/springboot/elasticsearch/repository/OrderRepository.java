@@ -1,6 +1,6 @@
-package com.aliencat.springboot.elesticsearch.repository;
+package com.aliencat.springboot.elasticsearch.repository;
 
-import com.aliencat.springboot.elesticsearch.pojo.Order;
+import com.aliencat.springboot.elasticsearch.pojo.Order;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 public interface OrderRepository extends ElasticsearchRepository<Order, Integer> {

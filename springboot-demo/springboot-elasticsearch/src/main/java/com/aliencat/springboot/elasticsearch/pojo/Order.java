@@ -1,4 +1,4 @@
-package com.aliencat.springboot.elesticsearch.pojo;
+package com.aliencat.springboot.elasticsearch.pojo;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

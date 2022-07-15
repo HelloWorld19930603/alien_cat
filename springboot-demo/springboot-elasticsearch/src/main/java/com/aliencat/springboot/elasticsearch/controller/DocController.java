@@ -1,8 +1,8 @@
-package com.aliencat.springboot.elesticsearch.controller;
+package com.aliencat.springboot.elasticsearch.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.aliencat.springboot.elesticsearch.pojo.Order;
-import com.aliencat.springboot.elesticsearch.service.OrderService;
+import com.aliencat.springboot.elasticsearch.pojo.Order;
+import com.aliencat.springboot.elasticsearch.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;

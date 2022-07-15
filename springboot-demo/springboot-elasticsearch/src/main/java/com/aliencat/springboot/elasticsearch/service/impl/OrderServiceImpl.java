@@ -1,9 +1,9 @@
-package com.aliencat.springboot.elesticsearch.service.impl;
+package com.aliencat.springboot.elasticsearch.service.impl;
 
-import com.aliencat.springboot.elesticsearch.pojo.Order;
-import com.aliencat.springboot.elesticsearch.pojo.PageResponse;
-import com.aliencat.springboot.elesticsearch.repository.OrderRepository;
-import com.aliencat.springboot.elesticsearch.service.OrderService;
+import com.aliencat.springboot.elasticsearch.pojo.Order;
+import com.aliencat.springboot.elasticsearch.pojo.PageResponse;
+import com.aliencat.springboot.elasticsearch.repository.OrderRepository;
+import com.aliencat.springboot.elasticsearch.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

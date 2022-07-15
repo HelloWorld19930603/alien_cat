@@ -1,4 +1,4 @@
-package com.aliencat.springboot.elesticsearch.config;
+package com.aliencat.springboot.elasticsearch.config;
 
 import lombok.Data;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -27,11 +27,10 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
     @Bean(name = "restHighLevelClient")
     public RestHighLevelClient elasticsearchClient() {
         ClientConfiguration configuration = ClientConfiguration.builder()
-                .connectedTo(uris)
+                .connectedTo(uris.split(","))
                 .build();
         return RestClients.create(configuration).rest();
     }
-
 
 }
 

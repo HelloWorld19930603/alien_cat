@@ -1,7 +1,6 @@
 package com.aliencat.springboot.elasticsearch;
 
-import com.aliencat.springboot.elesticsearch.ElasticsearchApplication;
-import com.aliencat.springboot.elesticsearch.solr.SearchSolr;
+import com.aliencat.springboot.elasticsearch.solr.SearchSolr;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -16,7 +15,7 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.xcontent.XContentType;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class SearchSolrToEsTest {
         String nextCursor = CursorMarkParams.CURSOR_MARK_START;//游标初始化
         do {
             cursorMark = nextCursor;
-            QueryResponse queryResponse = SearchSolr.queryByCursor(index, cursorMark);
+            QueryResponse queryResponse = SearchSolr.queryByCursor(SearchSolr.getContactClient(), cursorMark);
             nextCursor = queryResponse.getNextCursorMark();
             SolrDocumentList results = queryResponse.getResults();
             total += results.size();
@@ -81,7 +80,7 @@ public class SearchSolrToEsTest {
         String nextCursor = CursorMarkParams.CURSOR_MARK_START;//游标初始化
         do {
             cursorMark = nextCursor;
-            QueryResponse queryResponse = SearchSolr.queryByCursor(index, cursorMark);
+            QueryResponse queryResponse = SearchSolr.queryByCursor(SearchSolr.getMessageClient(), cursorMark);
             nextCursor = queryResponse.getNextCursorMark();
             SolrDocumentList results = queryResponse.getResults();
             total += results.size();

@@ -15,7 +15,7 @@
 
     <!-- 修改elasticsearch的版本 -->
     <properties>
-        <elasticsearch.version>7.17.4</elasticsearch.version>
+        <elasticsearch.version>7.6.2</elasticsearch.version>
     </properties>
 
     <dependencies>

@@ -10,5 +10,5 @@ es:
   articleType: /search4message/
 
 elasticsearch:
-  url: 127.0.0.1
+  url: 192.168.10.42
   port: 9200

@@ -1,4 +1,4 @@
-package com.aliencat.springboot.elesticsearch.utils;
+package com.aliencat.springboot.elasticsearch.utils;
 
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
