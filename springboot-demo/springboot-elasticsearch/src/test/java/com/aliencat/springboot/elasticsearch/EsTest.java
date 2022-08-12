@@ -39,6 +39,8 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,7 +59,7 @@ public class EsTest {
     static {
         List<HttpHost> httpHosts = new ArrayList<>();
         //填充数据
-        httpHosts.add(new HttpHost("localhost", 9200));
+        httpHosts.add(new HttpHost("60.12.236.206", 13699));
         //httpHosts.add(new HttpHost("localhost", 9200));
         //httpHosts.add(new HttpHost("localhost", 9200));
         //填充host节点
@@ -452,5 +454,41 @@ public class EsTest {
 
         System.out.println(s);
         System.out.println(s.replaceAll("\"","\\\""));
+    }
+
+    @Test
+    public void test2() throws ParseException {
+
+        String date1 = "2021-01-01";
+        String date2 = "2021-06-01";
+        String date3 = "2022-01-01";
+        String date4 = "2022-02-01";
+        String date5 = "2022-03-01";
+        String date6 = "2022-04-01";
+        String date7 = "2022-05-01";
+        String date8 = "2022-06-01";
+        String date9 = "2022-07-01";
+        String date10 = "2022-08-01";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println(date1+"    "+simpleDateFormat.parse(date1).getTime() / 1000);
+        System.out.println(date2+"    "+simpleDateFormat.parse(date2).getTime() / 1000);
+        System.out.println(date3+"    "+simpleDateFormat.parse(date3).getTime() / 1000);
+        System.out.println(date4+"    "+simpleDateFormat.parse(date4).getTime() / 1000);
+        System.out.println(date5+"    "+simpleDateFormat.parse(date5).getTime() / 1000);
+        System.out.println(date6+"    "+simpleDateFormat.parse(date6).getTime() / 1000);
+        System.out.println(date7+"    "+simpleDateFormat.parse(date7).getTime() / 1000);
+        System.out.println(date8+"    "+simpleDateFormat.parse(date8).getTime() / 1000);
+        System.out.println(date9+"    "+simpleDateFormat.parse(date9).getTime() / 1000);
+        System.out.println(date10+"    "+(simpleDateFormat.parse(date10).getTime() - simpleDateFormat.parse(date9).getTime()) / 1000);
+    }
+
+    @Test
+    public void test3() throws ParseException {
+
+        String date1 = "1970-01-01 00:00:00";
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(simpleDateFormat2.format(1609466400000L  ));
+        System.out.println(simpleDateFormat2.parse(date1).getTime());
     }
 }

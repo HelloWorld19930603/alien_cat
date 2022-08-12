@@ -1,5 +1,7 @@
 package com.aliencat.springboot.elasticsearch;
 
+import com.aliencat.springboot.elasticsearch.pojo.IndexConstant;
+import com.aliencat.springboot.elasticsearch.service.ElasticsearchIndexService;
 import com.aliencat.springboot.elasticsearch.solr.SearchSolr;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -10,11 +12,13 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,10 +28,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @Author chengcheng
@@ -40,6 +47,9 @@ public class SearchSolrToEsTest {
 
     @Autowired
     RestHighLevelClient restHighLevelClient;
+
+    @Autowired
+    ElasticsearchIndexService elasticsearchIndexService;
 
     @Test
     public void testCount() {
@@ -56,19 +66,27 @@ public class SearchSolrToEsTest {
         String nextCursor = CursorMarkParams.CURSOR_MARK_START;//游标初始化
         do {
             cursorMark = nextCursor;
-            QueryResponse queryResponse = SearchSolr.queryByCursor(SearchSolr.getContactClient(), cursorMark);
+            QueryResponse queryResponse = SearchSolr.queryByCursor2(SearchSolr.getContactClient(), cursorMark);
             nextCursor = queryResponse.getNextCursorMark();
             SolrDocumentList results = queryResponse.getResults();
             total += results.size();
-            ContactRunable runableTest = new ContactRunable(index, results);
-            threadPoolExecutor.execute(runableTest);
+
+            int maxSize = results.size() / 10000;
+            Stream.iterate(0, n -> n + 1)
+                    .limit(maxSize)
+                    .map(a -> results.parallelStream().skip(a * 10000).limit(10000).collect(Collectors.toList()))
+                    .filter(b -> !b.isEmpty())
+                    .forEach(list -> {
+                        ContactRunable runableTest = new ContactRunable(index, list);
+                        threadPoolExecutor.execute(runableTest);
+                    });
             //如果两次游标一样，说明数据拉取完毕，可以结束循环了
         } while (!cursorMark.equals(nextCursor));
 
         System.out.println("处理" + total + "条数据总耗时：" + (System.currentTimeMillis() - start) / 1000 + "s ");
     }
 
-    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 8, 60L, TimeUnit.MICROSECONDS, new ArrayBlockingQueue<>(100));
+    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 4, 60L, TimeUnit.MICROSECONDS, new ArrayBlockingQueue<>(40));
 
     @Test
     public void testMessageBatchUpdate() {
@@ -83,9 +101,15 @@ public class SearchSolrToEsTest {
             QueryResponse queryResponse = SearchSolr.queryByCursor(SearchSolr.getMessageClient(), cursorMark);
             nextCursor = queryResponse.getNextCursorMark();
             SolrDocumentList results = queryResponse.getResults();
-            total += results.size();
-            MessageRunable runableTest = new MessageRunable(index, results);
-            threadPoolExecutor.execute(runableTest);
+            int maxSize = results.size() / 10000;
+            Stream.iterate(0, n -> n + 1)
+                    .limit(maxSize)
+                    .map(a -> results.parallelStream().skip(a * 10000).limit(10000).collect(Collectors.toList()))
+                    .filter(b -> !b.isEmpty())
+                    .forEach(list -> {
+                        MessageRunable runableTest = new MessageRunable(index, list);
+                        threadPoolExecutor.execute(runableTest);
+                    });
             //如果两次游标一样，说明数据拉取完毕，可以结束循环了
         } while (!cursorMark.equals(nextCursor));
         System.out.println("处理" + total + "条数据总耗时：" + (System.currentTimeMillis() - start) / 1000 + "s ");
@@ -94,10 +118,10 @@ public class SearchSolrToEsTest {
 
     class MessageRunable implements Runnable {
 
-        SolrDocumentList results;
+        List<SolrDocument> results;
         String index;
 
-        MessageRunable(String index, SolrDocumentList results) {
+        MessageRunable(String index, List<SolrDocument> results) {
             this.index = index;
             this.results = results;
         }
@@ -110,10 +134,10 @@ public class SearchSolrToEsTest {
 
     class ContactRunable implements Runnable {
 
-        SolrDocumentList results;
+        List<SolrDocument> results;
         String index;
 
-        ContactRunable(String index, SolrDocumentList results) {
+        ContactRunable(String index, List<SolrDocument> results) {
             this.index = index;
             this.results = results;
         }
@@ -127,7 +151,7 @@ public class SearchSolrToEsTest {
     long spendTime = 0L;
     long total = 0L;
 
-    public void bulkPutContactIndex(String index, SolrDocumentList list) {
+    public void bulkPutContactIndex(String index, List<SolrDocument> list) {
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
@@ -136,6 +160,10 @@ public class SearchSolrToEsTest {
         for (int i = 0; i < size; i++) {
             Map<String, Object> map = list.get(i);
             String account = map.get("contact_account").toString();
+            String contact_type = map.get("contact_type").toString();
+            if("2".equals(contact_type) || "1".equals(contact_type)){
+                System.out.println("contact_type" + contact_type);
+            }
             if (SearchSolr.jointestMap.containsKey(account)) {
                 SolrDocument jointest = SearchSolr.jointestMap.get(account);
                 jointest.remove("id");
@@ -162,7 +190,7 @@ public class SearchSolrToEsTest {
         System.out.println(bulk.getTook() + " ---- " + spendTime / 1000L + " ---- " + total);
     }
 
-    public void bulkPutMessageIndex(String index, SolrDocumentList list) {
+    public void bulkPutMessageIndex(String index, List<SolrDocument> list) {
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
@@ -202,7 +230,7 @@ public class SearchSolrToEsTest {
     public void deleteIndex() throws IOException {
         //1、构建 删除索引请求
         //DeleteIndexRequest request = new DeleteIndexRequest("search4message");
-        DeleteIndexRequest request = new DeleteIndexRequest("search4contact");
+        DeleteIndexRequest request = new DeleteIndexRequest("tg_contact");
         //2、客户段执行删除的请求
         AcknowledgedResponse response = restHighLevelClient.indices().delete(request, RequestOptions.DEFAULT);
         //3、打印
@@ -212,91 +240,7 @@ public class SearchSolrToEsTest {
     @Test
     public void testCreateMessageIndex() throws IOException {
         String index = "search4message";
-
-        String mapping = "{\n" +
-                "    \"properties\" : {\n" +
-                "        \"business_action_id\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"contact_account\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"contact_account_id\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"gmt_create\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"id\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"is_group\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"m_l_charCount\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"m_l_informationType\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"m_l_senderType\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"message_content\" : {\n" +
-                "          \"type\" : \"text\",\n" +
-                "          \"analyzer\": \"ik_max_word\",\n" +
-                "          \"fields\" : {\n" +
-                "            \"keyword\" : {\n" +
-                "              \"type\" : \"keyword\",\n" +
-                "              \"ignore_above\" : 256\n" +
-                "            }\n" +
-                "          }\n" +
-                "        },\n" +
-                "        \"message_time\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"message_type\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"misc_long_orig\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"recipient_account\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"recipient_account_id\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"sender_account\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"sender_account_id\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"account_number\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"application_id\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"area_code\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"city\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"country\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"operator\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"province\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        }\n" +
-                "      }\n" +
-                "  }" +
-                "    }";
+        String mapping = IndexConstant.SEARCH4MESSAGE_MAPPING;
         createContactIndex(index, mapping);
     }
 
@@ -304,138 +248,23 @@ public class SearchSolrToEsTest {
     @Test
     public void testCreateContactIndex() throws IOException {
         String index = "search4contact";
-        String mapping = "{\n" +
-                "      \"properties\" : {\n" +
-                "        \"business_action_id\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"contact_account\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"contact_account_id\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"contact_id\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"contact_type\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"ex_k_age\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_bioInfo\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_groupType\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_icon\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_lastSeenTime\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_memberNum\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_name\" : {\n" +
-                "          \"type\" : \"text\",\n" +
-                "          \"analyzer\": \"ik_max_word\",\n" +
-                "          \"fields\" : {\n" +
-                "            \"keyword\" : {\n" +
-                "              \"type\" : \"keyword\",\n" +
-                "              \"ignore_above\" : 256\n" +
-                "            }\n" +
-                "          }\n" +
-                "        },\n" +
-                "        \"ex_k_nickName\" : {\n" +
-                "          \"type\" : \"text\",\n" +
-                "          \"analyzer\": \"ik_max_word\",\n" +
-                "          \"fields\" : {\n" +
-                "            \"keyword\" : {\n" +
-                "              \"type\" : \"keyword\",\n" +
-                "              \"ignore_above\" : 256\n" +
-                "            }\n" +
-                "          }\n" +
-                "        },\n" +
-                "        \"ex_k_offlineTime\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_phone\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_remark\" : {\n" +
-                "          \"type\" : \"text\",\n" +
-                "          \"analyzer\": \"ik_max_word\",\n" +
-                "          \"fields\" : {\n" +
-                "            \"keyword\" : {\n" +
-                "              \"type\" : \"keyword\",\n" +
-                "              \"ignore_above\" : 256\n" +
-                "            }\n" +
-                "          }\n" +
-                "        },\n" +
-                "        \"ex_k_sex\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_tmp\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_updateTime\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"ex_k_userName\" : {\n" +
-                "          \"type\" : \"text\",\n" +
-                "          \"analyzer\": \"ik_max_word\",\n" +
-                "          \"fields\" : {\n" +
-                "            \"keyword\" : {\n" +
-                "              \"type\" : \"keyword\",\n" +
-                "              \"ignore_above\" : 256\n" +
-                "            }\n" +
-                "          }\n" +
-                "        },\n" +
-                "        \"gmt_create\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"id\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"unique_account\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"unique_account_id\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"account_number\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"application_id\" : {\n" +
-                "          \"type\" : \"long\"\n" +
-                "        },\n" +
-                "        \"area_code\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"city\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"country\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"operator\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        },\n" +
-                "        \"province\" : {\n" +
-                "          \"type\" : \"keyword\"\n" +
-                "        }\n" +
-                "      }\n" +
-                "    }";
+        String mapping = IndexConstant.SEARCH4CONTACT_MAPPING;
         createContactIndex(index, mapping);
     }
 
     public void createContactIndex(String index, String mapping) throws IOException {
         CreateIndexRequest createIndexRequest = new CreateIndexRequest(index);
         createIndexRequest.mapping(mapping, XContentType.JSON);
+        createIndexRequest.settings(Settings.builder().put("index.number_of_shards",6).build());
         CreateIndexResponse createIndexResponse = restHighLevelClient.indices().create(createIndexRequest, RequestOptions.DEFAULT);
         System.out.println(createIndexResponse.isAcknowledged());
+    }
+
+
+    @Test
+    public void queryTotal() throws IOException {
+        SearchResponse searchResponse = elasticsearchIndexService.queryMessageByTime(1640966400L, 1654012800);
+        System.out.println(searchResponse.getHits().getTotalHits().value);
+
     }
 }

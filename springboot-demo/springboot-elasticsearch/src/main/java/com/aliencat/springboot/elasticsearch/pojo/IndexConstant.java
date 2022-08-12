@@ -9,6 +9,8 @@ public class IndexConstant {
     public static final String SEARCH4MESSAGE = "search4message";
     public static final String SEARCH4CONTACT = "search4contact";
 
+    public static final String TG_CONTACT = "tg_contact";
+
 
     public static void main(String[] args) {
         System.out.println(SEARCH4CONTACT_MAPPING);
@@ -161,14 +163,7 @@ public class IndexConstant {
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"ex_k_remark\" : {\n" +
-            "          \"type\" : \"text\",\n" +
-            "          \"analyzer\": \"ik_max_word\",\n" +
-            "          \"fields\" : {\n" +
-            "            \"keyword\" : {\n" +
-            "              \"type\" : \"keyword\",\n" +
-            "              \"ignore_above\" : 256\n" +
-            "            }\n" +
-            "          }\n" +
+            "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"ex_k_sex\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
@@ -190,7 +185,7 @@ public class IndexConstant {
             "          }\n" +
             "        },\n" +
             "        \"gmt_create\" : {\n" +
-            "          \"type\" : \"long\"\n" +
+            "          \"type\" : \"integer\"\n" +
             "        },\n" +
             "        \"id\" : {\n" +
             "          \"type\" : \"keyword\"\n" +

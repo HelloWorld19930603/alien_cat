@@ -27,6 +27,13 @@ public class ContactController {
         return "索引是否创建成功:" + elasticsearchIndexService.createIndex(indexName, mapping);
     }
 
+    @RequestMapping("create2")
+    public String create2() throws IOException {
+        String indexName = IndexConstant.TG_CONTACT;
+        String mapping = IndexConstant.SEARCH4CONTACT_MAPPING;
+        return "索引是否创建成功:" + elasticsearchIndexService.createIndex(indexName, mapping);
+    }
+
     /**
      * 删除索引
      */
@@ -49,9 +56,15 @@ public class ContactController {
 
 
     @RequestMapping("process")
-    public String process() {
+    public String process(String cursor) {
 
         return elasticsearchIndexService.getContactProcess();
+    }
+
+    @RequestMapping("scrollContact")
+    public String scrollContact(String cursor) {
+        new Thread(()->elasticsearchIndexService.contactBatchUpdate2(cursor)).start();
+        return "OK";
     }
 }
 

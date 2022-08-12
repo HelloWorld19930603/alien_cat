@@ -2,6 +2,7 @@ package com.aliencat.springboot.elasticsearch;
 
 import com.alibaba.fastjson.JSONObject;
 import com.aliencat.springboot.elasticsearch.pojo.User;
+import com.aliencat.springboot.elasticsearch.service.ElasticsearchIndexService;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -48,6 +49,8 @@ public class ElasticsearchApiTest {
     @Autowired
     RestHighLevelClient restHighLevelClient;
 
+    @Autowired
+    ElasticsearchIndexService elasticsearchIndexService;
     /**
      * 创建索引测试
      */
@@ -239,4 +242,8 @@ public class ElasticsearchApiTest {
     }
 
 
+    @Test
+    public void testMessageUpdate(){
+        elasticsearchIndexService.messageBatchUpdate3(null);
+    }
 }

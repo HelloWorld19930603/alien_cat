@@ -1,6 +1,7 @@
 package com.aliencat.springboot.elasticsearch.solr;
 
 import com.aliencat.springboot.elasticsearch.pojo.IndexConstant;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -18,10 +19,11 @@ import java.util.*;
  * @Author chengcheng
  * @Date 2022-07-01
  **/
+@Slf4j
 public class SearchSolr {
 
-    //static String baseSolrUrl = "http://60.190.244.226:22481/solr/";
-    static String baseSolrUrl = "http://solr2.aim:8080/solr/";
+    static String baseSolrUrl = "http://60.190.244.226:22481/solr/";
+    //static String baseSolrUrl = "http://solr2.aim:8080/solr/";
 
     public static Map<String,SolrDocument> jointestMap = new HashMap<>(1024 * 16);
 
@@ -72,6 +74,34 @@ public class SearchSolr {
         }
     }
 
+    public static QueryResponse queryByTime(String index,long startTime, long endTime)  {
+        try {
+            return queryByTime(index,startTime,endTime,0);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static QueryResponse queryByTime(String index,long startTime, long endTime,int start) throws IOException {
+        HttpSolrClient client = new HttpSolrClient.Builder(baseSolrUrl + index).build();
+        SolrQuery solrQuery = new SolrQuery();
+        int pageSize = 100000;
+        solrQuery.setRows(pageSize);
+        solrQuery.setStart(start);
+        solrQuery.setQuery(String.format("message_time:[%d TO %d]",startTime,endTime));
+        QueryResponse response = null;
+        try {
+            response = client.query(solrQuery);
+            SolrDocumentList documentList = response.getResults();
+            log.info("总计数据行数:" + documentList.getNumFound());
+            log.info("当前行数：" + documentList.size());
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
 
 
 

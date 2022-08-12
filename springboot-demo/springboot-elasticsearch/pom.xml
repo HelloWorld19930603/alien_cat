@@ -50,6 +50,6 @@
     </dependencies>
 
     <build>
-
+        <finalName>ElasticsearchApplication</finalName>
     </build>
 </project>

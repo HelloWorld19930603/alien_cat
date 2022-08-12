@@ -2,11 +2,15 @@ package com.aliencat.springboot.elasticsearch.controller;
 
 import com.aliencat.springboot.elasticsearch.pojo.IndexConstant;
 import com.aliencat.springboot.elasticsearch.service.ElasticsearchIndexService;
+import org.elasticsearch.action.search.SearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 @RequestMapping("/message/")
 @RestController
@@ -59,6 +63,45 @@ public class MessageController {
         return "OK\n";
     }
 
+    @RequestMapping("batchByDate")
+    public String batchByDate(String start, String end) {
+        System.out.println("start:" + start + "\nend:" + end);
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+            Date startDate = simpleDateFormat.parse(start);
+            Date endDate = simpleDateFormat.parse(end);
+            new Thread(() -> {
+                try {
+                    elasticsearchIndexService.messageBatchUpdateByDate(startDate,endDate);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
+        }catch(Exception e){
+            e.printStackTrace();
+            return "发生异常：" + e;
+        }
+        return "ok";
+    }
+
+    @RequestMapping("queryMessageByTime")
+    public String queryMessageByTime(String start, String end) {
+        System.out.println("start:" + start + "\nend:" + end);
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+            Date startDate = simpleDateFormat.parse(start);
+            Date endDate = simpleDateFormat.parse(end);
+            SearchResponse searchResponse = elasticsearchIndexService.queryMessageByTime(startDate.getTime() / 1000, endDate.getTime() / 1000);
+            return "查询结果：" + searchResponse.getHits().getTotalHits().value;
+        }catch(Exception e){
+            e.printStackTrace();
+            return "发生异常：" + e;
+        }
+    }
+
+
     @RequestMapping("process")
     public String process() {
         return elasticsearchIndexService.getMessageProcess();
@@ -82,5 +125,6 @@ public class MessageController {
         elasticsearchIndexService.setPause(flag);
         return "ok";
     }
+
 }
 
