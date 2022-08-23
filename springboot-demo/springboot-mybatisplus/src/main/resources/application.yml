@@ -1,0 +1,54 @@
+server:
+  port: 8088
+
+spring:
+  datasource:
+    druid:
+      stat-view-servlet:
+        enable: true
+        reset-enable: true
+        login-username: admin
+        login-password: admin
+    dynamic:
+      druid:
+        initial-size: 1
+        max-active: 100
+        max-wait: 60000
+        min-idle: 10
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        validation-query: SELECT 'x' FROM DUAL
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        max-open-prepared-statements: 20
+        remove-abandoned-on-borrow: true
+        filters: stat,wall
+        web-stat-filter:
+          enabled: true
+          session-stat-enable: true
+          principal-session-name: admin
+          principal-cookie-name: admin
+          profile-enable: true
+      datasource:
+        master:
+          username: root
+          password: yagoo@110
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://192.168.3.3:4000/bigdata2?serverTimezone=Asia/Shanghai&useUnicode=true&allowMultiQueries=true&useSSL=false
+        slave_1:
+          username: root
+          password: yagoo@110
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://192.168.3.3:4000/bigdata2?serverTimezone=Asia/Shanghai&useUnicode=true&allowMultiQueries=true&useSSL=false
+    primary: master
+
+mybatis-plus:
+  mapper-locations: classpath*:com/aliencat/springboot/mybatisplus/mapper/mapping/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+  #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    banner: false

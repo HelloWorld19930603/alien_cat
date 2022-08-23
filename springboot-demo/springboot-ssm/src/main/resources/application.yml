@@ -1,9 +1,13 @@
 spring:
   datasource: #数据库相关
-    url: jdbc:mysql://localhost:3306/test?serverTimezone=GMT%2B8&characterEncoding=utf-8
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.3.3:4000/bigdata2?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false
     username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: yagoo@110
+    initial-size: 10
+    max-active: 100
+    min-idle: 10
+    max-wait: 60000
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss #jackson对响应回去的日期参数进行格式化
     time-zone: GMT+8

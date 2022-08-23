@@ -340,18 +340,18 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
     }
 
     @Override
-    public void contactBatchUpdate2(String cursorMark) {
+    public void contactTransferEs(String fromIndex,String toIndex) {
         contact_time = System.currentTimeMillis();
-        log.info("contact2批处理程序启动：" + simpleDateFormat.format(new Date(contact_time)));
+        log.info("contact迁移程序启动：" + simpleDateFormat.format(new Date(contact_time)));
         String index = IndexConstant.TG_CONTACT;
-        nextCursor = Optional.ofNullable(cursorMark).orElse(CursorMarkParams.CURSOR_MARK_START);//游标初始化
+        nextCursor = CursorMarkParams.CURSOR_MARK_START;//游标初始化
         int size;
         do {
             long start = System.currentTimeMillis();
             contact_cursorMark = nextCursor;
             SearchResponse searchResponse = null;
             try {
-                searchResponse = scrollContact();
+                searchResponse = scrollContact(fromIndex);
                 total = total + searchResponse.getHits().getTotalHits().value;
                 nextCursor = searchResponse.getScrollId();
                 log.debug("nextCursor: {}" , nextCursor);
@@ -368,7 +368,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
                     .map(a -> results.parallelStream().skip(a * 10000).limit(10000).collect(Collectors.toList()))
                     .filter(b -> !b.isEmpty())
                     .forEach(list -> {
-                        ContactToEsRunable runableTest = new ContactToEsRunable(index, list);
+                        ContactToEsRunable runableTest = new ContactToEsRunable(toIndex, list);
                         threadPoolExecutor.execute(runableTest);
                     });
             size = results.size();
@@ -420,7 +420,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
         BulkRequest request = new BulkRequest();
         for (int i = 0; i < size; i++) {
             Map<String, Object> map = list.get(i);
-            String account = map.get("sender_account").toString();
+            String account = map.get("contact_account").toString();
             if (SearchSolr.jointestMap.containsKey(account)) {
                 SolrDocument jointest = SearchSolr.jointestMap.get(account);
                 jointest.remove("id");
@@ -435,7 +435,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
             String id = map.get("_id").toString();
             map.remove("_version_");
             map.remove("_id");
-            UpdateRequest doc = new UpdateRequest(index, "_doc", id).doc(map, XContentType.JSON);
+            UpdateRequest doc = new UpdateRequest(index,  id).doc(map, XContentType.JSON);
             request.add(doc);
         }
         BulkResponse bulk;
@@ -769,7 +769,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
     String nextCursor = null;
     long total = 0L;
 
-    public SearchResponse scrollContact() throws IOException {
+    public SearchResponse scrollContact(String index) throws IOException {
         final Scroll scroll = new Scroll(TimeValue.timeValueMinutes(10L));
         SearchResponse searchResponse;
         RequestOptions.Builder builder = RequestOptions.DEFAULT.toBuilder();
@@ -778,7 +778,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
                         //修改为500MB
                         .HeapBufferedResponseConsumerFactory(500 * 1024 * 1024));
         if (StringUtils.isEmpty(nextCursor) || "*".equals(nextCursor)) {
-            SearchRequest searchRequest = new SearchRequest(IndexConstant.SEARCH4CONTACT);
+            SearchRequest searchRequest = new SearchRequest(index);
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             searchSourceBuilder.query(QueryBuilders.termQuery("contact_type",2));
             //查询第一页
@@ -806,7 +806,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
         if (StringUtils.isEmpty(nextCursor) || "*".equals(nextCursor)) {
             SearchRequest searchRequest = new SearchRequest(IndexConstant.SEARCH4MESSAGE);
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-            searchSourceBuilder.sort("message_time", SortOrder.DESC);
+            searchSourceBuilder.sort("gmt_create", SortOrder.DESC);
             //查询第一页
             searchRequest.scroll(scroll);
             searchSourceBuilder.size(10000);

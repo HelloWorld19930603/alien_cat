@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.aliencat.springboot.elasticsearch.pojo.User;
 import com.aliencat.springboot.elasticsearch.service.ElasticsearchIndexService;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -40,6 +41,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ElasticsearchApplication.class)
@@ -51,13 +53,17 @@ public class ElasticsearchApiTest {
 
     @Autowired
     ElasticsearchIndexService elasticsearchIndexService;
+    
+    
+    String indexName = "user_index";
+    
     /**
      * 创建索引测试
      */
     @Test
     public void createIndex() throws IOException {
         //1、构建 创建索引的请求
-        CreateIndexRequest request = new CreateIndexRequest("my_index");//索引名
+        CreateIndexRequest request = new CreateIndexRequest(indexName);//索引名
         //2、客户端执行请求,获取响应
         CreateIndexResponse response = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
         //3、打印
@@ -70,7 +76,7 @@ public class ElasticsearchApiTest {
     @Test
     public void getIndex() throws IOException {
         //1、构建 获取索引的请求
-        GetIndexRequest request = new GetIndexRequest("my_index");
+        GetIndexRequest request = new GetIndexRequest(indexName);
         //2、客户端判断该索引是否存在
         boolean exists = restHighLevelClient.indices().exists(request, RequestOptions.DEFAULT);
         //3、打印
@@ -84,7 +90,7 @@ public class ElasticsearchApiTest {
     @Test
     public void deleteIndex() throws IOException {
         //1、构建 删除索引请求
-        DeleteIndexRequest request = new DeleteIndexRequest("search4contact");
+        DeleteIndexRequest request = new DeleteIndexRequest(indexName);
         //2、客户段执行删除的请求
         AcknowledgedResponse response = restHighLevelClient.indices().delete(request, RequestOptions.DEFAULT);
         //3、打印
@@ -97,13 +103,13 @@ public class ElasticsearchApiTest {
      */
     @Test
     public void createDocument() throws IOException {
-        User user = new User().setId(1).setUsername("张三");
+        User user = new User().setId(2).setUsername("小二");
 
         //1、构建请求
-        IndexRequest request = new IndexRequest("user_index");
+        IndexRequest request = new IndexRequest(indexName);
 
         //2、设置规则  PUT /user_index/user/_doc/1
-        request.id("1");//设置id
+        request.id("2");//设置id
         request.timeout(TimeValue.timeValueSeconds(1));//设置超时时间
 
         //3、将数据放入到请求中,以JSON的格式存放
@@ -135,14 +141,33 @@ public class ElasticsearchApiTest {
     }
 
     /**
+     * 获取所有文档
+     */
+    @Test
+    public void getAllDocument() throws IOException {
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder().query(QueryBuilders.matchAllQuery());
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.source(searchSourceBuilder);
+        searchRequest.indices(indexName);
+        SearchResponse search = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHit[] hits = search.getHits().getHits();
+        for (SearchHit hit : hits) {
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            System.out.println(hit.getId() + " : " +sourceAsMap.get("username"));
+        }
+
+
+    }
+
+    /**
      * 更新文档
      */
     @Test
     public void updateDocument() throws IOException {
         //更新id为1的文档的信息
-        UpdateRequest request = new UpdateRequest("user_index", "1");
+        UpdateRequest request = new UpdateRequest(indexName, "2");
 
-        User user = new User().setUsername("李四");
+        User user = new User().setUsername("小二");
         request.doc(JSONObject.toJSONString(user), XContentType.JSON);
 
         //客户端执行更新请求
@@ -156,7 +181,7 @@ public class ElasticsearchApiTest {
     @Test
     public void deleteDocument() throws IOException {
         //构建删除请求
-        DeleteRequest request = new DeleteRequest("user_index", "1");
+        DeleteRequest request = new DeleteRequest(indexName, "2");
         //客户端执行删除请求，并获取响应结果
         DeleteResponse response = restHighLevelClient.delete(request, RequestOptions.DEFAULT);
         //打印
@@ -183,9 +208,11 @@ public class ElasticsearchApiTest {
         //批量插入请求设置
         for (int i = 0; i < list.size(); i++) {
             request.add(
-                    new IndexRequest("user_index")//设置索引
+                    new IndexRequest(indexName)//设置索引
                             .id(String.valueOf(i + 1))//设置文档的id，如果没有指定，会随机生成，自己测试
                             .source(JSONObject.toJSONString(list.get(i)), XContentType.JSON)//设置要添加的资源，类型为JSON
+                            .opType(DocWriteRequest.OpType.CREATE)
+
             );
         }
         BulkResponse response = restHighLevelClient.bulk(request, RequestOptions.DEFAULT);
@@ -198,7 +225,7 @@ public class ElasticsearchApiTest {
     @Test
     public void query() throws IOException {
         //1、构建搜索请求
-        SearchRequest request = new SearchRequest("user_index");
+        SearchRequest request = new SearchRequest(indexName);
 
         //2、设置搜索条件，使用该构建器进行查询
         SearchSourceBuilder builder = new SearchSourceBuilder();//生成构建器
@@ -228,7 +255,6 @@ public class ElasticsearchApiTest {
     }
 
 
-    String indexName = "search4message";
     public long countArticle(QueryBuilder query) throws IOException {
         CountRequest countRequest = new CountRequest(indexName);
         countRequest.query(query);

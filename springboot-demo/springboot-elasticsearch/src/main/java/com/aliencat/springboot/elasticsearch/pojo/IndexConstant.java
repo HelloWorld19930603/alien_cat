@@ -6,7 +6,7 @@ package com.aliencat.springboot.elasticsearch.pojo;
  **/
 public class IndexConstant {
 
-    public static final String SEARCH4MESSAGE = "search4message";
+    public static final String SEARCH4MESSAGE = "tg_contact";
     public static final String SEARCH4CONTACT = "search4contact";
 
     public static final String TG_CONTACT = "tg_contact";

@@ -40,11 +40,4 @@ public class CollectorsDemo {
 
 }
 
-@Data
-@AllArgsConstructor
-class Person {
 
-    private Integer id;
-    private String name;
-
-}

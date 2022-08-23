@@ -62,8 +62,9 @@ public class ContactController {
     }
 
     @RequestMapping("scrollContact")
-    public String scrollContact(String cursor) {
-        new Thread(()->elasticsearchIndexService.contactBatchUpdate2(cursor)).start();
+    public String scrollContact() {
+        new Thread(()->elasticsearchIndexService.contactTransferEs(IndexConstant.SEARCH4CONTACT,IndexConstant.TG_CONTACT))
+                .start();
         return "OK";
     }
 }

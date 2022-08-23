@@ -29,7 +29,7 @@ public interface ElasticsearchIndexService {
 
     void contactBatchUpdate(String cursorMark);
 
-    void contactBatchUpdate2(String cursorMark);
+    void contactTransferEs(String fromIndex,String toIndex);
 
     SearchResponse queryMessageByTime(long start, long end) throws IOException;
 

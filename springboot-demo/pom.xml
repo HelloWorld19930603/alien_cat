@@ -16,6 +16,7 @@
         <module>springboot-rocketmq</module>
         <module>springboot-elasticsearch</module>
         <module>springboot-solr</module>
+        <module>springboot-mybatisplus</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -102,6 +103,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

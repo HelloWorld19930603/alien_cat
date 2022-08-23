@@ -490,5 +490,9 @@ public class EsTest {
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println(simpleDateFormat2.format(1609466400000L  ));
         System.out.println(simpleDateFormat2.parse(date1).getTime());
+
+        HashMap<String, String> stringObjectHashMap = new HashMap<>();
+        HashMap<String, String> stringObjectHashMap2 = new HashMap<>();
+
     }
 }
