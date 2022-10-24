@@ -21,17 +21,23 @@ public class ContactController {
      * 创建索引
      */
     @RequestMapping("create")
-    public String create() throws IOException {
+    public String create(Integer shardNum) throws IOException {
+        if(shardNum == null){
+            shardNum = 10;
+        }
         String indexName = IndexConstant.SEARCH4CONTACT;
         String mapping = IndexConstant.SEARCH4CONTACT_MAPPING;
-        return "索引是否创建成功:" + elasticsearchIndexService.createIndex(indexName, mapping);
+        return "索引是否创建成功:" + elasticsearchIndexService.createIndex(indexName, mapping,shardNum) + "\n";
     }
 
     @RequestMapping("create2")
-    public String create2() throws IOException {
+    public String create2(Integer shardNum) throws IOException {
+        if(shardNum == null){
+            shardNum = 10;
+        }
         String indexName = IndexConstant.TG_CONTACT;
         String mapping = IndexConstant.SEARCH4CONTACT_MAPPING;
-        return "索引是否创建成功:" + elasticsearchIndexService.createIndex(indexName, mapping);
+        return "索引是否创建成功:" + elasticsearchIndexService.createIndex(indexName, mapping,shardNum) + "\n";
     }
 
     /**
@@ -41,17 +47,17 @@ public class ContactController {
     public String delete() throws IOException {
         String indexName = IndexConstant.SEARCH4CONTACT;
         String mapping = IndexConstant.SEARCH4CONTACT_MAPPING;
-        return "索引是否删除成功：" + elasticsearchIndexService.deleteIndex(indexName, mapping);
+        return "索引是否删除成功：" + elasticsearchIndexService.deleteIndex(indexName, mapping) + "\n";
     }
 
     @RequestMapping("batch")
     public String batch(String cursor) {
         if(flag){
-            return "contact批量程序已启动";
+            return "contact批量程序已启动\n";
         }
         new Thread(()->elasticsearchIndexService.contactBatchUpdate(cursor)).start();
         flag = true;
-        return "OK";
+        return "OK\n";
     }
 
 
@@ -65,7 +71,7 @@ public class ContactController {
     public String scrollContact() {
         new Thread(()->elasticsearchIndexService.contactTransferEs(IndexConstant.SEARCH4CONTACT,IndexConstant.TG_CONTACT))
                 .start();
-        return "OK";
+        return "OK\n";
     }
 }
 

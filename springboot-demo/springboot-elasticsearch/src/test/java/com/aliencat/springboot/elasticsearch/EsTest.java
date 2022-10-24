@@ -59,7 +59,7 @@ public class EsTest {
     static {
         List<HttpHost> httpHosts = new ArrayList<>();
         //填充数据
-        httpHosts.add(new HttpHost("60.12.236.206", 13699));
+        httpHosts.add(new HttpHost("127.0.0.1", 9200));
         //httpHosts.add(new HttpHost("localhost", 9200));
         //httpHosts.add(new HttpHost("localhost", 9200));
         //填充host节点
@@ -493,6 +493,12 @@ public class EsTest {
 
         HashMap<String, String> stringObjectHashMap = new HashMap<>();
         HashMap<String, String> stringObjectHashMap2 = new HashMap<>();
+
+    }
+
+    @Test
+    public void test4(){
+
 
     }
 }

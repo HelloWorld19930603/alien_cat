@@ -3,6 +3,7 @@ package com.aliencat.springboot.elasticsearch.solr;
 import com.aliencat.springboot.elasticsearch.pojo.IndexConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -22,8 +23,8 @@ import java.util.*;
 @Slf4j
 public class SearchSolr {
 
-    static String baseSolrUrl = "http://60.190.244.226:22481/solr/";
-    //static String baseSolrUrl = "http://solr2.aim:8080/solr/";
+    //static String baseSolrUrl = "http://60.190.244.226:22481/solr/";
+    static String baseSolrUrl = "http://solr1.aim:8080/solr/";
 
     public static Map<String,SolrDocument> jointestMap = new HashMap<>(1024 * 16);
 
@@ -78,8 +79,9 @@ public class SearchSolr {
         try {
             return queryByTime(index,startTime,endTime,0);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+           log.info("solr查询异常：",e);
         }
+        return null;
     }
 
     public static QueryResponse queryByTime(String index,long startTime, long endTime,int start) throws IOException {
@@ -89,9 +91,12 @@ public class SearchSolr {
         solrQuery.setRows(pageSize);
         solrQuery.setStart(start);
         solrQuery.setQuery(String.format("message_time:[%d TO %d]",startTime,endTime));
+        //solrQuery.setTimeAllowed(0);
+        //client.setConnectionTimeout(120000);
+        //client.setSoTimeout(120000);
         QueryResponse response = null;
         try {
-            response = client.query(solrQuery);
+            response = client.query(solrQuery, SolrRequest.METHOD.POST);
             SolrDocumentList documentList = response.getResults();
             log.info("总计数据行数:" + documentList.getNumFound());
             log.info("当前行数：" + documentList.size());
@@ -143,6 +148,7 @@ public class SearchSolr {
      * 分页获取所有数据
      */
     public static void queryJointestByCursor() {
+
         if(!jointestMap.isEmpty()){
             return;
         }
@@ -170,7 +176,12 @@ public class SearchSolr {
                 cursorMark = nextCursorMark;
                 SolrDocumentList documentList = response.getResults();
                 documentList.forEach(entries -> {
-                    jointestMap.put(entries.get("account_number").toString(),entries);
+                    entries.remove("id");
+                    entries.remove("area_code");
+                    entries.remove("operator");
+                    String account_number = entries.get("account_number").toString();
+                    entries.remove("account_number");
+                    jointestMap.put(account_number,entries);
                 });
             }
         } catch (SolrServerException e) {
@@ -207,7 +218,7 @@ public class SearchSolr {
     public static QueryResponse queryByCursor(HttpSolrClient client, String cursorMark) {
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery("*:*");
-        solrQuery.setRows(200000);
+        solrQuery.setRows(120000);
         solrQuery.setSort("id", SolrQuery.ORDER.desc);
         //solrQuery.setQuery("account_number:"+account_number);
         //solrQuery.setFilterQueries(" {!join fromIndex=search4jointest toIndex=search4contact from=account_number  to=contact_account}");
@@ -223,10 +234,29 @@ public class SearchSolr {
         return response;
     }
 
-    public static QueryResponse queryByCursor2(HttpSolrClient client, String cursorMark) {
+    public static QueryResponse queryByCursorAsc(HttpSolrClient client, String cursorMark) {
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery("*:*");
-        solrQuery.setRows(200000);
+        solrQuery.setRows(120000);
+        solrQuery.setSort("id", SolrQuery.ORDER.asc);
+        //solrQuery.setQuery("account_number:"+account_number);
+        //solrQuery.setFilterQueries(" {!join fromIndex=search4jointest toIndex=search4contact from=account_number  to=contact_account}");
+        QueryResponse response = null;
+        //String cursorMark = CursorMarkParams.CURSOR_MARK_START;//游标初始化
+        try {
+            solrQuery.set(CursorMarkParams.CURSOR_MARK_PARAM, cursorMark);//变化游标条件
+            response = client.query(solrQuery);//执行多次查询读取
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("发生异常，当前游标：" + cursorMark);
+        }
+        return response;
+    }
+
+    public static QueryResponse queryByCursorAsc(HttpSolrClient client, String cursorMark,long start, long end) {
+        SolrQuery solrQuery = new SolrQuery();
+        solrQuery.setQuery(String.format("message_time:[%d TO %d]",start,end));
+        solrQuery.setRows(100000);
         solrQuery.setSort("id", SolrQuery.ORDER.asc);
         //solrQuery.setQuery("account_number:"+account_number);
         //solrQuery.setFilterQueries(" {!join fromIndex=search4jointest toIndex=search4contact from=account_number  to=contact_account}");

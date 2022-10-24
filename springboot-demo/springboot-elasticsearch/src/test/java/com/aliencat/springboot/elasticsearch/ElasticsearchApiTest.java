@@ -1,6 +1,7 @@
 package com.aliencat.springboot.elasticsearch;
 
 import com.alibaba.fastjson.JSONObject;
+import com.aliencat.springboot.elasticsearch.pojo.IndexConstant;
 import com.aliencat.springboot.elasticsearch.pojo.User;
 import com.aliencat.springboot.elasticsearch.service.ElasticsearchIndexService;
 import lombok.extern.slf4j.Slf4j;
@@ -271,5 +272,10 @@ public class ElasticsearchApiTest {
     @Test
     public void testMessageUpdate(){
         elasticsearchIndexService.messageBatchUpdate3(null);
+    }
+
+    @Test
+    public void testContactUpdate(){
+        elasticsearchIndexService.contactTransferEs(IndexConstant.SEARCH4CONTACT,IndexConstant.TG_CONTACT);
     }
 }

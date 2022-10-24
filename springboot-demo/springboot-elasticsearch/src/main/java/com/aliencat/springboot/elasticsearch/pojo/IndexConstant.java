@@ -1,19 +1,37 @@
 package com.aliencat.springboot.elasticsearch.pojo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @Author chengcheng
  * @Date 2022-07-11
  **/
 public class IndexConstant {
 
-    public static final String SEARCH4MESSAGE = "tg_contact";
+    public static final String SEARCH4MESSAGE = "tg_message";
     public static final String SEARCH4CONTACT = "search4contact";
 
     public static final String TG_CONTACT = "tg_contact";
 
 
-    public static void main(String[] args) {
-        System.out.println(SEARCH4CONTACT_MAPPING);
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        //System.out.println(SEARCH4MESSAGE_MAPPING);
+
+        System.out.println(URLEncoder.encode("浙江省", "utf-8"));
+        System.out.println(URLDecoder.decode("%E6%B5%99%E6%B1%9F%E7%9C%81","UTF-8"));
+        String s = "%2525E6%2525B5%252599%2525E6%2525B1%25259F%2525E7%25259C%252581";
+        System.out.println(URLDecoder.decode(s,"UTF-8"));
+        System.out.println(URLDecoder.decode("fgf13gf","UTF-8"));
+
+
+        List<String> stringList = new ArrayList<>();
+        stringList.stream().forEach(s1 -> {
+            System.out.println(s);
+        });
     }
 
     public static final String SEARCH4MESSAGE_MAPPING = "{\n" +
@@ -24,9 +42,7 @@ public class IndexConstant {
             "        \"contact_account\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
-            "        \"contact_account_id\" : {\n" +
-            "          \"type\" : \"keyword\"\n" +
-            "        },\n" +
+
             "        \"gmt_create\" : {\n" +
             "          \"type\" : \"long\"\n" +
             "        },\n" +
@@ -61,21 +77,15 @@ public class IndexConstant {
             "        \"message_type\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
-            "        \"misc_long_orig\" : {\n" +
-            "          \"type\" : \"keyword\"\n" +
-            "        },\n" +
+
             "        \"recipient_account\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
-            "        \"recipient_account_id\" : {\n" +
-            "          \"type\" : \"keyword\"\n" +
-            "        },\n" +
+
             "        \"sender_account\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
-            "        \"sender_account_id\" : {\n" +
-            "          \"type\" : \"keyword\"\n" +
-            "        },\n" +
+
             "        \"account_number\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
@@ -109,9 +119,6 @@ public class IndexConstant {
             "        \"contact_account\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
-            "        \"contact_account_id\" : {\n" +
-            "          \"type\" : \"keyword\"\n" +
-            "        },\n" +
             "        \"contact_id\" : {\n" +
             "          \"type\" : \"long\"\n" +
             "        },\n" +
@@ -137,24 +144,10 @@ public class IndexConstant {
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"ex_k_name\" : {\n" +
-            "          \"type\" : \"text\",\n" +
-            "          \"analyzer\": \"ik_max_word\",\n" +
-            "          \"fields\" : {\n" +
-            "            \"keyword\" : {\n" +
-            "              \"type\" : \"keyword\",\n" +
-            "              \"ignore_above\" : 256\n" +
-            "            }\n" +
-            "          }\n" +
+            "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"ex_k_nickName\" : {\n" +
-            "          \"type\" : \"text\",\n" +
-            "          \"analyzer\": \"ik_max_word\",\n" +
-            "          \"fields\" : {\n" +
-            "            \"keyword\" : {\n" +
-            "              \"type\" : \"keyword\",\n" +
-            "              \"ignore_above\" : 256\n" +
-            "            }\n" +
-            "          }\n" +
+            "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"ex_k_offlineTime\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
@@ -175,14 +168,7 @@ public class IndexConstant {
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"ex_k_userName\" : {\n" +
-            "          \"type\" : \"text\",\n" +
-            "          \"analyzer\": \"ik_max_word\",\n" +
-            "          \"fields\" : {\n" +
-            "            \"keyword\" : {\n" +
-            "              \"type\" : \"keyword\",\n" +
-            "              \"ignore_above\" : 256\n" +
-            "            }\n" +
-            "          }\n" +
+            "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"gmt_create\" : {\n" +
             "          \"type\" : \"integer\"\n" +
@@ -191,9 +177,6 @@ public class IndexConstant {
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"unique_account\" : {\n" +
-            "          \"type\" : \"keyword\"\n" +
-            "        },\n" +
-            "        \"unique_account_id\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"account_number\" : {\n" +
@@ -219,5 +202,6 @@ public class IndexConstant {
             "        }\n" +
             "      }\n" +
             "    }";
+
 
 }

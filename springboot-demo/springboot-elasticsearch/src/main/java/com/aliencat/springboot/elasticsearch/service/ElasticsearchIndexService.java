@@ -17,19 +17,19 @@ public interface ElasticsearchIndexService {
 
     String getContactProcess();
 
-    boolean createIndex(String index, String mapping) throws IOException;
+    boolean createIndex(String index, String mapping, int shards) throws IOException;
 
     boolean deleteIndex(String index, String mapping) throws IOException;
 
     void messageBatchUpdate(String cursorMark);
 
-    void messageBatchUpdate2(String cursorMark);
+    void messageBatchUpdateAsc(Date start, Date end);
 
     void messageBatchUpdate3(String cursorMark);
 
     void contactBatchUpdate(String cursorMark);
 
-    void contactTransferEs(String fromIndex,String toIndex);
+    void contactTransferEs(String fromIndex, String toIndex);
 
     SearchResponse queryMessageByTime(long start, long end) throws IOException;
 
@@ -43,4 +43,7 @@ public interface ElasticsearchIndexService {
 
     void messageBatchUpdateByDate(Date start, Date end) throws IOException, InterruptedException;
 
+    void messageBatchUpdateByDateFromMysql(Date startDate, Date endDate) throws InterruptedException;
+
+    void messageBatchUpdateByContactFromMysql(String contact);
 }

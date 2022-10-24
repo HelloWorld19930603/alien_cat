@@ -66,7 +66,7 @@ public class SearchSolrToEsTest {
         String nextCursor = CursorMarkParams.CURSOR_MARK_START;//游标初始化
         do {
             cursorMark = nextCursor;
-            QueryResponse queryResponse = SearchSolr.queryByCursor2(SearchSolr.getContactClient(), cursorMark);
+            QueryResponse queryResponse = SearchSolr.queryByCursorAsc(SearchSolr.getContactClient(), cursorMark);
             nextCursor = queryResponse.getNextCursorMark();
             SolrDocumentList results = queryResponse.getResults();
             total += results.size();
