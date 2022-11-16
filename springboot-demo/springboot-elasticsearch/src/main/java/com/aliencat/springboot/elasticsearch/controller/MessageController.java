@@ -2,6 +2,7 @@ package com.aliencat.springboot.elasticsearch.controller;
 
 import com.aliencat.springboot.elasticsearch.pojo.IndexConstant;
 import com.aliencat.springboot.elasticsearch.service.ElasticsearchIndexService;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,7 @@ import java.util.TimeZone;
 
 @RequestMapping("/message/")
 @RestController
+@Slf4j
 public class MessageController {
 
     private boolean flag = false;
@@ -31,7 +33,7 @@ public class MessageController {
     public String create() throws IOException {
         String indexName = IndexConstant.SEARCH4MESSAGE;
         String mapping = IndexConstant.SEARCH4MESSAGE_MAPPING;
-        return "索引是否创建成功:" + elasticsearchIndexService.createIndex(indexName, mapping,150);
+        return "索引是否创建成功:" + elasticsearchIndexService.createIndex(indexName, mapping,200);
     }
 
     /**
@@ -66,7 +68,7 @@ public class MessageController {
     @RequestMapping("batchAsc")
     public String batch2(String start, String end) {
 
-        System.out.println("message批量程序2已启动 - start:" + start + "\nend:" + end);
+        log.info("message批量程序2已启动 - start:" + start + "\nend:" + end);
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
@@ -94,7 +96,7 @@ public class MessageController {
      */
     @RequestMapping("batchByDate")
     public String batchByDate(String start, String end) {
-        System.out.println("start:" + start + "\nend:" + end);
+        log.info("start:" + start + "\nend:" + end);
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
@@ -116,12 +118,12 @@ public class MessageController {
 
     @RequestMapping("batchByDateFromMysql")
     public String batchByDateFromMysql(String start, String end,String[] contact) {
-        System.out.println("start:" + start + "\nend:" + end);
+        log.info("start:" + start + "\nend:" + end);
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
-            Date startDate = simpleDateFormat.parse(start);
-            Date endDate = simpleDateFormat.parse(end);
+            Date startDate = start != null ? simpleDateFormat.parse(start) : null;
+            Date endDate = end != null ? simpleDateFormat.parse(end) : null;
             new Thread(() -> {
                 try {
                     elasticsearchIndexService.messageBatchUpdateByDateFromMysql(startDate,endDate);
@@ -130,7 +132,7 @@ public class MessageController {
                 }
             }).start();
         }catch(Exception e){
-            e.printStackTrace();
+            log.info("batchByDateFromMysql异常:",e);
             return "发生异常：" + e;
         }
         return "ok\n";
@@ -138,7 +140,7 @@ public class MessageController {
 
     @RequestMapping("batchByContactFromMysql")
     public String batchByContactFromMysql(String start, String end,String contact) {
-        System.out.println("contact:" + contact);
+        log.info("contact:" + contact);
         if(StringUtils.isEmpty(contact)){
             return "empty";
         }
@@ -151,7 +153,7 @@ public class MessageController {
                 }
             }).start();
         }catch(Exception e){
-            e.printStackTrace();
+            log.info("batchByContactFromMysql异常:",e);
             return "发生异常：" + e;
         }
         return "ok\n";
@@ -159,7 +161,7 @@ public class MessageController {
 
     @RequestMapping("queryMessageByTime")
     public String queryMessageByTime(String start, String end) {
-        System.out.println("start:" + start + "\nend:" + end);
+        log.info("start:" + start + "\nend:" + end);
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));

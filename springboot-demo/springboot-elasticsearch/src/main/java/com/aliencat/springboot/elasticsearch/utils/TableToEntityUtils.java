@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.aliencat.springboot.elasticsearch.solr.SearchSolr.landingMap;
+
 /**
  * @Author chengcheng
  * @Date 2022-09-07
@@ -18,14 +20,18 @@ public class TableToEntityUtils {
 
     static final String USER = "root";
     static final String PASS = "yagoo@110";
-    static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+    //static final String PASS = "YG@root#safe";
+    //static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     // MySQL 8.0 以下版本 - JDBC 驱动名及数据库 URL
-    //static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     //static final String DB_URL = "jdbc:mysql://192.168.2.5:3306/bigdata?useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&allowMultiQueries=true&rewriteBatchedStatements=true";
     static final String DB_URL = "jdbc:mysql://tidb-pd1.aim:4000/bigdata?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true";
 
     public static void main(String[] args) throws Exception {
-        getMessageMaps("2018-03-01 00:00:00","2021-07-02 00:00:00", null);
+        //getMessageMaps("2018-03-01 00:00:00","2021-07-02 00:00:00", null);
+        System.out.println(getMaxMessageTime());
+        System.out.println(getMinMessageTime());
+        System.out.println(getLandingRecord().size());
     }
 
     private static Connection conn = null;
@@ -90,6 +96,39 @@ public class TableToEntityUtils {
         return new ArrayList<>();
     }
 
+    public static List<Map<String,Object>> getMessageMaps(Long id) {
+        try{
+            getStatement();
+            String sql;
+            sql= "SELECT * FROM im_messages  WHERE id > "+id+" ORDER BY id  limit 200000";
+            return getMessageMaps(sql);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    public static Map<String,Map<String,String>> getLandingRecord() {
+        try{
+            getStatement();
+            String sql = "select account_number,country,province,city from landing_place_dictionary ";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Map<String, String> fieldMap = new HashMap();
+                String account_number = rs.getString("account_number");
+                fieldMap.put("account_number", account_number);
+                fieldMap.put("country",rs.getString("country"));
+                fieldMap.put("province",rs.getString("province"));
+                fieldMap.put("city",rs.getString("city"));
+                landingMap.put(account_number,fieldMap);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("落地信息初始化完成：" + landingMap.size());
+        return landingMap;
+    }
+
     public static List<Map<String,Object>> getMessageMapsByIds(List<Long> ids) {
         try{
             getStatement();
@@ -101,8 +140,36 @@ public class TableToEntityUtils {
         return new ArrayList<>();
     }
 
+    public static Long getMaxMessageTime() {
+        try{
+            getStatement();
+            String sql = "select max(message_time) message_time from im_messages ;";
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return rs.getTimestamp("message_time").getTime() + 3600000 * 24L;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Long getMinMessageTime() {
+        try{
+            getStatement();
+            String sql = "select min(message_time) message_time from im_messages ;";
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return rs.getTimestamp("message_time").getTime() - 3600000 * 24L;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static List<Map<String,Object>> getMessageMaps(String sql) throws SQLException {
-        List<Map<String,Object>> tableFieldList=new ArrayList<>(100000);
+        List<Map<String,Object>> tableFieldList=new ArrayList<>(200000);
         ResultSet rs = stmt.executeQuery(sql);
         int i = 0;
         while (rs.next()) {

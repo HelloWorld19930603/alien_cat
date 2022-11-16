@@ -33,10 +33,10 @@ thread-pool-factory:
   #IO密集型应用，线程数为2N+1
   corePoolSize: 4
   maxPoolSize: 4
-  queueCapacity: 30
+  queueCapacity: 10
   keepAliveSeconds: 120
 schedule:
-  start_cron_expression:  0 30 23 * * ?
-  end_cron_expression: 0 59 7 * * ?
+  start_cron_expression:  0 0 18 * * ?
+  end_cron_expression: 0 59 8 * * ?
   thread_count: 20
   thread_priority: 5

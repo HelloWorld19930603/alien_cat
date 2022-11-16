@@ -45,5 +45,6 @@ public interface ElasticsearchIndexService {
 
     void messageBatchUpdateByDateFromMysql(Date startDate, Date endDate) throws InterruptedException;
 
+
     void messageBatchUpdateByContactFromMysql(String contact);
 }

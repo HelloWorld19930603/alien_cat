@@ -2,9 +2,11 @@ package com.aliencat.javabase.java8.date;
 
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateAndTime {
@@ -204,7 +206,38 @@ public class DateAndTime {
         String dayAfterTommorrow = "20200123";
         LocalDate formatted = LocalDate.parse(dayAfterTommorrow, DateTimeFormatter.BASIC_ISO_DATE);
         System.out.printf("Date generated from String %s is %s %n", dayAfterTommorrow, formatted);
+
+        LocalDate localDate = LocalDate.parse("2022-11-11");
+        String date = localDate.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+        System.out.println(date); //十一月 11, 2022
+
     }
 
-    
+    @Test
+    public void testCalendar(){
+        //获取当前日期
+        Date date = new Date();
+        //将时间格式化成yyyy-MM-dd HH:mm:ss的格式
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        //创建Calendar实例
+        Calendar cal = Calendar.getInstance();
+        //设置当前时间
+        cal.setTime(date);
+        //在当前时间基础上减一年
+        cal.add(Calendar.YEAR, -1);
+        System.out.println(format.format(cal.getTime()));
+        //在当前时间基础上减一月
+        cal.add(Calendar.MONTH,-1);
+        System.out.println(format.format(cal.getTime()));
+        //同理增加一天的方法：
+        cal.add(Calendar.DATE, 1);
+        System.out.println(format.format(cal.getTime()));
+    }
+
+    @Test
+    public void testInstant(){
+        System.out.println(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC));
+        System.out.println(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+    }
+
 }

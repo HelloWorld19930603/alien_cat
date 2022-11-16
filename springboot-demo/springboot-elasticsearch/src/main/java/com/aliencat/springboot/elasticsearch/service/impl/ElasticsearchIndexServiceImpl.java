@@ -108,6 +108,9 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
     RedisService redisService;
     @Resource(name = "restHighLevelClient")
     private RestHighLevelClient restHighLevelClient;
+
+    @Resource(name = "restHighLevelClient2")
+    private RestHighLevelClient restHighLevelClient2;
     @Resource
     private ThreadPoolConfig threadPoolConfig;
 
@@ -118,7 +121,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
         log.info(String.valueOf(results.size()));
         log.info(String.valueOf(queryResponse.getQTime()));
         log.info(String.valueOf((System.currentTimeMillis() - start) / 1000));
-        int maxSize = results.size() / 10000;
+        int maxSize = (int) Math.ceil(results.size() / 10000.0f);
         Stream.iterate(0, n -> n + 1)
                 .limit(maxSize)
                 .parallel()
@@ -231,7 +234,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
                 nextCursor = queryResponse.getNextCursorMark();
                 qTime = queryResponse.getQTime();
                 SolrDocumentList results = queryResponse.getResults();
-                int maxSize = results.size() / 10000;
+                int maxSize = (int) Math.ceil(results.size() / 10000.0f);
                 Stream.iterate(0, n -> n + 1)
                         .limit(maxSize)
                         .parallel()
@@ -279,7 +282,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
                 }
                 qTime = queryResponse.getQTime();
                 SolrDocumentList results = queryResponse.getResults();
-                int maxSize = results.size() / 10000;
+                int maxSize = (int) Math.ceil(results.size() / 10000.0f);
                 Stream.iterate(0, n -> n + 1)
                         .limit(maxSize)
                         .parallel()
@@ -358,7 +361,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
             nextCursor = queryResponse.getNextCursorMark();
             qTime = queryResponse.getQTime();
             SolrDocumentList results = queryResponse.getResults();
-            int maxSize = results.size() / 10000;
+            int maxSize = (int) Math.ceil(results.size() / 10000.0f);
             Stream.iterate(0, n -> n + 1)
                     .limit(maxSize)
                     .parallel()
@@ -397,7 +400,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
             List<Map<String, Object>> results = Stream.of(searchResponse.getHits().getHits())
                     .map(SearchHit::getSourceAsMap).collect(Collectors.toList());
             qTime = (int) searchResponse.getTook().getMillis();
-            int maxSize = results.size() / 10000;
+            int maxSize = (int) Math.ceil(results.size() / 10000.0f);
             Stream.iterate(0, n -> n + 1)
                     .limit(maxSize)
                     .parallel()
@@ -462,8 +465,8 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
         for (int i = 0; i < size; i++) {
             Map<String, Object> map = list.get(i);
             String account = map.get("contact_account").toString();
-            if (SearchSolr.jointestMap.containsKey(account)) {
-                SolrDocument jointest = SearchSolr.jointestMap.get(account);
+            if (SearchSolr.landingMap.containsKey(account)) {
+                Map<String, String> jointest = SearchSolr.landingMap.get(account);
                 map.put("country", jointest.get("country"));
                 Object province = jointest.get("province");
                 if (!StringUtils.isEmpty(province) || !"-".equals(province)) {
@@ -489,7 +492,6 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
             long count = 0;
             if (bulk.hasFailures()) {
                 BulkItemResponse[] items = bulk.getItems();
-                count = Arrays.stream(items).filter(BulkItemResponse::isFailed).count();
                 // Optional<BulkItemResponse> first = Arrays.stream(items).filter(BulkItemResponse::isFailed).findFirst();
                 BulkItemResponse item = items[0];
                 if (item != null && item.isFailed()) {
@@ -497,6 +499,9 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
                         Thread.sleep(20000);
                         MessageUpdateRunable runableTest = new MessageUpdateRunable(index, list);
                         threadPoolExecutor.execute(runableTest);
+                        isTooMany = true;
+                        log.info("Too Many Requests异常，已重新入队");
+                        return;
                     }
                     log.info("es返回的错误：" + item.getFailureMessage());
                 }
@@ -504,6 +509,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
                 map.entrySet().stream().forEach(e->{
                     log.info(e.getKey() + " : " + e.getValue());
                 });*/
+                count = Arrays.stream(items).filter(BulkItemResponse::isFailed).count();
                 if (count > 0) {
                     List<Map<String, Object>> failedCollect = Arrays.stream(items).map(bulkItemResponse ->
                             list.get(bulkItemResponse.getItemId())).collect(Collectors.toList());
@@ -511,7 +517,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
                     failedCollect.forEach(map -> {
                         stringBuilder.append(map.get("id")).append(",");
                     });
-                    FileUtils.saveAsFileWriter("/usr/solr2es/ids.txt", stringBuilder.toString(), true);
+                    FileUtils.saveAsFileWriter("/httx/run/server/ids.txt", stringBuilder.toString(), true);
                     Thread.sleep(5000);
                 }
             }
@@ -724,7 +730,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
         log.info("初始化落地信息");
         if (isJoin) {
             isJoin = false;
-            new Thread(() -> SearchSolr.queryJointestByCursor()).start();
+            new Thread(() -> TableToEntityUtils.getLandingRecord()).start();
         }
     }
 
@@ -811,19 +817,28 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
     }
 
     private Date currentDate;
+
+    public volatile boolean isTooMany;
     @Override
     public void messageBatchUpdateByDateFromMysql(Date start, Date end) {
         if(currentDate != null){
             start = currentDate;
         }
         long hour = 3600 * 1000L;
-        long startTime = start.getTime();
-        long endTime = end.getTime();
+        long startTime = start != null ? start.getTime() : TableToEntityUtils.getMinMessageTime();
+        long endTime = end != null ? end.getTime()  : TableToEntityUtils.getMaxMessageTime() + 1;
         long total = 0L;
         Thread.currentThread().setName("messageBatchUpdateByDateFromMysql");
         while (startTime <= endTime) {
             if (pause) {
                 break;
+            }
+            if(isTooMany){
+                try {
+                    Thread.sleep(30000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
             long tmp = startTime + hour;
             String startDate = simpleDateFormat.format(new Date(startTime));
@@ -832,14 +847,19 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
                     , tmpDate, null);
             int size = messageMaps.size();
             log.info("当前size:" + size + " ,start from " + startDate + " to " + tmpDate);
+            if(size < 1){
+                hour = hour * 10L;
+            }
+            if(hour == 0){
+                break;
+            }
             if (size < 80000) {
-                hour = hour * 2;
-                continue;
+                hour = hour * 2L;
             } else if (size > 200000) {
-                hour = hour / 2;
+                hour = (long) (hour * 0.75F);
             }
             long numFound = size;
-            long maxSize = numFound / 10000;
+            long maxSize = (long) Math.ceil(numFound / 10000.0f);
             List<Map<String, Object>> finalResults1 = messageMaps;
             Stream.iterate(0, n -> n + 1)
                     .limit(maxSize)
@@ -854,8 +874,9 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
             currentDate = new Date(startTime);
         }
         TableToEntityUtils.close();
-        log.info("处理完成: " + simpleDateFormat.format(start) + " - " + simpleDateFormat.format(end));
+        log.info("处理完成: " + total);
     }
+
 
     @Override
     public void messageBatchUpdateByContactFromMysql(String contact) {
@@ -897,12 +918,12 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
             searchRequest.scroll(scroll);
             searchSourceBuilder.size(10000);
             searchRequest.source(searchSourceBuilder);
-            searchResponse = restHighLevelClient.search(searchRequest, builder.build());
+            searchResponse = restHighLevelClient2.search(searchRequest, builder.build());
         } else {
             //查询下一页
             SearchScrollRequest scrollRequest = new SearchScrollRequest(nextCursor);
             scrollRequest.scroll(scroll);
-            searchResponse = restHighLevelClient.scroll(scrollRequest, builder.build());
+            searchResponse = restHighLevelClient2.scroll(scrollRequest, builder.build());
         }
         return searchResponse;
     }

@@ -23,7 +23,7 @@ public class ContactController {
     @RequestMapping("create")
     public String create(Integer shardNum) throws IOException {
         if(shardNum == null){
-            shardNum = 10;
+            shardNum = 20;
         }
         String indexName = IndexConstant.SEARCH4CONTACT;
         String mapping = IndexConstant.SEARCH4CONTACT_MAPPING;
@@ -69,7 +69,7 @@ public class ContactController {
 
     @RequestMapping("scrollContact")
     public String scrollContact() {
-        new Thread(()->elasticsearchIndexService.contactTransferEs(IndexConstant.SEARCH4CONTACT,IndexConstant.TG_CONTACT))
+        new Thread(()->elasticsearchIndexService.contactTransferEs(IndexConstant.TG_CONTACT,IndexConstant.SEARCH4CONTACT))
                 .start();
         return "OK\n";
     }

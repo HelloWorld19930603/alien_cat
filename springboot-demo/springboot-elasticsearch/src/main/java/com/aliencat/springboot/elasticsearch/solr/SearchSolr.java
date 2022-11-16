@@ -27,6 +27,7 @@ public class SearchSolr {
     static String baseSolrUrl = "http://solr1.aim:8080/solr/";
 
     public static Map<String,SolrDocument> jointestMap = new HashMap<>(1024 * 16);
+    public static Map<String,Map<String, String>> landingMap = new HashMap<>(1024 * 16);
 
     public static void main(String[] args) {
 

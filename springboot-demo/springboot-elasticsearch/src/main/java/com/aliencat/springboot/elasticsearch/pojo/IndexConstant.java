@@ -12,7 +12,7 @@ import java.util.List;
  **/
 public class IndexConstant {
 
-    public static final String SEARCH4MESSAGE = "tg_message";
+    public static final String SEARCH4MESSAGE = "search4message";
     public static final String SEARCH4CONTACT = "search4contact";
 
     public static final String TG_CONTACT = "tg_contact";
@@ -20,7 +20,7 @@ public class IndexConstant {
 
     public static void main(String[] args) throws UnsupportedEncodingException {
         //System.out.println(SEARCH4MESSAGE_MAPPING);
-
+        System.out.println(Runtime.getRuntime().availableProcessors());
         System.out.println(URLEncoder.encode("浙江省", "utf-8"));
         System.out.println(URLDecoder.decode("%E6%B5%99%E6%B1%9F%E7%9C%81","UTF-8"));
         String s = "%2525E6%2525B5%252599%2525E6%2525B1%25259F%2525E7%25259C%252581";
@@ -42,7 +42,6 @@ public class IndexConstant {
             "        \"contact_account\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
-
             "        \"gmt_create\" : {\n" +
             "          \"type\" : \"long\"\n" +
             "        },\n" +
@@ -92,16 +91,10 @@ public class IndexConstant {
             "        \"application_id\" : {\n" +
             "          \"type\" : \"long\"\n" +
             "        },\n" +
-            "        \"area_code\" : {\n" +
-            "          \"type\" : \"keyword\"\n" +
-            "        },\n" +
             "        \"city\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"country\" : {\n" +
-            "          \"type\" : \"keyword\"\n" +
-            "        },\n" +
-            "        \"operator\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"province\" : {\n" +
@@ -185,16 +178,10 @@ public class IndexConstant {
             "        \"application_id\" : {\n" +
             "          \"type\" : \"long\"\n" +
             "        },\n" +
-            "        \"area_code\" : {\n" +
-            "          \"type\" : \"keyword\"\n" +
-            "        },\n" +
             "        \"city\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"country\" : {\n" +
-            "          \"type\" : \"keyword\"\n" +
-            "        },\n" +
-            "        \"operator\" : {\n" +
             "          \"type\" : \"keyword\"\n" +
             "        },\n" +
             "        \"province\" : {\n" +

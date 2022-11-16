@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * @Author chengcheng
@@ -26,9 +25,8 @@ public class ScheduledService {
     public void startTask() throws ParseException, InterruptedException {
         log.info("startTask");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date start = simpleDateFormat.parse("2022-02-01 00:00:00");
         elasticsearchIndexService.setPause(false);
-        elasticsearchIndexService.messageBatchUpdateByDateFromMysql(start,new Date());
+        elasticsearchIndexService.messageBatchUpdateByDateFromMysql(null, null);
     }
 
 

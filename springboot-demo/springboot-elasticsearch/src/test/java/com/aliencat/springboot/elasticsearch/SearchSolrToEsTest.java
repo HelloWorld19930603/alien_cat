@@ -71,7 +71,7 @@ public class SearchSolrToEsTest {
             SolrDocumentList results = queryResponse.getResults();
             total += results.size();
 
-            int maxSize = results.size() / 10000;
+            int maxSize = (int) Math.ceil(results.size() / 10000.0f);
             Stream.iterate(0, n -> n + 1)
                     .limit(maxSize)
                     .map(a -> results.parallelStream().skip(a * 10000).limit(10000).collect(Collectors.toList()))
@@ -101,7 +101,7 @@ public class SearchSolrToEsTest {
             QueryResponse queryResponse = SearchSolr.queryByCursor(SearchSolr.getMessageClient(), cursorMark);
             nextCursor = queryResponse.getNextCursorMark();
             SolrDocumentList results = queryResponse.getResults();
-            int maxSize = results.size() / 10000;
+            int maxSize = (int) Math.ceil(results.size() / 10000.0f);
             Stream.iterate(0, n -> n + 1)
                     .limit(maxSize)
                     .map(a -> results.parallelStream().skip(a * 10000).limit(10000).collect(Collectors.toList()))
