@@ -236,8 +236,55 @@ public class DateAndTime {
 
     @Test
     public void testInstant(){
-        System.out.println(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC));
+        System.out.println(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC).getEpochSecond());
         System.out.println(LocalDateTime.now().toInstant(ZoneOffset.UTC));
+    }
+
+
+
+    // 获得某天最大时间 YYYY-MM-DD 23:59:59
+    public static Date getEndOfDay(Date date) {
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());;
+        LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+        return Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    // 获得某天最小时间 YYYY-MM-DD 00:00:00
+    public static Date getStartOfDay(Date date) {
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
+        LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+        return Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    @Test
+    public  void getStartOfDay() {
+        Date time = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        System.out.println(calendar.getTime().getTime());
+        System.out.println(calendar.getTimeInMillis());
+        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calendar.getTime()));
+
+        System.out.println(getStartOfDay(time));
+    }
+
+    @Test
+    public  void getEndOfDay() {
+        Date time = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        System.out.println(calendar.getTimeInMillis());
+        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calendar.getTime()));
+
+        System.out.println(getEndOfDay(time));
     }
 
 }
