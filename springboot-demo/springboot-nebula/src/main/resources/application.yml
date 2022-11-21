@@ -1,0 +1,77 @@
+nebula:
+  address : 192.168.2.12:9669
+  userName : root
+  passworld : nebula
+  spaceName : RegionalTrend
+  pagerankSpaceName :  pagerank
+  minConnsSize : 5
+  maxConnSize : 80
+  timeout : 600
+  idleTime : 60
+  logNum : 100
+  # 用户亲密度系数
+  userIntimacyCoefficient : 0.8
+  # 系统亲密度系数
+  systemIntimacyCoefficient : 0.2
+  # zeroToZero :普通账号对普通账号  zeroToOne :普通账号对认证账号  oneToZero :认证账号对普通账号  oneToOne :认证账号对认证账号
+  zeroToZero : 0.15
+  zeroToOne : 0.05
+  oneToZero : 0.3
+  oneToOne : 0.3
+  like : 0.13
+  retransmission : 0.12
+  reply : 0.1
+  quote : 0.05
+
+  #普通账号对普通账号,单方面,无关注
+  pToP_OneToZero : 0.08
+  #普通账号对普通账号,单方面,有关注
+  pToP_OneToOne : 0
+  #普通账号对普通账号,互相关注
+  pToP_Two : 0.3
+  #普通账号对普通账号,无互相关注，有互动
+  pToP_Three : 0.3
+  #普通账号对普通账号,互相关注，并有互动
+  pToP_Four : 0.45
+
+
+  #普通账号对认证账号,单方面,无关注
+  pToR_OneToZero : 0
+  #普通账号对认证账号,单方面,有关注
+  pToR_OneToOne : 0
+  #普通账号对认证账号,互相关注
+  pToR_Two : 0.4
+  #普通账号对认证账号,无互相关注，有互动
+  pToR_Three : 0.3
+  #普通账号对认证账号,互相关注，并有互动
+  pToR_Four : 0.55
+
+
+  #认证账号对普通账号,单方面,无关注
+  rToP_OneToZero : 0.2
+  #认证账号对普通账号,单方面,有关注
+  rToP_OneToOne : 0
+  #认证账号对普通账号,互相关注
+  rToP_Two : 0.15
+  #认证账号对普通账号,无互相关注，有互动
+  rToP_Three : 0.35
+  #认证账号对普通账号,互相关注，并有互动
+  rToP_Four : 0.3
+
+
+  #认证账号对普通账号,单方面,无关注
+  rToR_OneToZero : 0.2
+  #认证账号对普通账号,单方面,有关注
+  rToR_OneToOne : 0
+  #认证账号对普通账号,互相关注
+  rToR_Two : 0.15
+  #认证账号对普通账号,无互相关注，有互动
+  rToR_Three : 0.35
+  #认证账号对普通账号,互相关注，并有互动
+  rToR_Four : 0.3
+  sKey : 6d782000a3
+  ivParameter : 66692k0da0
+  translateUri : http://192.168.2.5:18083
+  nebulaEsUri : 192.168.2.192:9200
+  nebulaEsGte : 100000000000000000000000000000
+  nebulaEsLte : 300000000000000000000000000000
