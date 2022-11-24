@@ -33,7 +33,7 @@ public class MessageController {
     public String create() throws IOException {
         String indexName = IndexConstant.SEARCH4MESSAGE;
         String mapping = IndexConstant.SEARCH4MESSAGE_MAPPING;
-        return "索引是否创建成功:" + elasticsearchIndexService.createIndex(indexName, mapping,200);
+        return "索引是否创建成功:" + elasticsearchIndexService.createIndex(indexName, mapping,150);
     }
 
     /**

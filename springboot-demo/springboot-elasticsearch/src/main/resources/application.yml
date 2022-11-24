@@ -31,9 +31,9 @@ spring:
 
 thread-pool-factory:
   #IO密集型应用，线程数为2N+1
-  corePoolSize: 4
-  maxPoolSize: 4
-  queueCapacity: 10
+  corePoolSize: 3
+  maxPoolSize: 3
+  queueCapacity: 5
   keepAliveSeconds: 120
 schedule:
   start_cron_expression:  0 0 18 * * ?

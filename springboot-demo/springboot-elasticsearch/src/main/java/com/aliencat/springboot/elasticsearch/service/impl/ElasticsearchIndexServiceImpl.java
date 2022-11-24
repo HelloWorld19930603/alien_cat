@@ -156,7 +156,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
                         if (!executor.isShutdown()) {
                             try {
                                 log.info("队列已满，等待重新入队-" + Thread.currentThread().getName());
-                                Thread.sleep(10000);
+                                Thread.sleep(20000);
                                 executor.getQueue().put(r);
                             } catch (InterruptedException e) {
                                 log.info("executor:", e);
@@ -835,7 +835,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
             }
             if(isTooMany){
                 try {
-                    Thread.sleep(30000);
+                    Thread.sleep(60000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

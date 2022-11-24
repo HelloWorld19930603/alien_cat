@@ -17,6 +17,7 @@
         <module>springboot-elasticsearch</module>
         <module>springboot-solr</module>
         <module>springboot-mybatisplus</module>
+        <module>springboot-component</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -84,6 +85,21 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.75</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.10</version>
+        </dependency>
+        <dependency>
+            <artifactId>commons-collections4</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <version>4.4</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.4.3</version>
         </dependency>
     </dependencies>
 
